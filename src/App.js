@@ -3,20 +3,17 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { AuthContext } from './context';
 import Home from './components/Home';
 import Login from './components/Login';
-import Navbar from './components/Navbar';
 import Dashboard from './components/Dashboard';
 
-import './App.css';
+import './styles/App.css';
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
   const login = () => {
     setLoggedIn(true);
-    console.log('login');
   };
   const logout = () => {
     setLoggedIn(false);
-    console.log('logout');
   };
 
   return (
@@ -24,7 +21,7 @@ function App() {
       <AuthContext.Provider
         value={{ isLoggedIn, login: login, logout: logout }}
       >
-        <Navbar />
+        {/* <Navbar /> */}
         <Route path="/" exact component={Home} />
         <Route path="/login" exact component={Login} />
         <Route path="/dashboard" exact component={Dashboard} />

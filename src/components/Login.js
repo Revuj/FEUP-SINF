@@ -17,9 +17,9 @@ function Login() {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider).then(() => {
       console.log(user);
-      history.push('/');
+      authContext.login();
+      history.push('/dashboard');
     });
-    authContext.login();
   };
 
   const signInWithEmailAndPassword = () => {
@@ -28,9 +28,9 @@ function Login() {
       .signInWithEmailAndPassword(username, password)
       .then(() => {
         console.log(user);
+        authContext.login();
         history.push('/dashboard');
       });
-    authContext.login();
   };
 
   return (

@@ -1,4 +1,4 @@
-import { React, useContext } from 'react';
+import { React, useContext, useState } from 'react';
 import { auth } from '../firebase/config';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../context';
@@ -8,10 +8,26 @@ import '../styles/Dashboard.css';
 function Dashboard() {
   const history = useHistory();
   const authContext = useContext(AuthContext);
+  const [tab, setTab] = useState('main');
 
   const signOut = () => {
     auth.signOut();
     authContext.logout();
+  };
+
+  const renderTab = () => {
+    switch (tab) {
+      case 'main':
+        return <h1>main</h1>;
+      case 'financial':
+        return <h1>financial</h1>;
+      case 'sales':
+        return <h1>sales</h1>;
+      case 'inventory':
+        return <h1>inventory</h1>;
+      case 'procurement':
+        return <h1>procurement</h1>;
+    }
   };
 
   return authContext.isLoggedIn ? (
@@ -23,7 +39,7 @@ function Dashboard() {
               <img src={Koala} alt="koala logo" />
             </span>
           </li>
-          <li className="nav-item">
+          <li className="nav-item" onClick={() => setTab('main')}>
             <span className="nav-link">
               <svg
                 width="43"
@@ -42,7 +58,7 @@ function Dashboard() {
             </span>
           </li>
 
-          <li className="nav-item">
+          <li className="nav-item" onClick={() => setTab('financial')}>
             <span className="nav-link">
               <svg
                 width="39"
@@ -61,7 +77,7 @@ function Dashboard() {
             </span>
           </li>
 
-          <li className="nav-item">
+          <li className="nav-item" onClick={() => setTab('sales')}>
             <span className="nav-link">
               <svg
                 width="48"
@@ -80,7 +96,7 @@ function Dashboard() {
             </span>
           </li>
 
-          <li className="nav-item">
+          <li className="nav-item" onClick={() => setTab('inventory')}>
             <span className="nav-link">
               <svg
                 width="51"
@@ -98,7 +114,7 @@ function Dashboard() {
               <span className="link-text">Inventory</span>
             </span>
           </li>
-          <li className="nav-item">
+          <li className="nav-item" onClick={() => setTab('procurement')}>
             <span className="nav-link">
               <svg
                 width="53"
@@ -123,14 +139,7 @@ function Dashboard() {
           </li>
         </ul>
       </nav>
-      <main>
-        <span className="secondary-font">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro,
-          voluptatem? Nisi iusto repellat saepe cumque perferendis beatae
-          quibusdam, accusantium iure, eligendi consectetur minima sapiente
-          repudiandae nobis ea itaque expedita ex?
-        </span>
-      </main>
+      <main>{renderTab()}</main>
     </>
   ) : (
     <>{history.push('/')}</>

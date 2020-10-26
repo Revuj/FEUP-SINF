@@ -5,6 +5,7 @@ import { fetchYearPurchases } from '../../api/purchases';
 import { Line } from 'react-chartjs-2';
 
 function RevenueVsCost() {
+  // no futuro acrescentar await keyword
   const sales = fetchYearSales();
   const purchases = fetchYearPurchases();
 

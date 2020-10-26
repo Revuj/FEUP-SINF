@@ -1,0 +1,35 @@
+.listCard {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding-top: 1rem;
+}
+
+.listCard__title {
+    font-size: 1.3em;
+    margin-left: 1rem;
+}
+
+.listCard__listItem {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    word-wrap: break-word;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+}
+
+.listCard__listItem:last-child {
+    padding-bottom: 0.5rem;
+}
+
+.listCard__listItem__label {
+    padding: 0.5em;
+    background-color: #a1ffb8;
+    color: #262626;
+    border-radius: 50px;
+    margin-right: 0.5em;
+}
+
+.listCard__listItem__description {
+    margin: 0;
+  }

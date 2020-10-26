@@ -3,6 +3,7 @@ import { auth } from '../firebase/config';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../context';
 import Koala from '../assets/koala-white.svg';
+import Financial from './Financial';
 import '../styles/Dashboard.css';
 
 function Dashboard() {
@@ -20,7 +21,7 @@ function Dashboard() {
       case 'main':
         return <h1>main</h1>;
       case 'financial':
-        return <h1>financial</h1>;
+        return <Financial />;
       case 'sales':
         return <h1>sales</h1>;
       case 'inventory':
@@ -30,7 +31,9 @@ function Dashboard() {
     }
   };
 
-  return authContext.isLoggedIn ? (
+  // authContext.isLoggedIn ? (
+
+  return (
     <>
       <nav className="navbar">
         <ul className="navbar-nav">
@@ -141,9 +144,10 @@ function Dashboard() {
       </nav>
       <main>{renderTab()}</main>
     </>
-  ) : (
-    <>{history.push('/')}</>
   );
+  // ) : (
+  //   <>{history.push('/')}</>
+  // );
 }
 
 export default Dashboard;

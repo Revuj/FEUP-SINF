@@ -1,0 +1,10 @@
+.pontualInfo {
+    display: flex;
+    gap: 1rem;
+    flex: 1 1;
+    padding: 1rem;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    box-sizing: border-box; 
+    justify-content: space-between;
+}

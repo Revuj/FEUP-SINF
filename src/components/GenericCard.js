@@ -24,14 +24,14 @@ const GenericCard = ({title, description, amount, formatter, unit, styleCard, st
     console.log(styleAmount)
     return (
         <div className = 'card' style = {styleCard}>
-            <div className = "card__title" style = {styleTitle != undefined ? styleTitle : {}}>
+            <div className = "card__title" style = {styleTitle !== undefined ? styleTitle : {}}>
                 {title}
             </div>
-            <div className= "card__amount" style = {styleAmount != undefined ? styleAmount : {}}>
-                {formatter(amount)}
+            <div className= "card__amount" style = {styleAmount !== undefined ? styleAmount : {}}>
+                {formatter && formatter(amount)}
                 {unit}
             </div>
-            <div className= "card__description" style = {styleDescription != undefined ? styleAmount : {}}>
+            <div className= "card__description" style = {styleDescription !== undefined ? styleAmount : {}}>
                 {description}
             </div>
 

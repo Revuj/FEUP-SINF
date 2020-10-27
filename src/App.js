@@ -1,5 +1,6 @@
-import { React, useState } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { React, useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, useHistory } from 'react-router-dom';
+import { firebase } from './firebase/config';
 import { AuthContext } from './context';
 import Home from './components/Home';
 import Login from './components/Login';
@@ -8,7 +9,18 @@ import Dashboard from './components/Dashboard';
 import './styles/App.css';
 
 function App() {
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isLoggedIn, setLoggedIn] = useState(true);
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
+      }
+    });
+  }, []);
+
   const login = () => {
     setLoggedIn(true);
   };

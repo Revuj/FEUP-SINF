@@ -1,6 +1,7 @@
 import React from 'react';
 import RevenueVsCost from './RevenueVsCost';
 import GenericCard from '../GenericCard';
+import GenericListing from '../GenericListing';
 import {formatMoney} from '../../helper/CurrencyFormater';
 import '../../styles/FinantialLayouts.css';
 
@@ -68,6 +69,33 @@ function index() {
         />
       </section>
       <RevenueVsCost />
+        
+      <section className = "listingInfo">
+
+        <GenericListing
+          title = "Balance sheet"
+          data = {[
+            {label : "caixa", description : "+100"},
+            {label : "caixa", description : "-50"},
+            {label : "vendas", description : "+150"},
+            {label : "compras", description : "-250"}
+          ]}
+          style = {{width:'25%', backgroundColor: 'white'}}
+          itemStyle = {{borderTop: '1px solid black'}}
+        />
+
+        <GenericListing
+          title = "Profit and loss statement"
+          data = {[
+            {label : "caixa", description : "+100"},
+            {label : "caixa", description : "-50"},
+            {label : "vendas", description : "+150"},
+            {label : "compras", description : "-250"}
+          ]}
+          style = {{width:'25%', backgroundColor: 'white'}}
+          itemStyle = {{borderTop: '1px solid black'}}
+        />
+      </section>
     </div>
   );
 }

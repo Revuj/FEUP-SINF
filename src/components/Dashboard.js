@@ -28,12 +28,12 @@ function Dashboard() {
         return <h1>inventory</h1>;
       case 'procurement':
         return <h1>procurement</h1>;
+      default:
+        return <h1>main</h1>;
     }
   };
 
-  // authContext.isLoggedIn ? (
-
-  return (
+  return authContext.isLoggedIn ? (
     <>
       <nav className="navbar">
         <ul className="navbar-nav">
@@ -43,7 +43,7 @@ function Dashboard() {
             </span>
           </li>
           <li className="nav-item" onClick={() => setTab('main')}>
-            <span className="nav-link">
+            <span className={'nav-link' + (tab === 'main' ? ' selected' : '')}>
               <svg
                 width="43"
                 height="38"
@@ -62,7 +62,9 @@ function Dashboard() {
           </li>
 
           <li className="nav-item" onClick={() => setTab('financial')}>
-            <span className="nav-link">
+            <span
+              className={'nav-link' + (tab === 'financial' ? ' selected' : '')}
+            >
               <svg
                 width="39"
                 height="39"
@@ -81,7 +83,7 @@ function Dashboard() {
           </li>
 
           <li className="nav-item" onClick={() => setTab('sales')}>
-            <span className="nav-link">
+            <span className={'nav-link' + (tab === 'sales' ? ' selected' : '')}>
               <svg
                 width="48"
                 height="42"
@@ -100,7 +102,9 @@ function Dashboard() {
           </li>
 
           <li className="nav-item" onClick={() => setTab('inventory')}>
-            <span className="nav-link">
+            <span
+              className={'nav-link' + (tab === 'inventory' ? ' selected' : '')}
+            >
               <svg
                 width="51"
                 height="51"
@@ -118,7 +122,11 @@ function Dashboard() {
             </span>
           </li>
           <li className="nav-item" onClick={() => setTab('procurement')}>
-            <span className="nav-link">
+            <span
+              className={
+                'nav-link' + (tab === 'procurement' ? ' selected' : '')
+              }
+            >
               <svg
                 width="53"
                 height="42"
@@ -144,10 +152,9 @@ function Dashboard() {
       </nav>
       <main>{renderTab()}</main>
     </>
+  ) : (
+    <>{history.push('/')}</>
   );
-  // ) : (
-  //   <>{history.push('/')}</>
-  // );
 }
 
 export default Dashboard;

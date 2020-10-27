@@ -8,3 +8,15 @@
     box-sizing: border-box; 
     justify-content: space-between;
 }
+
+.listingInfo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 3rem;
+    gap: 2rem;
+}
+
+.listingInfo > .listCard {
+    flex:1;
+}

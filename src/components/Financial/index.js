@@ -2,7 +2,8 @@ import React from 'react';
 import RevenueVsCost from './RevenueVsCost';
 import GenericCard from '../GenericCard';
 import GenericListing from '../GenericListing';
-import {formatMoney} from '../../helper/CurrencyFormater';
+import GenericTable from '../GenericTable';
+import { formatMoney } from '../../helper/CurrencyFormater';
 import '../../styles/FinantialLayouts.css';
 
 function index() {
@@ -10,90 +11,101 @@ function index() {
     <div>
       <h1>Financial</h1>
 
-      <section className = "pontualInfo">
-        <GenericCard 
-          title = "EBIT"
-          description = "Earnings Before Interest and Taxes"
-          amount = "300000"
-          formatter = {formatMoney}
-          unit = "€"
-          styleTitle = { {
-            borderBottom:'1px solid black',
-            backgroundColor: '#85DCB0'
+      <section className="pontualInfo">
+        <GenericCard
+          title="EBIT"
+          description="Earnings Before Interest and Taxes"
+          amount="300000"
+          formatter={formatMoney}
+          unit="€"
+          styleTitle={{
+            borderBottom: '1px solid black',
+            backgroundColor: '#85DCB0',
           }}
-          styleCard = {{
-            width: '45%'
-          }}
-        />
-        <GenericCard 
-          title = "EBITA"
-          description = "Earnings before interest, taxes, and amortization"
-          amount = "300000"
-          formatter = {formatMoney}
-          unit = "€"
-          styleTitle = { {
-            borderBottom:'1px solid black',
-            backgroundColor: '#E8A87C'
-          }}
-          styleCard = {{
-            width: '45%'
+          styleCard={{
+            width: '45%',
           }}
         />
-        <GenericCard 
-          title = "Account Receivables"
-          description = "Amount of money owed by customers for purchases made on credit"
-          amount = "300000"
-          formatter = {formatMoney}
-          unit = "€"
-          styleTitle = { {
-            borderBottom:'1px solid black',
-            backgroundColor: '#C38D9E'
+        <GenericCard
+          title="EBITA"
+          description="Earnings before interest, taxes, and amortization"
+          amount="300000"
+          formatter={formatMoney}
+          unit="€"
+          styleTitle={{
+            borderBottom: '1px solid black',
+            backgroundColor: '#E8A87C',
           }}
-          styleCard = {{
-            width: '45%'
+          styleCard={{
+            width: '45%',
           }}
         />
-        <GenericCard 
-          title = "Earnings"
-          description = "Amount of profit "
-          amount = "300000"
-          formatter = {formatMoney}
-          unit = "€"
-          styleTitle = { {
-            borderBottom:'1px solid black',
-            backgroundColor: '#41B3A3'
+        <GenericCard
+          title="Account Receivables"
+          description="Amount of money owed by customers for purchases made on credit"
+          amount="300000"
+          formatter={formatMoney}
+          unit="€"
+          styleTitle={{
+            borderBottom: '1px solid black',
+            backgroundColor: '#C38D9E',
           }}
-          styleCard = {{
-            width: '45%'
+          styleCard={{
+            width: '45%',
+          }}
+        />
+        <GenericCard
+          title="Earnings"
+          description="Amount of profit "
+          amount="300000"
+          formatter={formatMoney}
+          unit="€"
+          styleTitle={{
+            borderBottom: '1px solid black',
+            backgroundColor: '#41B3A3',
+          }}
+          styleCard={{
+            width: '45%',
           }}
         />
       </section>
       <RevenueVsCost />
-        
-      <section className = "listingInfo">
 
+      <section className="listingInfo">
         <GenericListing
-          title = "Balance sheet"
-          data = {[
-            {label : "caixa", description : "+100"},
-            {label : "caixa", description : "-50"},
-            {label : "vendas", description : "+150"},
-            {label : "compras", description : "-250"}
+          title="Balance sheet"
+          data={[
+            { label: 'caixa', description: '+100' },
+            { label: 'caixa', description: '-50' },
+            { label: 'vendas', description: '+150' },
+            { label: 'compras', description: '-250' },
           ]}
-          style = {{width:'25%', backgroundColor: 'white'}}
-          itemStyle = {{borderTop: '1px solid black'}}
+          style={{ width: '25%', backgroundColor: 'white' }}
+          itemStyle={{ borderTop: '1px solid black' }}
         />
 
         <GenericListing
-          title = "Profit and loss statement"
-          data = {[
-            {label : "caixa", description : "+100"},
-            {label : "caixa", description : "-50"},
-            {label : "vendas", description : "+150"},
-            {label : "compras", description : "-250"}
+          title="Profit and loss statement"
+          data={[
+            { label: 'caixa', description: '+100' },
+            { label: 'caixa', description: '-50' },
+            { label: 'vendas', description: '+150' },
+            { label: 'compras', description: '-250' },
           ]}
-          style = {{width:'25%', backgroundColor: 'white'}}
-          itemStyle = {{borderTop: '1px solid black'}}
+          style={{ width: '25%', backgroundColor: 'white' }}
+          itemStyle={{ borderTop: '1px solid black' }}
+        />
+
+        <GenericTable
+          title="Table title"
+          numberItemsPerPage={4}
+          headers={[
+            { name: 'No#', field: 'id', sortable: false },
+            { name: 'Name', field: 'name', sortable: true },
+            { name: 'Email', field: 'email', sortable: true },
+            { name: 'Comment', field: 'body', sortable: false },
+          ]}
+          containerStyle={{ width: '100%' }}
         />
       </section>
     </div>

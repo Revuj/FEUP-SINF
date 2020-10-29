@@ -5,6 +5,7 @@ import { AuthContext } from '../context';
 import Koala from '../assets/koala-white.svg';
 import Financial from './Financial';
 import '../styles/Dashboard.css';
+import { Procurement } from './Procurement';
 
 function Dashboard() {
   const history = useHistory();
@@ -23,11 +24,11 @@ function Dashboard() {
       case 'financial':
         return <Financial />;
       case 'sales':
-        return <h1>sales</h1>;
+        return <h1>Your mom</h1>;
       case 'inventory':
         return <h1>inventory</h1>;
       case 'procurement':
-        return <h1>procurement</h1>;
+        return <Procurement title = "Procurement"/>;
       default:
         return <h1>main</h1>;
     }

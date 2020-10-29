@@ -1,0 +1,17 @@
+.top-cards {
+  display: flex;
+  margin-top: 2rem;
+}
+
+.card {
+  width: 300px;
+  margin-right: 2rem;
+}
+
+.row-50-50 {
+  display: flex;
+}
+
+.row-50-50 > span {
+  flex: 1 1 0px;
+}

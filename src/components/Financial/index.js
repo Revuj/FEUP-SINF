@@ -4,7 +4,7 @@ import GenericCard from '../GenericCard';
 import GenericListing from '../GenericListing';
 import GenericTable from '../GenericTable';
 import { formatMoney } from '../../helper/CurrencyFormater';
-import '../../styles/FinantialLayouts.css';
+import '../../styles/Finantial.css';
 
 function index() {
   return (

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import {IconContext} from "react-icons";
 
-const TableHeader = ({ headers, onSorting }) => {
+
+const TableHeader = ({ headers, onSorting, color }) => {
     const [sortingField, setSortingField] = useState("");
     const [sortingOrder, setSortingOrder] = useState("asc");
 
@@ -18,7 +20,7 @@ const TableHeader = ({ headers, onSorting }) => {
         <thead>
             <tr>
                 {headers.map(({ name, field, sortable }) => (
-                    <th style = {{backgroundColor : "orange"}}
+                    <th style = {{backgroundColor : color}}
                         key={name}
                         onClick={() =>
                             sortable ? onSortingChange(field) : null
@@ -27,13 +29,13 @@ const TableHeader = ({ headers, onSorting }) => {
                         {name}
 
                         {sortingField && sortingField === field && (
-                            <FontAwesomeIcon
-                                icon={
-                                    sortingOrder === "asc"
-                                        ? "arrow-down"
-                                        : "arrow-up"
-                                }
-                            />
+                            <IconContext.Provider
+                                value={{ size: '50px'}}
+                            >
+                                {(sortingOrder === "asc") ?  <FaArrowUp size={10} /> : <FaArrowDown size={10} />}
+                            </IconContext.Provider>
+
+                            
                             
                         )}
                     </th>

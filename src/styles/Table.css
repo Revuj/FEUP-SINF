@@ -22,6 +22,7 @@ table {
   table td {
     padding: .625em;
     text-align: center;
+    border-right: 1px solid black;
   }
   
   table th {
@@ -74,3 +75,11 @@ table {
       border-bottom: 0;
     }
   }
+
+.header_info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  flex-wrap: wrap;
+}

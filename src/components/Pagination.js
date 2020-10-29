@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Pagination from 'react-bootstrap/Pagination';
 import '../styles/Pagination.css';
 
@@ -7,6 +7,7 @@ const PaginationComponent = ({
   itemsPerPage = 10,
   currentPage = 1,
   onPageChange,
+  color
 }) => {
   const [totalPages, setTotalPages] = useState(0);
   const [pages, setPages] = useState(null);
@@ -38,7 +39,7 @@ const PaginationComponent = ({
 
   return (
     <Pagination>
-      <Pagination.Prev
+      <Pagination.Prev style={{ marginRight: '1rem',padding: '0.25rem 0.5rem' }}
         onClick={() => {
           if (currentPage > 1) onPageChange(currentPage - 1);
         }}
@@ -51,14 +52,19 @@ const PaginationComponent = ({
               key={page}
               active={page === currentPage}
               onClick={() => onPageChange(page)}
-              style={{ marginRight: '1rem' }}
+              style={{ 
+              marginRight: '1rem' ,
+              backgroundColor: page === currentPage ? color : '',
+              padding: '0.25rem 0.5rem',
+              cursor: 'pointer'}}
             >
               {page}
             </li>
           );
         })}
 
-      <Pagination.Next
+      <Pagination.Next style={{ marginRight: '1rem',padding: '0.25rem 0.5rem' }}
+
         onClick={() => {
           if (currentPage < totalPages) onPageChange(currentPage + 1);
         }}

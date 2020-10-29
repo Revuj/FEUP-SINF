@@ -1,0 +1,13 @@
+
+.title {
+    width:100%;
+    font-size: 2rem;
+}
+
+.card-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin : 3rem 0rem;
+}   
+

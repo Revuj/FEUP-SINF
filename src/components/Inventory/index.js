@@ -1,6 +1,5 @@
 import React from 'react';
 import GenericCard from '../GenericCard';
-// import GenericListing from '../GenericListing';
 import GenericTable from '../GenericTable';
 import StockByTime from './StockByTime';
 import StockByWarehouse from './StockByWarehouse';

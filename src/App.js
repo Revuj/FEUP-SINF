@@ -1,12 +1,15 @@
-import { React, useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, useHistory } from 'react-router-dom';
-import { firebase } from './firebase/config';
-import { AuthContext } from './context';
-import Home from './components/Home';
-import Login from './components/Login';
-import Dashboard from './components/Dashboard';
+import { React, useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, useHistory } from "react-router-dom";
+import { firebase } from "./firebase/config";
+import { AuthContext } from "./context";
+import Home from "./components/Home";
+import Login from "./components/Login";
+import Dashboard from "./components/Dashboard";
+import Product from "./components/Product/Product";
+import Customer from "./components/Customer/Customer";
+import Supplier from "./components/Supplier/Supplier";
 
-import './styles/App.css';
+import "./styles/App.css";
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(true);
@@ -37,6 +40,9 @@ function App() {
         <Route path="/" exact component={Home} />
         <Route path="/login" exact component={Login} />
         <Route path="/dashboard" exact component={Dashboard} />
+        <Route path="/product" exact component={Product} />
+        <Route path="/customer" exact component={Customer} />
+        <Route path="/supplier" exact component={Supplier} />
       </AuthContext.Provider>
     </Router>
   );

@@ -11,6 +11,7 @@ import GenericCard from '../GenericCard';
 import { formatMoney } from '../../helper/CurrencyFormater';
 import GenericTable from '../GenericTable';
 import RevenueVsCost from '../Financial/RevenueVsCost';
+import SuppliersTable from '../Procurement/SuppliersTable';
 import '../../styles/Procurement.css';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
@@ -75,17 +76,9 @@ const Procurement = ({ title }) => {
         </section>
 
         <RevenueVsCost />
-
-        <GenericTable
-          title="Suppliers"
+        <SuppliersTable
           numberItemsPerPage={4}
-          headers={[
-            { name: 'No#', field: 'id', sortable: false },
-            { name: 'Name', field: 'name', sortable: true },
-            { name: 'Email', field: 'email', sortable: true },
-          ]}
           containerStyle={{ width: '100%', marginTop: '2rem' }}
-          themeColor=""
         />
       </div>
     </div>

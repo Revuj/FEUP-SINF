@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import GenericCard from '../GenericCard';
-import BestClients from './BestClients';
 import SalesByTime from './SalesByTime';
 import TopProducts from './TopProducts';
+import BestClientsTable from './BestClientsTable';
+import TopProductsTable from './TopProductsTable';
 import { formatMoney } from '../../helper/CurrencyFormater';
 import '../../styles/Sales.css';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -41,11 +42,11 @@ const Sales = () => {
         <section className="row-50-50">
           <span>
             <SalesByTime />
-            <BestClients />
+            <BestClientsTable numberItemsPerPage={5} />
           </span>
 
           <span>
-            <TopProducts />
+            <TopProductsTable numberItemsPerPage={13} />
           </span>
         </section>
       </div>

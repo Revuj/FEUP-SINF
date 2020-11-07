@@ -3,6 +3,7 @@ import GenericCard from '../GenericCard';
 import GenericTable from '../GenericTable';
 import StockByTime from './StockByTime';
 import StockByWarehouse from './StockByWarehouse';
+import StockByProductTable from './StockByProductTable';
 import { formatMoney } from '../../helper/CurrencyFormater';
 import '../../styles/Inventory.css';
 import '../../styles/GenericChart.css';
@@ -58,14 +59,9 @@ const Index = () => {
 
         <section className="row-50-50">
           <span>
-            <GenericTable
-              title="Stock by Product"
+            <StockByProductTable
               numberItemsPerPage={12}
-              headers={[
-                { name: 'No#', field: 'id', sortable: false },
-                { name: 'Name', field: 'name', sortable: true },
-                { name: 'Stock', field: 'email', sortable: true },
-              ]}
+              containerStyle={{ width: '100%' }}
             />
           </span>
 

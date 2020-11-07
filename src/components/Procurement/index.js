@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import GenericCard from '../GenericCard';
 import { formatMoney } from '../../helper/CurrencyFormater';
 import GenericTable from '../GenericTable';
+import Purchases from './Purchases';
 import RevenueVsCost from '../Financial/RevenueVsCost';
 import SuppliersTable from '../Procurement/SuppliersTable';
 import '../../styles/Procurement.css';
@@ -73,9 +74,23 @@ const Procurement = ({ title }) => {
               color: 'white',
             }}
           />
+          <GenericCard
+            class
+            qName="purchase-rotation"
+            title="Purchase Rotation"
+            description="Amounts of money spent in purchases"
+            amount="80000"
+            formatter={formatMoney}
+            unit="€"
+            styleTitle={{
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
+            }}
+          />
         </section>
 
-        <RevenueVsCost />
+        <Purchases />
         <SuppliersTable
           numberItemsPerPage={4}
           containerStyle={{ width: '100%', marginTop: '2rem' }}

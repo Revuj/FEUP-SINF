@@ -44,9 +44,9 @@ const Sales = () => {
             <SalesByTime />
             <BestClientsTable numberItemsPerPage={5} />
           </span>
-
           <span>
-            <TopProductsTable numberItemsPerPage={13} />
+            <TopProductsTable numberItemsPerPage={4} />
+            {/* Sales Backlog */}
           </span>
         </section>
       </div>

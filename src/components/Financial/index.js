@@ -36,8 +36,8 @@ const Index = () => {
             }}
           />
           <GenericCard
-            title="EBITA"
-            description="Earnings before interest, taxes, and amortization"
+            title="EBITDA"
+            description="Earnings before interest, taxes, depreciation and amortization"
             amount="300000"
             formatter={formatMoney}
             unit="€"
@@ -48,7 +48,7 @@ const Index = () => {
             }}
           />
           <GenericCard
-            title="Account Receivables"
+            title="Accouns Receivable"
             description="Amount of money owed by customers for purchases made on credit"
             amount="300000"
             formatter={formatMoney}
@@ -60,7 +60,19 @@ const Index = () => {
             }}
           />
           <GenericCard
-            title="Earnings"
+            title="Accouns Payable"
+            description="Amount of money owed to suppliers"
+            amount="10000"
+            formatter={formatMoney}
+            unit="€"
+            styleTitle={{
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
+            }}
+          />
+          <GenericCard
+            title="Net Income"
             description="Amount of profit "
             amount="300000"
             formatter={formatMoney}

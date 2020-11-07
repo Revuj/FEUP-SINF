@@ -1,35 +1,39 @@
 .listCard {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    padding-top: 1rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.listCard__title {
-    font-size: 1.3em;
-    margin-left: 1rem;
+.listCard-title {
+  padding: 0.75rem 1rem 0.5rem 1rem;
+  text-transform: uppercase;
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 400;
+  background-color: var(--primary-color);
+  color: white;
 }
 
-.listCard__listItem {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    word-wrap: break-word;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem 1rem;
+.listCard-list {
+  margin-bottom: 0;
 }
 
-.listCard__listItem:last-child {
-    padding-bottom: 0.5rem;
+.listCard-listItem {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  word-wrap: break-word;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
 }
 
-.listCard__listItem__label {
-    padding: 0.5em;
-    background-color: #a1ffb8;
-    color: #262626;
-    border-radius: 50px;
-    margin-right: 0.5em;
+.listCard-listItem-label {
+  padding: 0.5em;
+  background-color: #a1ffb8;
+  color: #262626;
+  border-radius: 50px;
+  margin-right: 0.5em;
 }
 
-.listCard__listItem__description {
-    margin: 0;
-  }
+.listCard-listItem-description {
+  margin: 0;
+}

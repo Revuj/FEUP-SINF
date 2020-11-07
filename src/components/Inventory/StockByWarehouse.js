@@ -46,8 +46,14 @@ function StockByTime() {
   };
 
   return (
-    <div>
-      <Bar data={data} options={options} />
+    <div className="chart">
+      <h3 className="chart-title">Stock By Warehouse</h3>
+      <Bar
+        options={{ responsive: true, maintainAspectRatio: false }}
+        height={115}
+        data={data}
+        options={options}
+      />
     </div>
   );
 }

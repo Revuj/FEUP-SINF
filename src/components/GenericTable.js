@@ -25,7 +25,7 @@ const GenericTable = ({
   numberItemsPerPage,
   headers,
   containerStyle,
-  themeColor 
+  themeColor,
 }) => {
   const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [totalItems, setTotalItems] = useState(0);
@@ -85,20 +85,20 @@ const GenericTable = ({
 
   return (
     <>
-      <section style={containerStyle}>
-        <header className = "header_info">
-            <h3>{title}</h3>
-            <Search
+      <section className="table" style={containerStyle}>
+        <header className="header_info">
+          <h3 className="table-title">{title}</h3>
+          <Search
             onSearch={(value) => {
-                setSearch(value);
-                setCurrentPage(1);
+              setSearch(value);
+              setCurrentPage(1);
             }}
-            />
+          />
         </header>
-        
-        <table className = "content">
+
+        <table className="content">
           <TableHeader
-            color = {themeColor}
+            color={themeColor}
             headers={headers}
             onSorting={(field, order) => setSorting({ field, order })}
           />
@@ -106,16 +106,15 @@ const GenericTable = ({
             {commentsData.map((comment) => (
               <tr key={comment.id}>
                 <th scope="row">{comment.id}</th>
-                <td>{comment.name}</td>
                 <td>{comment.email}</td>
-                <td>{comment.body}</td>
+                <td>{comment.email}</td>
               </tr>
             ))}
           </tbody>
         </table>
 
         <PaginationComponent
-          color = {themeColor}
+          color={themeColor}
           total={totalItems}
           itemsPerPage={ITEMS_PER_PAGE}
           currentPage={currentPage}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import '../styles/GenericListing.css';
 
 /**
@@ -13,29 +13,40 @@ import '../styles/GenericListing.css';
         itemStyle = {{borderTop: '1px solid black'}}
     />
  */
-const GenericListing = ({title, data, style, titleStyle, listStyle, itemStyle}) => {
-    return (
-        <div className = "listCard" style = {style}>
+const GenericListing = ({
+  title,
+  data,
+  style,
+  titleStyle,
+  listStyle,
+  itemStyle,
+}) => {
+  return (
+    <div className="listCard" style={style}>
+      <h3 className="listCard-title" style={titleStyle}>
+        {title}
+      </h3>
 
-            <div className = "listCard__title" style= {titleStyle}>
-                {title}
-            </div>
-
-            <ul className = "listCard__list" style = {listStyle}>
-                {data !== undefined && data.map(
-                    item => 
-                        Object.entries(item).length !== 0 && (
-                            <li style= {itemStyle} className = "listCard__listItem" key = {item.label} >
-                                <div className = "listCard__listItem__label">{item.label}</div>
-                                <div className = "listCard__listItem__description">{item.description}</div>
-                            </li>
-                        )
-                    )
-                }
-            </ul>
-            
-        </div>
-    )
-}
+      <ul className="listCard-list" style={listStyle}>
+        {data !== undefined &&
+          data.map(
+            (item) =>
+              Object.entries(item).length !== 0 && (
+                <li
+                  style={itemStyle}
+                  className="listCard-listItem"
+                  key={item.label}
+                >
+                  <div className="listCard-listItem-label">{item.label}</div>
+                  <div className="listCard-listItem-description">
+                    {item.description}
+                  </div>
+                </li>
+              )
+          )}
+      </ul>
+    </div>
+  );
+};
 
 export default GenericListing;

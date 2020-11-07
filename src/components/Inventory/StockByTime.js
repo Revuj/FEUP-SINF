@@ -47,8 +47,9 @@ function StockByTime() {
   };
 
   return (
-    <div>
-      <Line data={data} options={options} />
+    <div className="chart">
+      <h3 className="chart-title">Stock By Month</h3>
+      <Line height={115} data={data} options={options} />
     </div>
   );
 }

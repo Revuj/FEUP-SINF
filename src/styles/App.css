@@ -97,3 +97,38 @@ submit {
   opacity: 0.8;
   filter: drop-shadow(0px 5px 10px rgba(134, 134, 134, 0.281));
 }
+
+.top-bar {
+  background-color: var(--primary-color);
+  height: 75px;
+  display: inline-block;
+  vertical-align: middle;
+  width: 100%;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 2rem;
+}
+
+.title {
+  margin-left: 2rem;
+  width: fit-content;
+  margin-bottom: 0;
+}
+
+.main-content {
+  padding: 2rem;
+}
+
+canvas {
+  height: 100%;
+}
+
+.dropdown {
+  height: 40px;
+}
+
+#dropdown-basic-button {
+  background-color: var(--font-color);
+}

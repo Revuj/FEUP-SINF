@@ -1,22 +1,19 @@
-.pontualInfo {
-    display: flex;
-    gap: 1rem;
-    flex: 1 1;
-    padding: 1rem;
-    flex-wrap: wrap;
-    flex-grow: 1;
-    box-sizing: border-box; 
-    justify-content: space-between;
+.top-cards {
+  display: flex;
+}
+
+.card {
+  width: 300px;
+  margin-right: 2rem;
 }
 
 .listingInfo {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    margin-top: 3rem;
-    gap: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
 }
 
 .listingInfo > .listCard {
-    flex:1;
+  flex: 1;
 }

@@ -12,6 +12,7 @@ import { formatMoney } from '../../helper/CurrencyFormater';
 import GenericTable from '../GenericTable';
 import RevenueVsCost from '../Financial/RevenueVsCost';
 import '../../styles/Procurement.css';
+import SuppliersTable from './SuppliersTable';
 
 const Procurement = ({ title }) => {
   return (
@@ -70,18 +71,11 @@ const Procurement = ({ title }) => {
 
       <RevenueVsCost />
 
-      <GenericTable
-        title="Suppliers"
-        numberItemsPerPage={4}
-        headers={[
-          { name: 'No#', field: 'id', sortable: false },
-          { name: 'Name', field: 'name', sortable: true },
-          { name: 'Email', field: 'email', sortable: true },
-          { name: 'Comment', field: 'body', sortable: false },
-        ]}
+      <SuppliersTable
+        numberItemsPerPage={6}
         containerStyle={{ width: '100%', marginTop: '2rem' }}
         themeColor="orange"
-      />
+      />    
     </div>
   );
 };

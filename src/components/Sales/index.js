@@ -1,8 +1,8 @@
 import React from 'react';
 import GenericCard from '../GenericCard';
-import BestClients from './BestClients';
+import BestClientsTable from './BestClientsTable';
 import SalesByTime from './SalesByTime';
-import TopProducts from './TopProducts';
+import TopProductsTable from './TopProductsTable';
 import { formatMoney } from '../../helper/CurrencyFormater';
 import '../../styles/Sales.css';
 
@@ -26,11 +26,15 @@ function index() {
       <section className="row-50-50">
         <span>
           <SalesByTime />
-          <BestClients />
+          <BestClientsTable
+            numberItemsPerPage={4}
+          />
         </span>
 
         <span>
-          <TopProducts />
+          <TopProductsTable
+            numberItemsPerPage={6}
+          />
         </span>
       </section>
     </div>

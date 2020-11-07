@@ -96,17 +96,6 @@ function index() {
           itemStyle={{ borderTop: '1px solid black' }}
         />
 
-        <GenericTable
-          title="Table title"
-          numberItemsPerPage={4}
-          headers={[
-            { name: 'No#', field: 'id', sortable: false },
-            { name: 'Name', field: 'name', sortable: true },
-            { name: 'Email', field: 'email', sortable: true },
-            { name: 'Comment', field: 'body', sortable: false },
-          ]}
-          containerStyle={{ width: '100%' }}
-        />
       </section>
     </div>
   );

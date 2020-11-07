@@ -70,7 +70,7 @@ const SuppliersTable = ({ numberItemsPerPage, containerStyle, themeColor }) => {
     <>
       <section className="table" style={containerStyle}>
         <header className="header_info">
-          <h3 className="table-title">Best Suppliers</h3>
+          <h3 className="table-title">Suppliers</h3>
           <Search
             onSearch={(value) => {
               setSearch(value);

@@ -3,6 +3,7 @@ import { auth } from '../firebase/config';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../context';
 import Koala from '../assets/koala-white.svg';
+import Overview from './Overview';
 import Financial from './Financial';
 import Inventory from './Inventory';
 import Sales from './Sales';
@@ -22,7 +23,7 @@ function Dashboard() {
   const renderTab = () => {
     switch (tab) {
       case 'main':
-        return <h1>main</h1>;
+        return <Overview />;
       case 'financial':
         return <Financial />;
       case 'sales':
@@ -32,7 +33,7 @@ function Dashboard() {
       case 'procurement':
         return <Procurement title="Procurement" />;
       default:
-        return <h1>main</h1>;
+        return <Overview />;
     }
   };
 
@@ -60,7 +61,7 @@ function Dashboard() {
                 />
               </svg>
 
-              <span className="link-text">Dashboard</span>
+              <span className="link-text">Overview</span>
             </span>
           </li>
 

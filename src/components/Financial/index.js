@@ -48,7 +48,7 @@ const Index = () => {
             }}
           />
           <GenericCard
-            title="Accouns Receivable"
+            title="Accounts Receivable"
             description="Amount of money owed by customers for purchases made on credit"
             amount="300000"
             formatter={formatMoney}
@@ -60,7 +60,7 @@ const Index = () => {
             }}
           />
           <GenericCard
-            title="Accouns Payable"
+            title="Accounts Payable"
             description="Amount of money owed to suppliers"
             amount="10000"
             formatter={formatMoney}

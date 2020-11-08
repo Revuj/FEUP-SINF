@@ -3,7 +3,7 @@ import { fetchYearSales } from '../../api/sales';
 import { fetchYearPurchases } from '../../api/purchases';
 import { Line } from 'react-chartjs-2';
 
-function RevenueVsCost() {
+function RevenueVsCost({ height }) {
   // no futuro acrescentar await keyword
   const sales = fetchYearSales();
   const purchases = fetchYearPurchases();
@@ -58,7 +58,7 @@ function RevenueVsCost() {
   return (
     <div className="chart">
       <h3 className="chart-title">Sales vs Costs</h3>
-      <Line height={75} data={data} options={options} />
+      <Line height={height || 75} data={data} options={options} />
     </div>
   );
 }

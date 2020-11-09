@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import GenericCard from '../GenericCard';
 import SalesByTime from './SalesByTime';
-import TopProducts from './TopProducts';
 import BestClientsTable from './BestClientsTable';
+import SalesBacklogTable from './SalesBacklogTable';
 import TopProductsTable from './TopProductsTable';
 import { formatMoney } from '../../helper/CurrencyFormater';
 import '../../styles/Sales.css';
@@ -46,7 +46,7 @@ const Sales = () => {
           </span>
           <span>
             <TopProductsTable numberItemsPerPage={4} />
-            {/* Sales Backlog */}
+            <SalesBacklogTable numberItemsPerPage={4} />
           </span>
         </section>
       </div>

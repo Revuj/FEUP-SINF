@@ -4,6 +4,7 @@ import StockByTime from '../Inventory/StockByTime';
 import GenericCard from '../GenericCard';
 import GenericListing from '../GenericListing';
 import GenericTable from '../GenericTable';
+import SalesBacklogTable from '../Sales/SalesBacklogTable';
 import { formatMoney } from '../../helper/CurrencyFormater';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
@@ -81,7 +82,9 @@ const Overview = () => {
             <RevenueVsCost height="115" />
             <StockByTime />
           </span>
-          <span>{/* Sales Backlog */}</span>
+          <span>
+            <SalesBacklogTable numberItemsPerPage={4} />  
+          </span>
         </section>
       </div>
     </div>

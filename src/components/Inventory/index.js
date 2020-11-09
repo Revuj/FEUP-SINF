@@ -4,6 +4,7 @@ import GenericTable from '../GenericTable';
 import StockByTime from './StockByTime';
 import StockByWarehouse from './StockByWarehouse';
 import StockByProductTable from './StockByProductTable';
+import StockByWarehouseTable from './StockByWarehouseTable';
 import { formatMoney } from '../../helper/CurrencyFormater';
 import '../../styles/Inventory.css';
 import '../../styles/GenericChart.css';
@@ -98,6 +99,10 @@ const Index = () => {
           <span>
             <StockByTime />
             <StockByWarehouse />
+            <StockByWarehouseTable
+              numberItemsPerPage={6}
+              containerStyle={{ width: '100%' }}
+            />
           </span>
         </section>
       </div>

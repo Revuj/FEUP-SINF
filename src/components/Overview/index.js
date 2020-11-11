@@ -60,7 +60,7 @@ const Overview = () => {
             }}
           />
           <GenericCard
-            title="Stock"
+            title="Inventory value"
             description="Current total stock"
             amount="300000"
             formatter={formatMoney}

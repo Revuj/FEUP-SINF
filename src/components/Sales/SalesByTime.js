@@ -47,7 +47,7 @@ function SalesByTime() {
 
   return (
     <div className="chart">
-      <h3 className="chart-title">Sales By Month</h3>
+      <h3 className="chart-title">monthly sales</h3>
       <Line height={115} data={data} options={options} />
     </div>
   );

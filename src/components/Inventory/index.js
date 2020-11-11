@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import GenericCard from '../GenericCard';
-import GenericTable from '../GenericTable';
+
 import StockByTime from './StockByTime';
-import StockByWarehouse from './StockByWarehouse';
+
 import StockByProductTable from './StockByProductTable';
 import StockByWarehouseTable from './StockByWarehouseTable';
 import { formatMoney } from '../../helper/CurrencyFormater';
 import '../../styles/Inventory.css';
 import '../../styles/GenericChart.css';
-import { withTheme } from '@material-ui/core';
+
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 
@@ -96,9 +96,8 @@ const Index = () => {
             />
           </span>
 
-          <span>
+          <span >
             <StockByTime />
-            <StockByWarehouse />
           </span>
         </section>
         <StockByWarehouseTable

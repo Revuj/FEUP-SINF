@@ -48,7 +48,7 @@ const Procurement = ({ title }) => {
           />
           <GenericCard
             className="orders-to-arrive"
-            title="Orders To Arrive"
+            title="Purchase backlog"
             description="Amounts of money in orders that are to arrive."
             amount="33000"
             formatter={formatMoney}
@@ -63,7 +63,7 @@ const Procurement = ({ title }) => {
           <GenericCard
             class
             qName="total-purchases"
-            title="Total purchases"
+            title="total of purchases"
             description="Amounts of money spent in purchases"
             amount="80000"
             formatter={formatMoney}
@@ -74,22 +74,9 @@ const Procurement = ({ title }) => {
               color: 'white',
             }}
           />
+      
           <GenericCard
-            class
-            qName="purchase-rotation"
-            title="Purchase Rotation"
-            description="Amounts of money spent in purchases"
-            amount="80000"
-            formatter={formatMoney}
-            unit="€"
-            styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
-            }}
-          />
-          <GenericCard
-            title="Delay in Stock Receivment"
+            title="Delay in inventory Receivment"
             description="Average number of days the company takes to receive items from the suppliers"
             amount="5"
             formatter={formatMoney}

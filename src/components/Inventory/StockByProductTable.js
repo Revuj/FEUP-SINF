@@ -74,7 +74,7 @@ const StockByProductTable = ({
     <>
       <section className="table" style={containerStyle}>
         <header className="header_info">
-          <h3 className="table-title">Stock by Product</h3>
+          <h3 className="table-title">Inventory by Product</h3>
           <Search
             onSearch={(value) => {
               setSearch(value);

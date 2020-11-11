@@ -77,3 +77,21 @@ main {
 .logo-text {
   left: 0px;
 }
+
+#logo {
+  display: flex;
+  align-items: center;
+  margin: 1rem 1rem;
+}
+
+#logo img {
+  width: 3rem;
+  display: inline;
+}
+
+#title {
+  display: inline;
+  color: white;
+  margin-left: 2rem;
+  padding-top: 0.5rem;
+}

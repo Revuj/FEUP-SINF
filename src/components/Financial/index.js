@@ -100,7 +100,7 @@ const Index = () => {
           />
 
           <GenericListing
-            title="Profit and loss statement"
+            title="Income statement"
             data={[
               { label: 'caixa', description: '+100' },
               { label: 'caixa', description: '-50' },

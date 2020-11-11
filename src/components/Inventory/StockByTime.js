@@ -48,7 +48,7 @@ function StockByTime() {
 
   return (
     <div className="chart">
-      <h3 className="chart-title">Stock By Month</h3>
+      <h3 className="chart-title">Stock in the inventory By Month</h3>
       <Line height={115} data={data} options={options} />
     </div>
   );

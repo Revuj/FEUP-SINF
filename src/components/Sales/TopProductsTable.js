@@ -74,7 +74,7 @@ const TopProductsTable = ({
     <>
       <section className="table" style={containerStyle}>
         <header className="header_info">
-          <h3 className="table-title">Best Products</h3>
+          <h3 className="table-title">Products overview</h3>
           <Search
             onSearch={(value) => {
               setSearch(value);

@@ -99,12 +99,12 @@ const Index = () => {
           <span>
             <StockByTime />
             <StockByWarehouse />
-            <StockByWarehouseTable
-              numberItemsPerPage={6}
-              containerStyle={{ width: '100%' }}
-            />
           </span>
         </section>
+        <StockByWarehouseTable
+          numberItemsPerPage={6}
+          containerStyle={{ width: '100%' }}
+        />
       </div>
     </div>
   );

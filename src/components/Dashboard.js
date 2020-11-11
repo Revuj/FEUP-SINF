@@ -2,7 +2,7 @@ import { React, useContext, useState } from 'react';
 import { auth } from '../firebase/config';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../context';
-import Koala from '../assets/koala-white.svg';
+import Honey from '../assets/honey.svg';
 import Overview from './Overview';
 import Financial from './Financial';
 import Inventory from './Inventory';
@@ -42,9 +42,8 @@ function Dashboard() {
       <nav className="navbar">
         <ul className="navbar-nav">
           <li id="logo">
-            <span>
-              <img src={Koala} alt="koala logo" />
-            </span>
+            <img src={Honey} alt="assets logo" />
+            <h2 id="title">Bee</h2>
           </li>
           <li className="nav-item" onClick={() => setTab('main')}>
             <span className={'nav-link' + (tab === 'main' ? ' selected' : '')}>
@@ -157,8 +156,8 @@ function Dashboard() {
       <main>{renderTab()}</main>
     </>
   ) : (
-    <>{history.push('/')}</>
-  );
+      <>{history.push('/')}</>
+    );
 }
 
 export default Dashboard;

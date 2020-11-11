@@ -71,7 +71,7 @@ function Login() {
       </span>
       <span id="login-right">
         <h1 id="login-koala" className="clear-text">
-          Koala
+          Bee
         </h1>
       </span>
     </div>

@@ -90,10 +90,11 @@ const Index = () => {
           <GenericListing
             title="Balance sheet"
             data={[
-              { label: 'caixa', description: '+100' },
-              { label: 'caixa', description: '-50' },
-              { label: 'vendas', description: '+150' },
-              { label: 'compras', description: '-250' },
+              { label: 'Cash', description: '+6600' },
+              { label: 'Accounts Receivable', description: '+6200' },
+              { label: 'Tools and Equipment', description: '+25000' },
+              { label: 'Notes Payable', description: '-5000' },
+              { label: 'Accounts Payable', description: '-25000' },
             ]}
             style={{ width: '25%', backgroundColor: 'white' }}
             itemStyle={{ borderTop: '1px solid black' }}
@@ -102,10 +103,13 @@ const Index = () => {
           <GenericListing
             title="Income statement"
             data={[
-              { label: 'caixa', description: '+100' },
-              { label: 'caixa', description: '-50' },
-              { label: 'vendas', description: '+150' },
-              { label: 'compras', description: '-250' },
+              { label: 'Revenue', description: '+21186' },
+              { label: 'Cost of sales', description: '-11745' },
+              { label: 'Operating expenses', description: '-4172' },
+              { label: 'Interest income', description: '+12' },
+              { label: 'Interest expense', description: '-799' },
+              { label: 'Income tax expense', description: '-1789' },
+              { label: 'Profit for the year', description: '2486' },
             ]}
             style={{ width: '25%', backgroundColor: 'white' }}
             itemStyle={{ borderTop: '1px solid black' }}

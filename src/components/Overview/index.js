@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import RevenueVsCost from '../Financial/RevenueVsCost';
 import StockByTime from '../Inventory/StockByTime';
 import GenericCard from '../GenericCard';
-import GenericListing from '../GenericListing';
-import GenericTable from '../GenericTable';
+import TopProductsTable from '../Sales/TopProductsTable';
 import SalesBacklogTable from '../Sales/SalesBacklogTable';
 import { formatMoney } from '../../helper/CurrencyFormater';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -83,7 +82,8 @@ const Overview = () => {
             <StockByTime />
           </span>
           <span>
-            <SalesBacklogTable numberItemsPerPage={4} />  
+            <SalesBacklogTable numberItemsPerPage={3} />
+            <TopProductsTable numberItemsPerPage={3} />
           </span>
         </section>
       </div>

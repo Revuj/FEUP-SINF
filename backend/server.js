@@ -1,22 +1,25 @@
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-const request = require('request');
-require('dotenv').config();
-const app = express();
+import { create, router as _router, defaults } from "json-server";
+import cors from "cors";
+import { join } from "path";
+import request from "request";
+require("dotenv").config();
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+const server = create();
+const router = _router("db.json");
+const middlewares = defaults({ noCors: false });
+const db = router.db.__wrapped__;
 
-app.post('/api/getAccessToken', (req, res) => {
+server.use(cors());
+server.use(middlewares);
+server.use(router);
+
+server.post("/api/getAccessToken", (req, res) => {
   console.log(req.body);
   const options = {
-    method: 'POST',
-    url: 'https://identity.primaverabss.com/connect/token',
+    method: "POST",
+    url: "https://identity.primaverabss.com/connect/token",
     headers: {
-      'Content-Type': 'multipart/form-data',
+      "Content-Type": "multipart/form-data",
     },
     formData: req.body,
   };
@@ -29,8 +32,8 @@ app.post('/api/getAccessToken', (req, res) => {
   });
 });
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'));
+server.get("*", (req, res) => {
+  res.sendFile(join(__dirname, "frontend", "build", "index.html"));
 });
 
-app.listen(8080, () => console.log('Server listening on port 8080!'));
+server.listen(8080, () => console.log("Server listening on port 8080!"));

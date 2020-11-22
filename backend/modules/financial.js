@@ -494,6 +494,8 @@ const processSums = (assets, accounts) => {
 
   assets.forEach(assetAccount => {
 
+    console.log(total);
+
     let current_taxonomy;  
     assetAccount.taxonomyCodes.forEach(taxonomy => {
         current_taxonomy = processTaxonomySum(Math.abs(taxonomy), accounts);
@@ -576,12 +578,11 @@ const getAssets = (account) => {
     const {assets_to_return, total} = processSums(balanceSheetTemplate.assets.current, account);
     totalCurrent = total; currentAssets = assets_to_return;
 
-    const {assets_to_return2, total2} = processSums(balanceSheetTemplate.assets.nonCurrent, account);
-    totalNonCurrent = total2; nonCurrentAssets = assets_to_return2;
+    const nonCurrent = processSums(balanceSheetTemplate.assets.nonCurrent, account);
+    totalNonCurrent = nonCurrent.total; nonCurrentAssets = nonCurrent.assets_to_return;
 
     final_total = totalCurrent + totalNonCurrent;
-    console.log(totalCurrent);
-    console.log(totalNonCurrent)
+    console.log(nonCurrentAssets);
 
     return {
         totalCurrent,

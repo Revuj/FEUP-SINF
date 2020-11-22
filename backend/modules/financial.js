@@ -619,18 +619,15 @@ const getLiabilities = (account) => {
 }
 
 const getEquity = (account) => {
-  let totalCurrent = 0;
-  let totalNonCurrent = 0;
   let equity = [];
 
   const {assets_to_return, total} = processSums(balanceSheetTemplate.equity, account);
-  totalCurrent = total; equity = assets_to_return;
+  equity = assets_to_return;
 
  // console.log(nonCurrentAssets);
 
   return {
-      totalCurrent,
-      totalNonCurrent,
+      total,
       equity,
   };
 }

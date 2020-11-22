@@ -651,4 +651,16 @@ module.exports = (server, db) => {
 
         res.json({balanceSheetResponse});
       });
+
+    server.get('/api/financial/accounts-receivable', (req, res) => {
+      const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
+      const assets = getAssets(accounts);
+
+      console.table(assets.currentAssets);
+
+      const clients = (assets.currentAssets).find(element => element.name === 'Clientes');
+      
+      res.json({"value" : clients.value})
+
+    });
 };

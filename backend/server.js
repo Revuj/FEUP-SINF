@@ -1,17 +1,24 @@
-import { create, router as _router, defaults } from "json-server";
-import cors from "cors";
-import { join } from "path";
-import request from "request";
+const{ create, router, defaults, bodyParser } =  require("json-server");
+const cors = require ("cors");
+const { join } = require("path");
+const request = require("request");
 require("dotenv").config();
 
 const server = create();
-const router = _router("db.json");
+const _router = router("db.json");
 const middlewares = defaults({ noCors: false });
-const db = router.db.__wrapped__;
+const db = _router.db.__wrapped__;
 
 server.use(cors());
 server.use(middlewares);
-server.use(router);
+server.use(bodyParser);
+
+const FinancialController = require('./modules/financial');
+
+FinancialController(server, db);
+
+server.use(_router);
+
 
 server.post("/api/getAccessToken", (req, res) => {
   console.log(req.body);
@@ -35,5 +42,6 @@ server.post("/api/getAccessToken", (req, res) => {
 server.get("*", (req, res) => {
   res.sendFile(join(__dirname, "frontend", "build", "index.html"));
 });
+
 
 server.listen(8080, () => console.log("Server listening on port 8080!"));

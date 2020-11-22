@@ -582,7 +582,7 @@ const getAssets = (account) => {
     totalNonCurrent = nonCurrent.total; nonCurrentAssets = nonCurrent.assets_to_return;
 
     final_total = totalCurrent + totalNonCurrent;
-    console.log(nonCurrentAssets);
+    //console.log(nonCurrentAssets);
 
     return {
         totalCurrent,
@@ -591,14 +591,58 @@ const getAssets = (account) => {
         nonCurrentAssets,
         final_total
     };
-}   
+}
 
+const getLiabilities = (account) => {
+  let totalCurrent = 0;
+  let totalNonCurrent = 0;
+  let currentLiabilites = [];
+  let nonCurrentLiabilities = [];
+  let final_total = 0;
 
+  const {assets_to_return, total} = processSums(balanceSheetTemplate.liabilities.current, account);
+  totalCurrent = total; currentLiabilites = assets_to_return;
+
+  const nonCurrent = processSums(balanceSheetTemplate.liabilities.nonCurrent, account);
+  totalNonCurrent = nonCurrent.total; nonCurrentLiabilities = nonCurrent.assets_to_return;
+
+  final_total = totalCurrent + totalNonCurrent;
+ // console.log(nonCurrentAssets);
+
+  return {
+      totalCurrent,
+      totalNonCurrent,
+      currentLiabilites,
+      nonCurrentLiabilities,
+      final_total
+  };
+}
+
+const getEquity = (account) => {
+  let totalCurrent = 0;
+  let totalNonCurrent = 0;
+  let equity = [];
+
+  const {assets_to_return, total} = processSums(balanceSheetTemplate.equity, account);
+  totalCurrent = total; equity = assets_to_return;
+
+ // console.log(nonCurrentAssets);
+
+  return {
+      totalCurrent,
+      totalNonCurrent,
+      equity,
+  };
+}
+
+// assets = equity + liability
 const balanceSheet = account => {
     const assets = getAssets(account);
+    const liabilities = getLiabilities(account);
+    const equity = getEquity(account);
     // liabilities
     // equity
-    return assets;
+    return {assets, liabilities, equity}
 
 }
 
@@ -607,6 +651,7 @@ module.exports = (server, db) => {
     server.get('/api/financial/balance-sheet', (req, res) => {
         const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
         const balanceSheetResponse = balanceSheet(accounts);
+
         res.json({balanceSheetResponse});
       });
 };

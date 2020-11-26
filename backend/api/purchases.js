@@ -23,7 +23,7 @@ module.exports = (server) => {
     };
 
     return global.request(options, (error, response, body) => {
-      if (error) console.error('error:', error);
+      if (error) res.json(error);
 
       let monthlyCumulativeValue = [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       if (!JSON.parse(body).message) {

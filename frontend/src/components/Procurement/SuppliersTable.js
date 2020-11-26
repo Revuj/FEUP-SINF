@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import axios from 'axios';
 import useFullPageLoader from '../../hooks/FullPageLoader';
 import PaginationComponent from '../Pagination';
 import Search from '../Search';
@@ -12,29 +13,31 @@ const SuppliersTable = ({ numberItemsPerPage, containerStyle, themeColor }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
   const [sorting, setSorting] = useState({ field: '', order: '' });
+  const [suppliers, setSuppliers] = useState([]);
 
   const ITEMS_PER_PAGE = numberItemsPerPage;
 
   const headers = [
     { name: 'No#', field: 'rank', sortable: false },
     { name: 'Name', field: 'name', sortable: true },
-    { name: 'Email', field: 'email', sortable: true },
-    { name: 'Purchases Value', field: 'value_purchases', sortable: false },
+    { name: 'Units Purchased', field: 'units', sortable: true },
+    { name: 'Value Purchased', field: 'value', sortable: false },
   ];
 
-  /* this is going to be used in the feature when doing the api call */
-  const [suppliers, setSuppliers] = useState([]);
-  /* insert the information fetched in the api (now using a dummy api) */
+  const year = 2020;
+
   useEffect(() => {
-    const getData = () => {
-      showLoader();
+    showLoader();
 
-      setSuppliers(fetchSuppliers());
-
-      hideLoader();
-    };
-
-    getData();
+    axios
+      .get(`/api/suppliers/${year}`)
+      .then((response) => {
+        setSuppliers(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    hideLoader();
   }, []);
 
   /*to able to sort the data we are going to retrieve */
@@ -90,8 +93,8 @@ const SuppliersTable = ({ numberItemsPerPage, containerStyle, themeColor }) => {
               <tr key={supplier.id}>
                 <th scope="row">{supplier.rank}</th>
                 <td>{supplier.name}</td>
-                <td>{supplier.email}</td>
-                <td>{supplier.value_purchases}</td>
+                <td>{supplier.units}</td>
+                <td>{supplier.value}</td>
               </tr>
             ))}
           </tbody>

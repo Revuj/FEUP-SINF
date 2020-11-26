@@ -40,7 +40,7 @@ const SuppliersTable = ({
         console.error(error);
       });
     hideLoader();
-  }, []);
+  }, [year]);
 
   /*to able to sort the data we are going to retrieve */
   const suppliersData = useMemo(() => {

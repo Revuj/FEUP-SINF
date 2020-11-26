@@ -33,16 +33,22 @@ const Procurement = ({ title }) => {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [year]);
 
   return (
     <div>
       <div className="top-bar">
         <h1 className="title">{title}</h1>
         <DropdownButton id="dropdown-basic-button" title={year}>
-          <Dropdown.Item href="#/action-1">2020</Dropdown.Item>
-          <Dropdown.Item href="#/action-2">2019</Dropdown.Item>
-          <Dropdown.Item href="#/action-3">2018</Dropdown.Item>
+          <Dropdown.Item href="#/action-1" onClick={() => setYear(2020)}>
+            2020
+          </Dropdown.Item>
+          <Dropdown.Item href="#/action-2" onClick={() => setYear(2019)}>
+            2019
+          </Dropdown.Item>
+          <Dropdown.Item href="#/action-3" onClick={() => setYear(2018)}>
+            2018
+          </Dropdown.Item>
         </DropdownButton>
       </div>
 

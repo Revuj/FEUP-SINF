@@ -43,7 +43,7 @@ function SalesByTime({ year }) {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [year]);
 
   const options = {
     scales: {

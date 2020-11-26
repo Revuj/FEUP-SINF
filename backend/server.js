@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const request = require('request');
+const Request = require('request');
 const app = express();
 require('dotenv').config();
 
@@ -10,7 +10,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-const basePrimaveraUrl = `https://my.jasminsoftware.com/api/${process.env.TENANT}/${process.env.ORGANIZATION}`;
+global.basePrimaveraUrl = `https://my.jasminsoftware.com/api/${process.env.TENANT}/${process.env.ORGANIZATION}`;
+const purchasesAPI = require('./api/purchases');
 
 const getAccessToken = () => {
   const options = {
@@ -26,13 +27,13 @@ const getAccessToken = () => {
       grant_type: 'client_credentials',
     },
   };
-  request(options, function (error, response, body) {
+  Request(options, function (error, response, body) {
     if (error) console.error('error:', error);
 
     const jsonF = JSON.parse(response.body);
-    request.defaults({
+    global.request = Request.defaults({
       headers: {
-        Authorization: `Bearer ${jsonF.accessToken}`,
+        Authorization: `Bearer ${jsonF.access_token}`,
         'Content-Type': 'application/json',
       },
     });
@@ -41,28 +42,14 @@ const getAccessToken = () => {
 
 getAccessToken();
 
-const purchasesAPI = require('./api/purchases');
 purchasesAPI(app);
 
-app.post('/api/getAccessToken', (req, res) => {
-  const options = {
-    method: 'POST',
-    url: 'https://identity.primaverabss.com/connect/token',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    formData: req.body,
-  };
-  request(options, function (error, response, body) {
-    if (error) throw new Error(error);
-
-    const jsonF = JSON.parse(response.body);
-    res.json(jsonF);
+// Set static folder in production
+if (process.env.NODE_ENV === 'production') {
+  server.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
   });
-});
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'));
-});
-
+}
 app.listen(8080, () => console.log('Server listening on port 8080!'));
+
+module.exports = app;

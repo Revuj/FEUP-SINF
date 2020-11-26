@@ -1,17 +1,8 @@
-/*
-procurement => 
-    compras (grafico) [] => grafico a ser usado tem a informacao errada, depois e preciso fazer outro
-    suppliers (tabela) [x]
-    product not arrived (card) [x]
-    accounts payable (card) [x]
-    total  em compras (card) [x]ou grafico cumulativo das compras [x]
-*/
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import GenericCard from '../GenericCard';
 import { formatMoney } from '../../helper/CurrencyFormater';
-import GenericTable from '../GenericTable';
 import Purchases from './Purchases';
-import RevenueVsCost from '../Financial/RevenueVsCost';
 import SuppliersTable from '../Procurement/SuppliersTable';
 import '../../styles/Procurement.css';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -19,6 +10,21 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 
 const Procurement = ({ title }) => {
   const [year, setYear] = useState('2020');
+  const [accountsPayable, setAccountsPayable] = useState(null);
+  const [purchaseBacklog, setPurchaseBacklog] = useState(null);
+  const [totalOfPurchases, setTotalOfPurchases] = useState(null);
+  const [delayInReceivment, setDelayInReceivment] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get(`/api/purchases/${year}`)
+      .then((response) => {
+        setTotalOfPurchases(response.data.reduce((a, b) => a + b, 0));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   return (
     <div>
@@ -64,8 +70,8 @@ const Procurement = ({ title }) => {
             class
             qName="total-purchases"
             title="total of purchases"
-            description="Amounts of money spent in purchases"
-            amount="80000"
+            description="Amount of money spent in purchases"
+            amount={totalOfPurchases || 0}
             formatter={formatMoney}
             unit="€"
             styleTitle={{
@@ -74,7 +80,7 @@ const Procurement = ({ title }) => {
               color: 'white',
             }}
           />
-      
+
           <GenericCard
             title="Delay in inventory Receivment"
             description="Average number of days the company takes to receive items from the suppliers"
@@ -92,10 +98,11 @@ const Procurement = ({ title }) => {
           />
         </section>
 
-        <Purchases />
+        <Purchases year={year} />
         <SuppliersTable
           numberItemsPerPage={4}
           containerStyle={{ width: '100%', marginTop: '2rem' }}
+          year={year}
         />
       </div>
     </div>

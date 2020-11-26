@@ -1,7 +1,7 @@
 const moment = require('moment');
 
 const processPurchases = (orders, year) => {
-  const monthlyCumulativeValue = [10, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  const monthlyCumulativeValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   orders
     .filter((order) => moment(order.documentDate).year() == year)
@@ -25,7 +25,7 @@ module.exports = (server) => {
     return global.request(options, (error, response, body) => {
       if (error) res.json(error);
 
-      let monthlyCumulativeValue = [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      let monthlyCumulativeValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       if (!JSON.parse(body).message) {
         monthlyCumulativeValue = processPurchases(JSON.parse(body), year);
       }

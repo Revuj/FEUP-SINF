@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
 
-function SalesByTime() {
+function SalesByTime({ year }) {
   const [purchases, setPurchases] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const year = 2020;
   // no futuro acrescentar await keyword
   useEffect(() => {
     axios

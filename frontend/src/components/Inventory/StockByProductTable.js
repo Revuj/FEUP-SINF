@@ -3,7 +3,7 @@ import useFullPageLoader from '../../hooks/FullPageLoader';
 import PaginationComponent from '../Pagination';
 import Search from '../Search';
 import TableHeader from '../TableHeader';
-import { fetchProducts } from '../../api/product';
+import { fetchProducts } from '../../actions/product';
 import '../../styles/Table.css';
 
 const StockByProductTable = ({

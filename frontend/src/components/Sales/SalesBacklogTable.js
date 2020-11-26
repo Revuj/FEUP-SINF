@@ -3,7 +3,7 @@ import useFullPageLoader from '../../hooks/FullPageLoader';
 import PaginationComponent from '../Pagination';
 import Search from '../Search';
 import TableHeader from '../TableHeader';
-import { fetchOngoingSales } from '../../api/sales';
+import { fetchOngoingSales } from '../../actions/sales';
 import '../../styles/Table.css';
 
 const SalesBacklogTable = ({
@@ -71,16 +71,16 @@ const SalesBacklogTable = ({
   }, [sales, currentPage, search, sorting]);
 
   const getListOfitemsInOrder = (items) => {
-      var output = [];
+    var output = [];
 
-      //Loop over your li's and grab the html content
-      items.forEach(item => {
-          output.push(item.number_units + "x " + item.name);
-      });
-      
-      //Set the paragraph value by joining the outputs together 
-      return output.join("\n");
-  }
+    //Loop over your li's and grab the html content
+    items.forEach((item) => {
+      output.push(item.number_units + 'x ' + item.name);
+    });
+
+    //Set the paragraph value by joining the outputs together
+    return output.join('\n');
+  };
 
   return (
     <>

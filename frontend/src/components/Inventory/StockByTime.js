@@ -1,5 +1,5 @@
 import React from 'react';
-import { fetchYearStocks } from '../../api/stock';
+import { fetchYearStocks } from '../../actions/stock';
 
 import { Line } from 'react-chartjs-2';
 

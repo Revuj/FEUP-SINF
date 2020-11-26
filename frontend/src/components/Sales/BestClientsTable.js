@@ -3,7 +3,7 @@ import useFullPageLoader from '../../hooks/FullPageLoader';
 import PaginationComponent from '../Pagination';
 import Search from '../Search';
 import TableHeader from '../TableHeader';
-import { fetchBestClients } from '../../api/clients';
+import { fetchBestClients } from '../../actions/clients';
 import '../../styles/Table.css';
 
 const BestClientsTable = ({

@@ -1,8 +1,8 @@
-import React from "react";
-import { fetchYearStocks } from "../../api/stock";
-import { Line } from "react-chartjs-2";
-import Paper from "@material-ui/core/Paper";
-import { makeStyles } from "@material-ui/core/styles";
+import React from 'react';
+import { fetchYearStocks } from '../../actions/stock';
+import { Line } from 'react-chartjs-2';
+import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -17,26 +17,26 @@ function ProductProfit() {
 
   const data = {
     labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ],
     datasets: [
       {
-        label: "Product Profit",
+        label: 'Product Profit',
         data: profit,
         fill: false,
-        backgroundColor: "rgb(255, 99, 132)",
-        borderColor: "rgba(255, 99, 132, 0.2)",
-        yAxisID: "y-axis-1",
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgba(255, 99, 132, 0.2)',
+        yAxisID: 'y-axis-1',
       },
     ],
   };
@@ -45,10 +45,10 @@ function ProductProfit() {
     scales: {
       yAxes: [
         {
-          type: "linear",
+          type: 'linear',
           display: true,
-          position: "left",
-          id: "y-axis-1",
+          position: 'left',
+          id: 'y-axis-1',
         },
       ],
     },

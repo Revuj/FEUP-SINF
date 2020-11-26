@@ -1,5 +1,5 @@
 import React from 'react';
-import { fetchYearSales } from '../../api/sales';
+import { fetchYearSales } from '../../actions/sales';
 import { Line } from 'react-chartjs-2';
 
 function SalesByTime() {

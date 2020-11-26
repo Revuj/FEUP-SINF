@@ -3,7 +3,7 @@ import useFullPageLoader from '../../hooks/FullPageLoader';
 import PaginationComponent from '../Pagination';
 import Search from '../Search';
 import TableHeader from '../TableHeader';
-import { fetchSuppliers } from '../../api/suppliers';
+import { fetchSuppliers } from '../../actions/suppliers';
 import '../../styles/Table.css';
 
 const SuppliersTable = ({ numberItemsPerPage, containerStyle, themeColor }) => {

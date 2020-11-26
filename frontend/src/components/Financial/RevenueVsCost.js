@@ -1,6 +1,6 @@
 import React from 'react';
-import { fetchYearSales } from '../../api/sales';
-import { fetchYearPurchases } from '../../api/purchases';
+import { fetchYearSales } from '../../actions/sales';
+import { fetchYearPurchases } from '../../actions/purchases';
 import { Line } from 'react-chartjs-2';
 
 function RevenueVsCost({ height }) {

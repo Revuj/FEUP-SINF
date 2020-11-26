@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import { firebase, auth } from '../firebase/config';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { AuthContext } from '../context';
-import getAccessToken from '../api/getAccessToken';
 
 import '../styles/Login.css';
 
@@ -15,22 +14,12 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const storeAccessToken = () => {
-    getAccessToken()
-      .then((res) => {
-        console.log(res);
-        authContext.setAccessToken(res.data.access_token);
-      })
-      .catch((err) => `Error while fetching access token: ${err}`);
-  };
-
   const signInWithGoogle = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider).then(async () => {
       console.log(user);
       authContext.login();
       history.push('/dashboard');
-      storeAccessToken();
     });
   };
 
@@ -42,7 +31,6 @@ function Login() {
         console.log(user);
         authContext.login();
         history.push('/dashboard');
-        storeAccessToken();
       });
   };
 

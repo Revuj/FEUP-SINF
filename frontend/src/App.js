@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, useHistory } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { firebase } from './firebase/config';
 import { AuthContext } from './context';
 import Home from './components/Home';
@@ -13,7 +13,6 @@ import './styles/App.css';
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
-  const [accessToken, setAccessToken] = useState(null);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {
@@ -39,8 +38,6 @@ function App() {
           isLoggedIn,
           login: login,
           logout: logout,
-          accessToken,
-          setAccessToken,
         }}
       >
         {/* <Navbar /> */}

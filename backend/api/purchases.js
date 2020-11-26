@@ -1,7 +1,7 @@
 const moment = require('moment');
 
 const processPurchases = (orders, year) => {
-  const monthlyCumulativeValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let monthlyCumulativeValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   orders
     .filter((order) => moment(order.documentDate).year() == year)
@@ -12,6 +12,18 @@ const processPurchases = (orders, year) => {
     });
 
   return monthlyCumulativeValue;
+};
+
+const getPurchasesBacklog = (orders) => {
+  let purchasesBacklog = 0;
+
+  orders
+    .filter((order) => moment(order.documentDate).date() > moment().date())
+    .forEach(({ documentDate, payableAmount }) => {
+      purchasesBacklog += payableAmount.amount;
+    });
+
+  return purchasesBacklog;
 };
 
 module.exports = (server) => {
@@ -25,11 +37,24 @@ module.exports = (server) => {
     return global.request(options, (error, response, body) => {
       if (error) res.json(error);
 
-      let monthlyCumulativeValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       if (!JSON.parse(body).message) {
-        monthlyCumulativeValue = processPurchases(JSON.parse(body), year);
+        res.json(processPurchases(JSON.parse(body), year));
       }
-      res.json(monthlyCumulativeValue);
+    });
+  });
+
+  server.get('/api/purchasesBacklog', (req, res) => {
+    const options = {
+      method: 'GET',
+      url: `${global.basePrimaveraUrl}/purchases/orders`,
+    };
+
+    return global.request(options, (error, response, body) => {
+      if (error) res.json(error);
+
+      if (!JSON.parse(body).message) {
+        res.json(getPurchasesBacklog(JSON.parse(body)));
+      }
     });
   });
 };

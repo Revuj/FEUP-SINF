@@ -11,7 +11,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 const Procurement = ({ title }) => {
   const [year, setYear] = useState('2020');
   const [accountsPayable, setAccountsPayable] = useState(null);
-  const [purchaseBacklog, setPurchaseBacklog] = useState(null);
+  const [purchasesBacklog, setPurchasesBacklog] = useState(null);
   const [totalOfPurchases, setTotalOfPurchases] = useState(null);
   const [delayInReceivment, setDelayInReceivment] = useState(null);
 
@@ -20,6 +20,15 @@ const Procurement = ({ title }) => {
       .get(`/api/purchases/${year}`)
       .then((response) => {
         setTotalOfPurchases(response.data.reduce((a, b) => a + b, 0));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    axios
+      .get(`/api/purchasesBacklog`)
+      .then((response) => {
+        setPurchasesBacklog(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -56,7 +65,7 @@ const Procurement = ({ title }) => {
             className="orders-to-arrive"
             title="Purchase backlog"
             description="Amounts of money in orders that are to arrive."
-            amount="33000"
+            amount={purchasesBacklog || 0}
             formatter={formatMoney}
             unit="€"
             styleTitle={{

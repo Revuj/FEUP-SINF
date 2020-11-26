@@ -4,10 +4,14 @@ import useFullPageLoader from '../../hooks/FullPageLoader';
 import PaginationComponent from '../Pagination';
 import Search from '../Search';
 import TableHeader from '../TableHeader';
-import { fetchSuppliers } from '../../actions/suppliers';
 import '../../styles/Table.css';
 
-const SuppliersTable = ({ numberItemsPerPage, containerStyle, themeColor }) => {
+const SuppliersTable = ({
+  numberItemsPerPage,
+  containerStyle,
+  themeColor,
+  year,
+}) => {
   const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -23,8 +27,6 @@ const SuppliersTable = ({ numberItemsPerPage, containerStyle, themeColor }) => {
     { name: 'Units Purchased', field: 'units', sortable: true },
     { name: 'Value Purchased', field: 'value', sortable: false },
   ];
-
-  const year = 2020;
 
   useEffect(() => {
     showLoader();

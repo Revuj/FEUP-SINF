@@ -18,7 +18,7 @@ const getPurchasesBacklog = (orders) => {
   let purchasesBacklog = 0;
 
   orders
-    .filter((order) => moment(order.documentDate).date() > moment().date())
+    .filter((order) => moment(order.documentDate).isAfter(moment()))
     .forEach(({ documentDate, payableAmount }) => {
       purchasesBacklog += payableAmount.amount;
     });

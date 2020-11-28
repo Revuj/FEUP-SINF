@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import axios from 'axios';
 import useFullPageLoader from '../../hooks/FullPageLoader';
 import PaginationComponent from '../Pagination';
 import Search from '../Search';
@@ -22,23 +23,25 @@ const StockByWarehouseTable = ({
   const headers = [
     { name: 'Id', field: 'id', sortable: false },
     { name: 'Name', field: 'name', sortable: true },
-    { name: 'Location', field: 'location', sortable: true },
     { name: 'Stock', field: 'stock', sortable: false },
+    { name: 'Total value of stock', field: 'total_value', sortable: true },
   ];
 
-  /* this is going to be used in the feature when doing the api call */
   const [warehouses, setWarehouses] = useState([]);
-  /* insert the information fetched in the api (now using a dummy api) */
+
+  const [products, setProducts] = useState([]);
   useEffect(() => {
-    const getData = () => {
-      showLoader();
+    showLoader();
 
-      setWarehouses(fetchWarehousesInfo());
-
-      hideLoader();
-    };
-
-    getData();
+    axios
+      .get('/api/inventory/warehouses')
+      .then((response) => {
+        setWarehouses(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    hideLoader();
   }, []);
 
   /*to able to sort the data we are going to retrieve */
@@ -94,8 +97,8 @@ const StockByWarehouseTable = ({
               <tr key={warehouse.id}>
                 <th scope="row">{warehouse.id}</th>
                 <td>{warehouse.name}</td>
-                <td>{warehouse.location}</td>
-                <td>{warehouse.stock}</td>
+                <td>{warehouse.quantity}</td>
+                <td>{warehouse.value}</td>
               </tr>
             ))}
           </tbody>

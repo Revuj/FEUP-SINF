@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import axios from 'axios';
 import useFullPageLoader from '../../hooks/FullPageLoader';
 import PaginationComponent from '../Pagination';
 import Search from '../Search';
 import TableHeader from '../TableHeader';
-import { fetchProducts } from '../../actions/product';
 import '../../styles/Table.css';
 
 const StockByProductTable = ({
@@ -26,19 +26,19 @@ const StockByProductTable = ({
     { name: 'Total value of stock', field: 'total_value', sortable: true },
   ];
 
-  /* this is going to be used in the feature when doing the api call */
   const [products, setProducts] = useState([]);
-  /* insert the information fetched in the api (now using a dummy api) */
   useEffect(() => {
-    const getData = () => {
-      showLoader();
+    showLoader();
 
-      setProducts(fetchProducts());
-
-      hideLoader();
-    };
-
-    getData();
+    axios
+      .get('/api/inventory/products')
+      .then((response) => {
+        setProducts(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    hideLoader();
   }, []);
 
   /*to able to sort the data we are going to retrieve */
@@ -94,8 +94,8 @@ const StockByProductTable = ({
               <tr key={product.id}>
                 <th scope="row">{product.rank}</th>
                 <td>{product.name}</td>
-                <td>{product.stock}</td>
-                <td>{product.stock * product.value_unit}</td>
+                <td>{product.quantity}</td>
+                <td>{product.value}</td>
               </tr>
             ))}
           </tbody>

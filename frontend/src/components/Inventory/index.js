@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import GenericCard from '../GenericCard';
-
 import StockByTime from './StockByTime';
 
 import StockByProductTable from './StockByProductTable';
@@ -14,6 +14,19 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 
 const Index = () => {
   const [year, setYear] = useState('2020');
+  const [stock, setStock] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get('/api/inventory/stock')
+      .then((response) => {
+        setStock(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <div>
       <div className="top-bar">
@@ -28,8 +41,8 @@ const Index = () => {
         <section className="top-cards">
           <GenericCard
             title="Stock"
-            description="Current total stock"
-            amount="300000"
+            description="Current value in stock"
+            amount={stock || 0}
             formatter={formatMoney}
             unit="€"
             styleTitle={{
@@ -91,7 +104,7 @@ const Index = () => {
         <section className="row-50-50">
           <span>
             <StockByProductTable
-              numberItemsPerPage={12}
+              numberItemsPerPage={4}
               containerStyle={{ width: '100%' }}
             />
           </span>

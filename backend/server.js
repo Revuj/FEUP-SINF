@@ -13,6 +13,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 global.basePrimaveraUrl = `https://my.jasminsoftware.com/api/${process.env.TENANT}/${process.env.ORGANIZATION}`;
 const purchasesAPI = require('./api/purchases');
 const suppliersAPI = require('./api/suppliers');
+const inventoryAPI = require('./api/inventory');
 
 const getAccessToken = () => {
   const options = {
@@ -45,6 +46,7 @@ getAccessToken();
 
 purchasesAPI(app);
 suppliersAPI(app);
+inventoryAPI(app);
 
 // Set static folder in production
 if (process.env.NODE_ENV === 'production') {

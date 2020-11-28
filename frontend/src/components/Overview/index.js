@@ -36,8 +36,31 @@ const Overview = () => {
             }}
           />
           <GenericCard
+            title="Net Sales"
+            description="Total value in sales"
+            amount="6100000"
+            formatter={formatMoney}
+            unit="€"
+            styleTitle={{
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
+            }}
+          /><GenericCard
+            title="Net Costs"
+            description="Total value in costs"
+            amount="50500"
+            formatter={formatMoney}
+            unit="€"
+            styleTitle={{
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
+            }}
+          />
+          <GenericCard
             title="Accounts Receivable"
-            description="Amount of money owed by customers for purchases made on credit"
+            description="Amount of money owed by customers"
             amount="300000"
             formatter={formatMoney}
             unit="€"
@@ -74,16 +97,29 @@ const Overview = () => {
               backgroundColor: 'white',
             }}
           />
+          <GenericCard
+            title="Sales Backlog"
+            description="Total value in backlog"
+            amount="300000"
+            formatter={formatMoney}
+            unit="€"
+            styleTitle={{
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
+            }}
+            styleCard={{
+              backgroundColor: 'white',
+            }}
+          />
         </section>
 
         <section className="row-50-50">
           <span>
             <RevenueVsCost height="115" />
-            <StockByTime />
           </span>
           <span>
-            <SalesBacklogTable numberItemsPerPage={3} />
-            <TopProductsTable numberItemsPerPage={3} />
+            <StockByTime />
           </span>
         </section>
       </div>

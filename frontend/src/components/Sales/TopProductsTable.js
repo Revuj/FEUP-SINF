@@ -23,7 +23,7 @@ const TopProductsTable = ({
     { name: 'No#', field: 'rank', sortable: false },
     { name: 'Name', field: 'name', sortable: true },
     { name: 'Number of sales', field: 'n_sold', sortable: true },
-    { name: 'Stock', field: 'stock', sortable: false },
+    { name: 'Value', field: 'stock', sortable: false },
   ];
 
   /* this is going to be used in the feature when doing the api call */

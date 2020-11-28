@@ -6,7 +6,6 @@ function SalesByTime({ year }) {
   const [purchases, setPurchases] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // no futuro acrescentar await keyword
   useEffect(() => {
     axios
       .get(`/api/purchases/${year}`)

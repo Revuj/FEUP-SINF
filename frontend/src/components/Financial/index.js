@@ -83,6 +83,18 @@ const Index = () => {
               color: 'white',
             }}
           />
+          <GenericCard
+            title="Cogs"
+            description="Cost of goods sold"
+            amount="25000"
+            formatter={formatMoney}
+            unit="€"
+            styleTitle={{
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
+            }}
+          />
         </section>
         <RevenueVsCost />
 

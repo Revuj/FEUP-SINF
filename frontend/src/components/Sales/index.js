@@ -25,7 +25,7 @@ const Sales = () => {
 
       <div className="main-content">
         <section className="top-cards">
-        <GenericCard
+          <GenericCard
             title="GPM"
             description="Gross Profit Margin"
             amount="70000"
@@ -38,9 +38,9 @@ const Sales = () => {
             }}
           />
           <GenericCard
-            title="Cogs"
-            description="Cost of goods sold"
-            amount="25000"
+            title="Net Sales"
+            description="Total value in sales"
+            amount="6100000"
             formatter={formatMoney}
             unit="€"
             styleTitle={{
@@ -49,6 +49,22 @@ const Sales = () => {
               color: 'white',
             }}
           />
+          <GenericCard
+            title="Sales Backlog"
+            description="Total value in backlog"
+            amount="300000"
+            formatter={formatMoney}
+            unit="€"
+            styleTitle={{
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
+            }}
+            styleCard={{
+              backgroundColor: 'white',
+            }}
+          />
+
 
         </section>
 

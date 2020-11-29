@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import RevenueVsCost from '../Financial/RevenueVsCost';
-import StockByTime from '../Inventory/StockByTime';
-import GenericCard from '../GenericCard';
-import TopProductsTable from '../Sales/TopProductsTable';
-import SalesBacklogTable from '../Sales/SalesBacklogTable';
-import { formatMoney } from '../../helper/CurrencyFormater';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
+import React, { useState } from "react";
+import RevenueVsCost from "../Financial/RevenueVsCost";
+import StockByTime from "../Inventory/StockByTime";
+import GenericCard from "../GenericCard";
+import TopProductsTable from "../Sales/TopProductsTable";
+import SalesBacklogTable from "../Sales/SalesBacklogTable";
+import { formatMoney } from "../../helper/CurrencyFormater";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
 
 const Overview = () => {
-  const [year, setYear] = useState('2020');
+  const [year, setYear] = useState("2020");
   return (
     <div>
       <div className="top-bar">
@@ -30,9 +30,9 @@ const Overview = () => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
+              borderBottom: "1px solid black",
+              backgroundColor: "#37d5d6",
+              color: "white",
             }}
           />
           <GenericCard
@@ -42,9 +42,9 @@ const Overview = () => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
+              borderBottom: "1px solid black",
+              backgroundColor: "#37d5d6",
+              color: "white",
             }}
           />
           <GenericCard
@@ -54,9 +54,9 @@ const Overview = () => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
+              borderBottom: "1px solid black",
+              backgroundColor: "#37d5d6",
+              color: "white",
             }}
           />
           <GenericCard
@@ -66,12 +66,12 @@ const Overview = () => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
+              borderBottom: "1px solid black",
+              backgroundColor: "#37d5d6",
+              color: "white",
             }}
             styleCard={{
-              backgroundColor: 'white',
+              backgroundColor: "white",
             }}
           />
         </section>

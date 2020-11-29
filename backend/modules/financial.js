@@ -845,9 +845,9 @@ const processTransactionLines = (lines, accountId) => {
   return { totalCredit, totalDebit };
 };
 
-const processTransactions = (transactions, accountId) => {
-  let totalCredit = 0,
-    totalDebit = 0;
+const processTransactions = (transactions, accountId, monthly) => {
+  let totalCredit = monthly ? [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] : 0,
+    totalDebit = monthly ? [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] : 0;
 
   let currentTransaction;
   if (Array.isArray(transactions)) {
@@ -858,36 +858,72 @@ const processTransactions = (transactions, accountId) => {
           accountId
         );
 
-        totalCredit += currentTransaction.totalCredit;
-        totalDebit += currentTransaction.totalDebit;
+        if (monthly) {
+          totalCredit[Math.min(parseInt(transaction.Period), 12) - 1] =
+            totalCredit[Math.min(parseInt(transaction.Period), 12) - 1] +
+            currentTransaction.totalCredit;
+          totalDebit[Math.min(parseInt(transaction.Period), 12) - 1] =
+            totalDebit[Math.min(parseInt(transaction.Period), 12) - 1] +
+            currentTransaction.totalDebit;
+        } else {
+          totalCredit += currentTransaction.totalCredit;
+          totalDebit += currentTransaction.totalDebit;
+        }
       }
     });
   } else if (transactions.Lines && transactions.Lines.TransactionType == "N") {
     currentTransaction = processTransactionLines(transactions.Lines, accountId);
 
-    totalCredit += currentTransaction.totalCredit;
-    totalDebit += currentTransaction.totalDebit;
+    if (monthly) {
+      totalCredit[Math.min(parseInt(transactions.Period), 12) - 1] =
+        totalCredit[Math.min(parseInt(transactions.Period), 12) - 1] +
+        currentTransaction.totalCredit;
+      totalDebit[Math.min(parseInt(transactions.Period), 12) - 1] =
+        totalDebit[Math.min(parseInt(transactions.Period), 12) - 1] +
+        currentTransaction.totalDebit;
+    } else {
+      totalCredit += currentTransaction.totalCredit;
+      totalDebit += currentTransaction.totalDebit;
+    }
   }
 
   return { totalCredit, totalDebit };
 };
 
-const processJournals = (journals, accountId) => {
-  let totalCredit = 0,
-    totalDebit = 0;
+const processJournals = (journals, accountId, monthly) => {
+  let totalCredit = monthly ? [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] : 0,
+    totalDebit = monthly ? [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] : 0;
   let current;
   if (Array.isArray(journals)) {
     journals.forEach((journal) => {
       if (journal.Transaction) {
-        current = processTransactions(journal.Transaction, accountId);
-        totalCredit = totalCredit += current.totalCredit;
-        totalDebit = totalDebit += current.totalDebit;
+        current = processTransactions(journal.Transaction, accountId, monthly);
+        if (monthly) {
+          totalCredit = totalCredit.map((value, index) => {
+            return current.totalCredit[index] + value;
+          });
+          totalDebit = totalDebit.map((value, index) => {
+            return current.totalDebit[index] + value;
+          });
+        } else {
+          totalCredit = totalCredit += current.totalCredit;
+          totalDebit = totalDebit += current.totalDebit;
+        }
       }
     });
   } else if (journals.Transaction) {
     current = processTransactions(journals.Transaction, accountId);
-    totalCredit = totalCredit += current.totalCredit;
-    totalDebit = totalDebit += current.totalDebit;
+    if (monthly) {
+      totalCredit = totalCredit.map((value, index) => {
+        return current.totalCredit[index] + value;
+      });
+      totalDebit = totalDebit.map((value, index) => {
+        return current.totalDebit[index] + value;
+      });
+    } else {
+      totalCredit = totalCredit += current.totalCredit;
+      totalDebit = totalDebit += current.totalDebit;
+    }
   }
 
   return { totalCredit, totalDebit };
@@ -905,7 +941,7 @@ const processTaxonomySumTransactions = (taxonomy, journals, accounts) => {
   });
 
   accountCodes.forEach((code) => {
-    currentAccount = processJournals(journals, code);
+    currentAccount = processJournals(journals, code, false);
     balance =
       Number(currentAccount.totalDebit) - Number(currentAccount.totalCredit);
     results.push({
@@ -1238,5 +1274,16 @@ module.exports = (server, db) => {
     const journal = db.GeneralLedgerEntries.Journal;
     const pl = profitLoss(journal, accounts);
     res.json(pl);
+  });
+
+  server.get("/api/financial/account-balance", (req, res) => {
+    const journal = db.GeneralLedgerEntries.Journal;
+    const values = processJournals(
+      journal,
+      req.query.accountId,
+      req.query.monthly === "true"
+    );
+
+    res.json(values);
   });
 };

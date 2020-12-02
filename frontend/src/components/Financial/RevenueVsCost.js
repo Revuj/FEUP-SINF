@@ -81,7 +81,7 @@ function RevenueVsCost({ height }) {
   return (
     <div className="chart">
       <h3 className="chart-title">Sales vs Costs</h3>
-      <Line height={height || 75} data={graphData} options={options} />
+      <Line height={height || 75} data={initial_data} options={options} />
     </div>
   );
 }

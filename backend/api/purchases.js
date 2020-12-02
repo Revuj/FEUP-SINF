@@ -31,7 +31,7 @@ module.exports = (server) => {
     const { year } = req.params;
     const options = {
       method: 'GET',
-      url: `${global.basePrimaveraUrl}/purchases/orders`,
+      url: `${global.basePrimaveraUrl}/purchases/orders`
     };
 
     return global.request(options, (error, response, body) => {

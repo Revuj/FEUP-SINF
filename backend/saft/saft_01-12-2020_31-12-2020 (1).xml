@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<AuditFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:OECD:StandardAuditFile-Tax:PT_1.04_01">
+  <Header>
+    <AuditFileVersion>1.04_01</AuditFileVersion>
+    <CompanyID>221770860</CompanyID>
+    <TaxRegistrationNumber>221770860</TaxRegistrationNumber>
+    <TaxAccountingBasis>F</TaxAccountingBasis>
+    <CompanyName>BeeCompany</CompanyName>
+    <CompanyAddress>
+      <BuildingNumber>0</BuildingNumber>
+      <StreetName>Rua Dr. Roberto Frias - FEUP</StreetName>
+      <AddressDetail>Rua Dr. Roberto Frias - FEUP   4200 465</AddressDetail>
+      <City>465</City>
+      <PostalCode>4200</PostalCode>
+      <Region>Desconhecido</Region>
+      <Country xsi:type="xsd:string">PT</Country>
+    </CompanyAddress>
+    <FiscalYear>2020</FiscalYear>
+    <StartDate>2020-12-01</StartDate>
+    <EndDate>2020-12-31</EndDate>
+    <CurrencyCode xsi:type="xsd:string">EUR</CurrencyCode>
+    <DateCreated>2020-12-01</DateCreated>
+    <TaxEntity>GLOBAL</TaxEntity>
+    <ProductCompanyTaxID>503140600</ProductCompanyTaxID>
+    <SoftwareCertificateNumber>2616</SoftwareCertificateNumber>
+    <ProductID>PRIMAVERA JASMIN/PRIMAVERA Business Software Solutions</ProductID>
+    <ProductVersion>1.00</ProductVersion>
+    <Email>sinf.grupo.ad@gmail.com</Email>
+  </Header>
+  <MasterFiles>
+    <Customer>
+      <CustomerID>0003.2</CustomerID>
+      <AccountID>Desconhecido</AccountID>
+      <CustomerTaxID>999999990</CustomerTaxID>
+      <CompanyName>Tiago Verdade</CompanyName>
+      <BillingAddress>
+        <BuildingNumber>Desconheci</BuildingNumber>
+        <StreetName>Desconhecido</StreetName>
+        <AddressDetail>Tiago Verdade</AddressDetail>
+        <City>Desconhecido</City>
+        <PostalCode>Desconhecido</PostalCode>
+        <Region>Desconhecido</Region>
+        <Country>PT</Country>
+      </BillingAddress>
+      <Telephone>Desconhecido</Telephone>
+      <Fax>Desconhecido</Fax>
+      <Email>Desconhecido</Email>
+      <Website>Desconhecido</Website>
+      <SelfBillingIndicator>0</SelfBillingIndicator>
+    </Customer>
+    <Product>
+      <ProductType>P</ProductType>
+      <ProductCode>EUCALYPTUSHONEY</ProductCode>
+      <ProductGroup>Sem família</ProductGroup>
+      <ProductDescription>Eucalyptus Honey</ProductDescription>
+      <ProductNumberCode>EUCALYPTUSHONEY</ProductNumberCode>
+    </Product>
+    <TaxTable>
+      <TaxTableEntry>
+        <TaxType>IVA</TaxType>
+        <TaxCountryRegion>PT</TaxCountryRegion>
+        <TaxCode>INT</TaxCode>
+        <Description>Taxa Intermédia</Description>
+        <TaxPercentage>13.000000</TaxPercentage>
+      </TaxTableEntry>
+      <TaxTableEntry>
+        <TaxType>IVA</TaxType>
+        <TaxCountryRegion>PT</TaxCountryRegion>
+        <TaxCode>ISE</TaxCode>
+        <Description>Isento</Description>
+        <TaxPercentage>0.000000</TaxPercentage>
+      </TaxTableEntry>
+      <TaxTableEntry>
+        <TaxType>IVA</TaxType>
+        <TaxCountryRegion>PT</TaxCountryRegion>
+        <TaxCode>NOR</TaxCode>
+        <Description>Taxa Normal</Description>
+        <TaxPercentage>23.000000</TaxPercentage>
+      </TaxTableEntry>
+      <TaxTableEntry>
+        <TaxType>IVA</TaxType>
+        <TaxCountryRegion>PT</TaxCountryRegion>
+        <TaxCode>RED</TaxCode>
+        <Description>Taxa Reduzida</Description>
+        <TaxPercentage>6.000000</TaxPercentage>
+      </TaxTableEntry>
+      <TaxTableEntry>
+        <TaxType>IVA</TaxType>
+        <TaxCountryRegion>PT-AC</TaxCountryRegion>
+        <TaxCode>INT</TaxCode>
+        <Description>Taxa Intermédia</Description>
+        <TaxPercentage>9.000000</TaxPercentage>
+      </TaxTableEntry>
+      <TaxTableEntry>
+        <TaxType>IVA</TaxType>
+        <TaxCountryRegion>PT-AC</TaxCountryRegion>
+        <TaxCode>ISE</TaxCode>
+        <Description>Isento</Description>
+        <TaxPercentage>0.000000</TaxPercentage>
+      </TaxTableEntry>
+      <TaxTableEntry>
+        <TaxType>IVA</TaxType>
+        <TaxCountryRegion>PT-AC</TaxCountryRegion>
+        <TaxCode>NOR</TaxCode>
+        <Description>Taxa Normal</Description>
+        <TaxPercentage>18.000000</TaxPercentage>
+      </TaxTableEntry>
+      <TaxTableEntry>
+        <TaxType>IVA</TaxType>
+        <TaxCountryRegion>PT-AC</TaxCountryRegion>
+        <TaxCode>RED</TaxCode>
+        <Description>Taxa Reduzida</Description>
+        <TaxPercentage>4.000000</TaxPercentage>
+      </TaxTableEntry>
+      <TaxTableEntry>
+        <TaxType>IVA</TaxType>
+        <TaxCountryRegion>PT-MA</TaxCountryRegion>
+        <TaxCode>INT</TaxCode>
+        <Description>Taxa Intermédia</Description>
+        <TaxPercentage>12.000000</TaxPercentage>
+      </TaxTableEntry>
+      <TaxTableEntry>
+        <TaxType>IVA</TaxType>
+        <TaxCountryRegion>PT-MA</TaxCountryRegion>
+        <TaxCode>ISE</TaxCode>
+        <Description>Isento</Description>
+        <TaxPercentage>0.000000</TaxPercentage>
+      </TaxTableEntry>
+      <TaxTableEntry>
+        <TaxType>IVA</TaxType>
+        <TaxCountryRegion>PT-MA</TaxCountryRegion>
+        <TaxCode>NOR</TaxCode>
+        <Description>Taxa Normal</Description>
+        <TaxPercentage>22.000000</TaxPercentage>
+      </TaxTableEntry>
+      <TaxTableEntry>
+        <TaxType>IVA</TaxType>
+        <TaxCountryRegion>PT-MA</TaxCountryRegion>
+        <TaxCode>RED</TaxCode>
+        <Description>Taxa Reduzida</Description>
+        <TaxPercentage>5.000000</TaxPercentage>
+      </TaxTableEntry>
+    </TaxTable>
+  </MasterFiles>
+  <SourceDocuments>
+    <SalesInvoices>
+      <NumberOfEntries>1</NumberOfEntries>
+      <TotalDebit>0</TotalDebit>
+      <TotalCredit>621.000000</TotalCredit>
+      <Invoice>
+        <InvoiceNo>FA 2020/2</InvoiceNo>
+        <ATCUD>0</ATCUD>
+        <DocumentStatus>
+          <InvoiceStatus>N</InvoiceStatus>
+          <InvoiceStatusDate>2020-12-01T11:52:25</InvoiceStatusDate>
+          <SourceID>up201706072@g.uporto.pt</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>BVh2aiyS2bqq+VfhmQhv02vT0kpFY1e1zb3Mq4sSwibdTM7LvDkPes6SPS2mwQca1CiYQhB0IvfBUYTwx66faKk4Jh5IRL6MA0v+SaQH3KF+3ksBUfY4CdvQc/7o6bOzJOOCu4kQy/0JFQpAFfHJoL8IfEZaMw6wUEPqNqYdKuY=</Hash>
+        <HashControl>1</HashControl>
+        <Period>12</Period>
+        <InvoiceDate>2020-12-01</InvoiceDate>
+        <InvoiceType>FT</InvoiceType>
+        <SpecialRegimes>
+          <SelfBillingIndicator>0</SelfBillingIndicator>
+          <CashVATSchemeIndicator>0</CashVATSchemeIndicator>
+          <ThirdPartiesBillingIndicator>0</ThirdPartiesBillingIndicator>
+        </SpecialRegimes>
+        <SourceID>up201706072@g.uporto.pt</SourceID>
+        <SystemEntryDate>2020-12-01T11:52:08</SystemEntryDate>
+        <CustomerID>0003.2</CustomerID>
+        <ShipTo>
+          <Address>
+            <StreetName>Desconhecido</StreetName>
+            <AddressDetail>Your Address</AddressDetail>
+            <City>Desconhecido</City>
+            <PostalCode>Desconhecido</PostalCode>
+            <Region>Desconhecido</Region>
+            <Country>PT</Country>
+          </Address>
+        </ShipTo>
+        <ShipFrom>
+          <Address>
+            <StreetName>Rua Dr. Roberto Frias - FEUP</StreetName>
+            <AddressDetail>Our Address Rua Dr. Roberto Frias - FEUP   4200 465</AddressDetail>
+            <City>465</City>
+            <PostalCode>4200</PostalCode>
+            <Region>Desconhecido</Region>
+            <Country>PT</Country>
+          </Address>
+        </ShipFrom>
+        <MovementStartTime>2020-12-01T11:50:20</MovementStartTime>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <ProductCode>EUCALYPTUSHONEY</ProductCode>
+          <ProductDescription>Eucalyptus Honey</ProductDescription>
+          <Quantity>9.000000</Quantity>
+          <UnitOfMeasure>UN</UnitOfMeasure>
+          <UnitPrice>69.000000</UnitPrice>
+          <TaxPointDate>2020-12-01</TaxPointDate>
+          <Description>Eucalyptus Honey</Description>
+          <CreditAmount>621.000000</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.000000</TaxPercentage>
+          </Tax>
+          <SettlementAmount>0.000000</SettlementAmount>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>142.83</TaxPayable>
+          <NetTotal>621.00</NetTotal>
+          <GrossTotal>763.83</GrossTotal>
+        </DocumentTotals>
+        <WithholdingTax>
+          <WithholdingTaxAmount>0.000000</WithholdingTaxAmount>
+        </WithholdingTax>
+      </Invoice>
+    </SalesInvoices>
+  </SourceDocuments>
+</AuditFile>

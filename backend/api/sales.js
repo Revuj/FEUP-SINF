@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 module.exports = (server, db) => {
   // monthly sales by year
   server.get('/api/sales/:year', (req, res) => {
@@ -15,21 +17,27 @@ module.exports = (server, db) => {
   });
 
   // net sales
-  server.get('api/netSales', (req, res) => {
-    res.json({db.SourceDocuments.SalesInvoices.TotalCredit});
+  server.get('/api/netSales', (req, res) => {
+    res.json(db.SourceDocuments.SalesInvoices.TotalCredit);
+  });
+
+  server.get('/api/products/random', (req, res) => {
+    const { id } = req.params;
+    const invoices = db.SourceDocuments.SalesInvoices;
+    res.json(invoices);
   });
 
   // sales products
   server.get('/api/sales/products', (req, res) => {
     let products = {};
     const validTypes = ['FT', 'FS', 'FR', 'VD'];
-
-    db.SourceDocuments.SalesInvoices.Invoice.forEach(invoice => {
+    console.log(db.SourceDocuments.SalesInvoices);
+    db.SourceDocuments.SalesInvoices.Invoice.forEach((invoice) => {
       const type = invoice.InvoiceType;
 
       if (!(invoice.Line.length && validTypes.includes(type))) return;
 
-      invoice.Line.forEach(line => {
+      invoice.Line.forEach((line) => {
         const { ProductCode, UnitPrice, ProductDescription, Quantity } = line;
         if (Object.prototype.hasOwnProperty.call(products, ProductCode)) {
           products[ProductCode].Quantity += parseInt(Quantity, 10);
@@ -45,14 +53,14 @@ module.exports = (server, db) => {
 
     products = Object.keys(products)
       .sort((a, b) => products[b].Quantity - products[a].Quantity)
-      .map(productCode => ({
+      .map((productCode) => ({
         id: productCode,
         name: products[productCode].ProductDescription,
         quantity: products[productCode].Quantity,
         value: Number(
           (
             products[productCode].Quantity * products[productCode].UnitPrice
-          ).toFixed(2),
+          ).toFixed(2)
         ),
       }));
 
@@ -67,14 +75,14 @@ module.exports = (server, db) => {
     const clients = [];
 
     if (Array.isArray(salesInvoices)) {
-      salesInvoices.forEach(invoice => {
+      salesInvoices.forEach((invoice) => {
         console.log(invoice.InvoiceType);
         if (validTypes.includes(invoice.InvoiceType)) {
           const customerID = invoice.CustomerID;
           let purchased = 0;
 
           if (Array.isArray(invoice.Line)) {
-            invoice.Line.forEach(line => {
+            invoice.Line.forEach((line) => {
               const { UnitPrice, Quantity } = line;
               purchased += UnitPrice * Quantity;
             });
@@ -106,7 +114,7 @@ module.exports = (server, db) => {
 
       if (validTypes.includes(invoice.InvoiceType)) {
         if (Array.isArray(invoice.Line)) {
-          invoice.Line.forEach(line => {
+          invoice.Line.forEach((line) => {
             const { UnitPrice, Quantity } = line;
             purchased += UnitPrice * Quantity;
           });
@@ -134,13 +142,11 @@ module.exports = (server, db) => {
 
     for (let i = 0; i < clients.length; i += 1) {
       clients[i].totalPurchased = parseFloat(clients[i].totalPurchased).toFixed(
-        2,
+        2
       );
     }
 
     const sorted = clients.sort((a, b) => a.totalPurchased > b.totalPurchased);
     res.json(sorted.slice(0, 5));
   });
-
-
 };

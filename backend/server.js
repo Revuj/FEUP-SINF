@@ -1,11 +1,11 @@
-const { create, router, defaults, bodyParser } = require("json-server");
-const cors = require("cors");
-const { join } = require("path");
-const request = require("request");
-require("dotenv").config();
+const { create, router, defaults, bodyParser } = require('json-server');
+const cors = require('cors');
+const { join } = require('path');
+const request = require('request');
+require('dotenv').config();
 
 const server = create();
-const _router = router("db.json");
+const _router = router('db.json');
 const middlewares = defaults({ noCors: false });
 const db = _router.db.__wrapped__;
 
@@ -15,12 +15,14 @@ server.use(bodyParser);
 
 global.basePrimaveraUrl = `https://my.jasminsoftware.com/api/${process.env.TENANT}/${process.env.ORGANIZATION}`;
 
-const FinancialController = require("./modules/financial");
-const purchasesAPI = require("./api/purchases");
-const suppliersAPI = require("./api/suppliers");
-const inventoryAPI = require("./api/inventory");
+const FinancialController = require('./modules/financial');
+const purchasesAPI = require('./api/purchases');
+const suppliersAPI = require('./api/suppliers');
+const inventoryAPI = require('./api/inventory');
+const salesAPI = require('./api/sales');
 
 FinancialController(server, db);
+salesAPI(server, db);
 purchasesAPI(server);
 suppliersAPI(server);
 inventoryAPI(server);
@@ -29,26 +31,26 @@ server.use(_router);
 
 const getAccessToken = () => {
   const options = {
-    method: "POST",
-    url: "https://identity.primaverabss.com/connect/token",
+    method: 'POST',
+    url: 'https://identity.primaverabss.com/connect/token',
     headers: {
-      "Content-Type": "multipart/form-data",
+      'Content-Type': 'multipart/form-data',
     },
     formData: {
       client_id: process.env.CLIENT_ID,
       client_secret: process.env.CLIENT_SECRET,
-      scope: "application",
-      grant_type: "client_credentials",
+      scope: 'application',
+      grant_type: 'client_credentials',
     },
   };
   request(options, function (error, response, body) {
-    if (error) console.error("error:", error);
+    if (error) console.error('error:', error);
 
     const jsonF = JSON.parse(response.body);
     global.request = request.defaults({
       headers: {
         Authorization: `Bearer ${jsonF.access_token}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
   });
@@ -56,10 +58,10 @@ const getAccessToken = () => {
 
 getAccessToken();
 
-server.get("*", (req, res) => {
-  res.sendFile(join(__dirname, "frontend", "build", "index.html"));
+server.get('*', (req, res) => {
+  res.sendFile(join(__dirname, 'frontend', 'build', 'index.html'));
 });
 
-server.listen(8080, () => console.log("Server listening on port 8080!"));
+server.listen(8080, () => console.log('Server listening on port 8080!'));
 
 module.exports = server;

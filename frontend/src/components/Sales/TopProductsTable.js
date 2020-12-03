@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import axios from 'axios';
 import useFullPageLoader from '../../hooks/FullPageLoader';
 import PaginationComponent from '../Pagination';
 import Search from '../Search';
 import TableHeader from '../TableHeader';
-import { fetchProducts } from '../../actions/product';
 import '../../styles/Table.css';
 
 const TopProductsTable = ({
@@ -16,6 +16,7 @@ const TopProductsTable = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
   const [sorting, setSorting] = useState({ field: '', order: '' });
+  const [products, setProducts] = useState([]);
 
   const ITEMS_PER_PAGE = numberItemsPerPage;
 
@@ -26,19 +27,19 @@ const TopProductsTable = ({
     { name: 'Value', field: 'stock', sortable: false },
   ];
 
-  /* this is going to be used in the feature when doing the api call */
-  const [products, setProducts] = useState([]);
-  /* insert the information fetched in the api (now using a dummy api) */
   useEffect(() => {
-    const getData = () => {
-      showLoader();
+    showLoader();
 
-      setProducts(fetchProducts());
-
-      hideLoader();
-    };
-
-    getData();
+    axios
+      .get(`/api/sales/products`)
+      .then((response) => {
+        console.log(response.data);
+        setProducts(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    hideLoader();
   }, []);
 
   /*to able to sort the data we are going to retrieve */

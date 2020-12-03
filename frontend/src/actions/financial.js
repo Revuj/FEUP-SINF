@@ -13,6 +13,14 @@ const fetchProfitLoss = () => {
 
 const fetchBalanceSheet = () => {
   return axios.get(`${baseUrl}/balance-sheet`, {});
+}
+
+const fetchAccountsReceivable = () => {
+  return axios.get(`${baseUrl}/accounts-receivable`, {});
+};
+
+const fetchAccountsPayable = () => {
+  return axios.get(`${baseUrl}/accounts-payable`, {});
 };
 
 const fetchSales = (monthly) => {
@@ -27,4 +35,4 @@ const fetchCosts = () => {
   );
 };
 
-export { fetchProfitLoss, fetchBalanceSheet, fetchSales, fetchCosts };
+export { fetchProfitLoss, fetchBalanceSheet, fetchAccountsReceivable, fetchAccountsPayable, fetchSales, fetchCosts };

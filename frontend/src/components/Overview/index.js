@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import RevenueVsCost from "../Financial/RevenueVsCost";
 import StockByTime from "../Inventory/StockByTime";
 import GenericCard from "../GenericCard";
@@ -7,8 +7,23 @@ import SalesBacklogTable from "../Sales/SalesBacklogTable";
 import { formatMoney } from "../../helper/CurrencyFormater";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import { fetchAccountsReceivable, fetchAccountsPayable } from "../../actions/financial";
 
 const Overview = () => {
+
+  const [accountsReceivable, setAccountsReceivable] = useState(0);
+  const [accountsPayable, setAccountsPayable] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const acReceivable = (await fetchAccountsReceivable()).data;
+      const acPayable = (await fetchAccountsPayable()).data;
+      setAccountsReceivable(acReceivable);
+      setAccountsPayable(acPayable);
+    };
+    fetchData();
+  });
+
   const [year, setYear] = useState("2020");
   return (
     <div>
@@ -61,7 +76,7 @@ const Overview = () => {
           <GenericCard
             title="Accounts Receivable"
             description="Amount of money owed by customers"
-            amount="300000"
+            amount={accountsReceivable}
             formatter={formatMoney}
             unit="€"
             styleTitle={{
@@ -73,7 +88,7 @@ const Overview = () => {
           <GenericCard
             title="Accounts Payable"
             description="Amount of money owed to suppliers"
-            amount="10000"
+            amount={accountsPayable}
             formatter={formatMoney}
             unit="€"
             styleTitle={{

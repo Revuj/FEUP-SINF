@@ -1284,13 +1284,26 @@ module.exports = (server, db) => {
     const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
     const assets = getAssets(accounts);
 
-    console.table(assets.currentAssets);
+    // console.table(assets.currentAssets);
 
     const clients = assets.currentAssets.find(
       (element) => element.name === 'Clientes'
     );
 
-    res.json({ value: clients.value });
+    res.json(clients.value);
+  });
+
+  server.get("/api/financial/accounts-payable", (req, res) => {
+    const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
+    const liabilities = getLiabilities(accounts);
+
+    // console.table(assets.currentLiabilities);
+
+    const suppliers = liabilities.currentLiabilities.find(
+      (element) => element.name === "Fornecedores"
+    );
+
+    res.json(suppliers.value);
   });
 
   server.get('/api/financial/profit-loss', (req, res) => {

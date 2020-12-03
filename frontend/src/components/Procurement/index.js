@@ -7,6 +7,7 @@ import SuppliersTable from '../Procurement/SuppliersTable';
 import '../../styles/Procurement.css';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import { fetchAccountsPayable } from "../../actions/financial";
 
 const Procurement = ({ title }) => {
   const [year, setYear] = useState('2020');
@@ -16,6 +17,11 @@ const Procurement = ({ title }) => {
   const [delayInReceivment, setDelayInReceivment] = useState(null);
 
   useEffect(() => {
+    const fetchData = async () => {
+      const acPayable = (await fetchAccountsPayable()).data;
+      setAccountsPayable(acPayable);
+    };
+
     axios
       .get(`/api/purchases/${year}`)
       .then((response) => {
@@ -33,6 +39,8 @@ const Procurement = ({ title }) => {
       .catch((error) => {
         console.error(error);
       });
+
+      fetchData();
   }, [year]);
 
   return (
@@ -58,7 +66,7 @@ const Procurement = ({ title }) => {
             className="account-payable"
             title="Accounts payable"
             description="Amounts due to vendors or suppliers for goods that have not yet been paid for."
-            amount="56000"
+            amount={accountsPayable || 0}
             formatter={formatMoney}
             unit="€"
             styleTitle={{

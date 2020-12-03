@@ -6,13 +6,15 @@ import { formatMoney } from '../../helper/CurrencyFormater';
 import '../../styles/Finantial.css';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { fetchProfitLoss, fetchBalanceSheet } from '../../actions/financial';
+import { fetchProfitLoss, fetchBalanceSheet, fetchAccountsReceivable, fetchAccountsPayable } from '../../actions/financial';
 import ProfitLossStatement from './ProfitLossStatement';
 
 const Index = () => {
   const [year, setYear] = useState('2020');
   const [ebit, setEbit] = useState(0);
   const [ebitda, setEbitda] = useState(0);
+  const [accountsReceivable, setAccountsReceivable] = useState(0);
+  const [accountsPayable, setAccountsPayable] = useState(0);
   const [netIncome, setNetIncome] = useState(0);
   const [cogs, setCogs] = useState(0);
   const [revenue, setRevenue] = useState(null);
@@ -24,12 +26,16 @@ const Index = () => {
   useEffect(() => {
     const fetchProfitLossData = async () => {
       const { data } = await fetchProfitLoss();
+      const acReceivable = (await fetchAccountsReceivable()).data;
+      const acPayable = (await fetchAccountsPayable()).data;
       setEbit(data.ebit);
       setEbitda(data.ebitda);
       setNetIncome(data.netIncome);
       setCogs(data.cogs);
       setRevenue(data.revenue);
       setExpenses(data.expenses);
+      setAccountsReceivable(acReceivable);
+      setAccountsPayable(acPayable);
     };
     fetchProfitLossData();
 
@@ -84,7 +90,7 @@ const Index = () => {
           <GenericCard
             title="Accounts Receivable"
             description="Amount of money owed by customers for purchases made on credit"
-            amount="300000"
+            amount={accountsReceivable}
             formatter={formatMoney}
             unit="€"
             styleTitle={{
@@ -96,7 +102,7 @@ const Index = () => {
           <GenericCard
             title="Accounts Payable"
             description="Amount of money owed to suppliers"
-            amount="10000"
+            amount={accountsPayable}
             formatter={formatMoney}
             unit="€"
             styleTitle={{

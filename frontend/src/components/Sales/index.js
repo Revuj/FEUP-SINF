@@ -1,16 +1,31 @@
-import React, { useState } from 'react';
-import GenericCard from '../GenericCard';
-import SalesByTime from './SalesByTime';
-import BestClientsTable from './BestClientsTable';
-import SalesBacklogTable from './SalesBacklogTable';
-import TopProductsTable from './TopProductsTable';
-import { formatMoney } from '../../helper/CurrencyFormater';
-import '../../styles/Sales.css';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
+import React, { useState, useEffect } from "react";
+import GenericCard from "../GenericCard";
+import SalesByTime from "./SalesByTime";
+import BestClientsTable from "./BestClientsTable";
+import SalesBacklogTable from "./SalesBacklogTable";
+import TopProductsTable from "./TopProductsTable";
+import { formatMoney } from "../../helper/CurrencyFormater";
+import { formatePercentage } from "../../helper/PercentageFormater";
+import "../../styles/Sales.css";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import { fetchGrossProfitMargin } from "../../actions/sales";
+import { fetchSales } from "../../actions/financial";
 
 const Sales = () => {
-  const [year, setYear] = useState('2020');
+  const [year, setYear] = useState("2020");
+  const [gpm, setGpm] = useState(0);
+  const [netSales, setNetSales] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const gpm = await fetchGrossProfitMargin();
+      const sales = await fetchSales(false);
+      setGpm(gpm.data.gpm);
+      setNetSales(sales.data.totalCredit - sales.data.totalDebit);
+    };
+    fetchData();
+  }, []);
 
   return (
     <div>
@@ -28,25 +43,25 @@ const Sales = () => {
           <GenericCard
             title="GPM"
             description="Gross Profit Margin"
-            amount="70000"
-            formatter={formatMoney}
-            unit="€"
+            amount={gpm}
+            formatter={formatePercentage}
+            unit="%"
             styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
+              borderBottom: "1px solid black",
+              backgroundColor: "#37d5d6",
+              color: "white",
             }}
           />
           <GenericCard
             title="Net Sales"
             description="Total value in sales"
-            amount="6100000"
+            amount={netSales}
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
+              borderBottom: "1px solid black",
+              backgroundColor: "#37d5d6",
+              color: "white",
             }}
           />
           <GenericCard
@@ -56,16 +71,14 @@ const Sales = () => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
+              borderBottom: "1px solid black",
+              backgroundColor: "#37d5d6",
+              color: "white",
             }}
             styleCard={{
-              backgroundColor: 'white',
+              backgroundColor: "white",
             }}
           />
-
-
         </section>
 
         <section className="row-50-50">

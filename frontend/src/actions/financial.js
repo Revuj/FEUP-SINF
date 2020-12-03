@@ -11,9 +11,9 @@ const fetchProfitLoss = () => {
   return axios.get(`${baseUrl}/profit-loss`, {});
 };
 
-const fetchSales = () => {
+const fetchSales = (monthly) => {
   return axios.get(
-    `${baseUrl}/account-balance?accountId=${accountsIds.sales}&monthly=true`
+    `${baseUrl}/account-balance?accountId=${accountsIds.sales}&monthly=${monthly}`
   );
 };
 

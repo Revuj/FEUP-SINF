@@ -56,7 +56,7 @@ function RevenueVsCost({ height }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const sales = await fetchSales();
+      const sales = await fetchSales(true);
       const costs = await fetchCosts();
       setSalesAndCosts({
         sales: sales.data,

@@ -1,30 +1,48 @@
-import React, { useState, useEffect } from "react";
-import RevenueVsCost from "./RevenueVsCost";
-import GenericCard from "../GenericCard";
-import GenericListing from "../GenericListing";
-import { formatMoney } from "../../helper/CurrencyFormater";
-import "../../styles/Finantial.css";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import { fetchProfitLoss } from "../../actions/financial";
+import React, { useState, useEffect } from 'react';
+import RevenueVsCost from './RevenueVsCost';
+import GenericCard from '../GenericCard';
+import BalanceSheet from './BalanceSheet';
+import { formatMoney } from '../../helper/CurrencyFormater';
+import '../../styles/Finantial.css';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import { fetchProfitLoss, fetchBalanceSheet } from '../../actions/financial';
+import ProfitLossStatement from './ProfitLossStatement';
 
 const Index = () => {
-  const [year, setYear] = useState("2020");
+  const [year, setYear] = useState('2020');
   const [ebit, setEbit] = useState(0);
   const [ebitda, setEbitda] = useState(0);
   const [netIncome, setNetIncome] = useState(0);
   const [cogs, setCogs] = useState(0);
+  const [revenue, setRevenue] = useState(null);
+  const [expenses, setExpenses] = useState(null);
+  const [assets, setAssets] = useState(null);
+  const [liabilities, setLiabilities] = useState(null);
+  const [equity, setEquity] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchProfitLossData = async () => {
       const { data } = await fetchProfitLoss();
       setEbit(data.ebit);
       setEbitda(data.ebitda);
       setNetIncome(data.netIncome);
       setCogs(data.cogs);
+      setRevenue(data.revenue);
+      setExpenses(data.expenses);
     };
-    fetchData();
-  });
+    fetchProfitLossData();
+
+    const fetchBalanceSheetData = async () => {
+      const { data } = await fetchBalanceSheet();
+      console.log('balance sheet');
+      console.log(data);
+      setAssets(data.assets);
+      setLiabilities(data.liabilities);
+      setEquity(data.equity);
+    };
+    fetchBalanceSheetData();
+  }, []);
 
   return (
     <div>
@@ -46,9 +64,9 @@ const Index = () => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: "1px solid black",
-              backgroundColor: "#37d5d6",
-              color: "white",
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
             }}
           />
           <GenericCard
@@ -58,9 +76,9 @@ const Index = () => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: "1px solid black",
-              backgroundColor: "#37d5d6",
-              color: "white",
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
             }}
           />
           <GenericCard
@@ -70,9 +88,9 @@ const Index = () => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: "1px solid black",
-              backgroundColor: "#37d5d6",
-              color: "white",
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
             }}
           />
           <GenericCard
@@ -82,9 +100,9 @@ const Index = () => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: "1px solid black",
-              backgroundColor: "#37d5d6",
-              color: "white",
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
             }}
           />
           <GenericCard
@@ -94,9 +112,9 @@ const Index = () => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: "1px solid black",
-              backgroundColor: "#37d5d6",
-              color: "white",
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
             }}
           />
           <GenericCard
@@ -106,42 +124,37 @@ const Index = () => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: "1px solid black",
-              backgroundColor: "#37d5d6",
-              color: "white",
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
             }}
           />
         </section>
         <RevenueVsCost />
 
         <section className="listingInfo">
-          <GenericListing
-            title="Balance sheet"
-            data={[
-              { label: "Cash", description: "+6600" },
-              { label: "Accounts Receivable", description: "+6200" },
-              { label: "Tools and Equipment", description: "+25000" },
-              { label: "Notes Payable", description: "-5000" },
-              { label: "Accounts Payable", description: "-25000" },
-            ]}
-            style={{ width: "25%", backgroundColor: "white" }}
-            itemStyle={{ borderTop: "1px solid black" }}
-          />
+          {revenue && expenses && (
+            <ProfitLossStatement
+              title="Profit & Loss Statement"
+              data={[
+                { name: 'revenue', data: revenue },
+                { name: 'expenses', data: expenses },
+              ]}
+              style={{ width: '25%', backgroundColor: 'white' }}
+              itemStyle={{ borderTop: '1px solid black' }}
+            />
+          )}
 
-          <GenericListing
-            title="Income statement"
-            data={[
-              { label: "Revenue", description: "+21186" },
-              { label: "Cost of sales", description: "-11745" },
-              { label: "Operating expenses", description: "-4172" },
-              { label: "Interest income", description: "+12" },
-              { label: "Interest expense", description: "-799" },
-              { label: "Income tax expense", description: "-1789" },
-              { label: "Profit for the year", description: "2486" },
-            ]}
-            style={{ width: "25%", backgroundColor: "white" }}
-            itemStyle={{ borderTop: "1px solid black" }}
-          />
+          {assets && liabilities && equity && (
+            <BalanceSheet
+              title="Profit & Loss Statement"
+              assets={assets}
+              liabilities={liabilities}
+              equity={equity}
+              style={{ width: '25%', backgroundColor: 'white' }}
+              itemStyle={{ borderTop: '1px solid black' }}
+            />
+          )}
         </section>
       </div>
     </div>

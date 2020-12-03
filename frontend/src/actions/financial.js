@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from 'axios';
 
-const baseUrl = "/api/financial";
+const baseUrl = '/api/financial';
 
 const accountsIds = {
   sales: 71,
@@ -9,6 +9,10 @@ const accountsIds = {
 
 const fetchProfitLoss = () => {
   return axios.get(`${baseUrl}/profit-loss`, {});
+};
+
+const fetchBalanceSheet = () => {
+  return axios.get(`${baseUrl}/balance-sheet`, {});
 };
 
 const fetchSales = (monthly) => {
@@ -23,4 +27,4 @@ const fetchCosts = () => {
   );
 };
 
-export { fetchProfitLoss, fetchSales, fetchCosts };
+export { fetchProfitLoss, fetchBalanceSheet, fetchSales, fetchCosts };

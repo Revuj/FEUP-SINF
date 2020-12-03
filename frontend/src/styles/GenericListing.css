@@ -37,3 +37,26 @@
 .listCard-listItem-description {
   margin: 0;
 }
+
+.list-section-title {
+  background: none;
+  padding: 0.75em 1em;
+  color: #262626;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.list-subsection-title {
+  background: none;
+  padding: 0.75em 2em;
+  color: var(--accent-color);
+  font-weight: 600;
+  font-size: smaller;
+  text-transform: uppercase;
+}
+
+#balance-sheet,
+#profit-loss-statement {
+  max-height: 500px;
+  overflow-y: auto;
+}

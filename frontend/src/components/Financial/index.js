@@ -147,7 +147,7 @@ const Index = () => {
 
           {assets && liabilities && equity && (
             <BalanceSheet
-              title="Profit & Loss Statement"
+              title="Balance Sheet"
               assets={assets}
               liabilities={liabilities}
               equity={equity}

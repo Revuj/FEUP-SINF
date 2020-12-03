@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import ProductInfo from "./ProductInfo";
@@ -6,7 +6,13 @@ import ProductSuppliers from "./ProductSuppliers";
 import ProductTopClients from "./ProductTopClients";
 import ProductProfit from "./ProductProfit";
 import UnitsSold from "./UnitsSold";
-import UnitsStock from "./UnitsStock";
+import axios from "axios";
+
+const fetchUnitsSold = async(id) => {
+  return axios.get('/api/products/units-sold');
+};
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,13 +27,14 @@ export default function Product() {
   return (
     <div className={classes.root}>
       <h1>Product</h1>
-
       <Grid container spacing={3}>
         <Grid item xs={4}>
           <ProductInfo />
           <UnitsSold />
-          <UnitsStock />
+          {/*
+          <UnitsStock / */}
         </Grid>
+        {/** 
         <Grid item xs={8} sm={8}>
           <ProductProfit />
         </Grid>
@@ -36,7 +43,7 @@ export default function Product() {
         </Grid>
         <Grid item xs={12} sm={6}>
           <ProductTopClients />
-        </Grid>
+        </Grid>*/}
       </Grid>
     </div>
   );

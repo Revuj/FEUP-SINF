@@ -1,7 +1,15 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
+import axios from 'axios';
+import { useParams } from "react-router-dom";
+
+
+const fetchProductData = async(id) => {
+  return await axios.get(`/api/products/${id}`);
+} 
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -15,6 +23,26 @@ const useStyles = makeStyles((theme) => ({
 
 const ProductInfo = () => {
   const classes = useStyles();
+  const {id} = useParams();
+
+  const [loading, setLoading] = useState(true);
+  const [product, setProduct] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async() => {
+      const {data} = await fetchProductData(id);
+      setProduct(data);
+      setLoading(false);
+    }
+    fetchData();
+
+  }, [id]);
+
+  if (loading) {
+    return <div className="App">Loading...</div>;
+  }
+
+  console.log(product)
 
   return (
     <Paper className={classes.paper}>
@@ -23,31 +51,28 @@ const ProductInfo = () => {
         <Grid item xs={6}>
           <div>
             <span className={classes.item_title}>ID</span>
-            <span>13</span>
+            <span>{product.itemKey}</span>
           </div>
           <div>
             <span className={classes.item_title}>Name</span>
-            <span>Favo de mel</span>
+            <span></span>
           </div>
         </Grid>
         <Grid item xs={6}>
           <div>
             <span className={classes.item_title}>Average PVP</span>
-            <span>15 €</span>
+            <span></span>
           </div>
           <div>
             <span className={classes.item_title}>Supplier</span>
-            <span>Abelhas LDA</span>
+            <span></span>
           </div>
         </Grid>
         <Grid item xs={12}>
           <div>
             <span className={classes.item_title}>Description</span>
             <span>
-              O mel, é fabricado exclusivamente pelas abelhas para estas se
-              alimentarem durante o Inverno. Contudo, a quantidade de mel que
-              fabricam é cerca de três vezes superior àquela de que necessitam
-              para sobreviver.
+              {product.description}
             </span>
           </div>
         </Grid>

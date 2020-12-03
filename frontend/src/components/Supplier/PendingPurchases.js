@@ -77,7 +77,7 @@ export default function PendingPurchases() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
+            {rows 
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (

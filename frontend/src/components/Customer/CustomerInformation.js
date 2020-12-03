@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CustomerInformation = () => {
+const CustomerInformation = ({id}) => {
   const classes = useStyles();
 
   return (
@@ -23,7 +23,7 @@ const CustomerInformation = () => {
         <Grid item xs={8}>
           <div>
             <span className={classes.item_title}>ID</span>
-            <span>0002</span>
+            <span>{id}</span>
           </div>
           <div>
             <span className={classes.item_title}>Name</span>

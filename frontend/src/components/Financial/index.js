@@ -13,6 +13,7 @@ const Index = () => {
   const [ebit, setEbit] = useState(0);
   const [ebitda, setEbitda] = useState(0);
   const [netIncome, setNetIncome] = useState(0);
+  const [cogs, setCogs] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,6 +21,7 @@ const Index = () => {
       setEbit(data.ebit);
       setEbitda(data.ebitda);
       setNetIncome(data.netIncome);
+      setCogs(data.cogs);
     };
     fetchData();
   });
@@ -100,7 +102,7 @@ const Index = () => {
           <GenericCard
             title="Cogs"
             description="Cost of goods sold"
-            amount="25000"
+            amount={cogs}
             formatter={formatMoney}
             unit="€"
             styleTitle={{

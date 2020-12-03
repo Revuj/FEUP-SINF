@@ -11,16 +11,16 @@ const fetchProfitLoss = () => {
   return axios.get(`${baseUrl}/profit-loss`, {});
 };
 
-const fetchSalesAndCosts = () => {
-  const sales = axios.get(
+const fetchSales = () => {
+  return axios.get(
     `${baseUrl}/account-balance?accountId=${accountsIds.sales}&monthly=true`
   );
-
-  const costs = axios.get(
-    `${baseUrl}/account-balance?accountId=${accountsIds.costs}&monthly=true`
-  );
-
-  return { sales, costs };
 };
 
-export { fetchProfitLoss, fetchSalesAndCosts };
+const fetchCosts = () => {
+  return axios.get(
+    `${baseUrl}/account-balance?accountId=${accountsIds.costs}&monthly=true`
+  );
+};
+
+export { fetchProfitLoss, fetchSales, fetchCosts };

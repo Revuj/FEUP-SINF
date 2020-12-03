@@ -1236,6 +1236,16 @@ const profitLoss = (journals, accounts) => {
     expensesInterest -
     taxes.reduce((acc, curr) => acc + curr.value, 0);
 
+  let cogs = 0;
+  for (let i = 0; i < expenses.length; i++) {
+    if (
+      expenses[i].name ===
+      "Custo das mercadorias vendidas e das matérias consumidas"
+    ) {
+      cogs = expenses[i].value;
+    }
+  }
+
   return {
     revenue,
     expenses,
@@ -1245,6 +1255,7 @@ const profitLoss = (journals, accounts) => {
     ebitda,
     ebit,
     netIncome,
+    cogs,
   };
 };
 

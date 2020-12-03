@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchSalesAndCosts } from "../../actions/financial";
+import { fetchSales, fetchCosts } from "../../actions/financial";
 import { Line } from "react-chartjs-2";
 
 const initial_data = {
@@ -8,6 +8,7 @@ const initial_data = {
     "Feb",
     "Mar",
     "Apr",
+    "May",
     "Jun",
     "Jul",
     "Aug",
@@ -50,38 +51,56 @@ const options = {
 };
 
 function RevenueVsCost({ height }) {
-  const [sales, setSales] = useState(null);
-  const [costs, setCosts] = useState(null);
+  const [salesAndCosts, setSalesAndCosts] = useState(null);
   const [graphData, setGraphData] = useState(initial_data);
-
-  const updateGraph = () => {
-    if (sales && costs) {
-      setGraphData(
-        initial_data.datasets.forEach((dataset) => {
-          dataset.data =
-            dataset.label == "Sales" ? sales.totalCredit : costs.totalDebit;
-        })
-      );
-    }
-  };
 
   useEffect(() => {
     const fetchData = async () => {
-      const salesAndCosts = await fetchSalesAndCosts();
-      setSales(salesAndCosts.sales);
-      setCosts(salesAndCosts.costs);
+      const sales = await fetchSales();
+      const costs = await fetchCosts();
+      setSalesAndCosts({
+        sales: sales.data,
+        costs: costs.data,
+      });
     };
     fetchData();
   }, []);
 
   useEffect(() => {
+    const updateGraph = () => {
+      if (salesAndCosts) {
+        console.log(salesAndCosts);
+        setGraphData({
+          labels: initial_data.labels,
+          datasets: [
+            {
+              label: "Sales",
+              data: salesAndCosts.sales.totalCredit,
+              fill: false,
+              backgroundColor: "rgb(255, 99, 132)",
+              borderColor: "rgba(255, 99, 132, 0.2)",
+              yAxisID: "y-axis-1",
+            },
+            {
+              label: "Costs",
+              data: salesAndCosts.costs.totalDebit,
+              fill: false,
+              backgroundColor: "rgb(54, 162, 235)",
+              borderColor: "rgba(54, 162, 235, 0.2)",
+              yAxisID: "y-axis-1",
+            },
+          ],
+        });
+      }
+    };
+
     updateGraph();
-  }, [sales, costs]);
+  }, [salesAndCosts]);
 
   return (
     <div className="chart">
       <h3 className="chart-title">Sales vs Costs</h3>
-      <Line height={height || 75} data={initial_data} options={options} />
+      <Line height={height || 75} data={graphData} options={options} />
     </div>
   );
 }

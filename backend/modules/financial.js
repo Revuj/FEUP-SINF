@@ -1248,6 +1248,19 @@ const profitLoss = (journals, accounts) => {
   };
 };
 
+/**
+ *
+ * GPM = (Net Sales - Cogs)/ Net Sales
+ */
+const grossProfitMargin = (journal) => {
+  // 71 corresponde a vendas
+ const revenue = processJournals(journal, '71', false);
+ // 61 corresponde a custo das mercadorias que foram vendidas
+ const costOfGods = processJournals(journal, '61', false);
+ const netSales = revenue.totalCredit - revenue.totalDebit;
+ return (netSales - (costOfGods.totalDebit - costOfGods.totalCredit))/ netSales;
+};
+
 module.exports = (server, db) => {
   server.get("/api/financial/balance-sheet", (req, res) => {
     const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
@@ -1290,11 +1303,17 @@ module.exports = (server, db) => {
     const journal = db.GeneralLedgerEntries.Journal;
     const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
     res.json({ebitda: profitLoss(journal, accounts).ebitda});
-  })
+  });
 
   server.get('/api/financial/ebit', (req, res) => {
     const journal = db.GeneralLedgerEntries.Journal;
     const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
     res.json({ebit: profitLoss(journal, accounts).ebit});
-  })
+  });
+
+  server.get('/api/financial/gpm', (req, res) => {
+    const journal = db.GeneralLedgerEntries.Journal;
+
+    res.json({gpm : grossProfitMargin(journal) });
+  });
 };

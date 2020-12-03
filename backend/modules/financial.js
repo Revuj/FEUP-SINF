@@ -1283,7 +1283,18 @@ module.exports = (server, db) => {
       req.query.accountId,
       req.query.monthly === "true"
     );
-
     res.json(values);
   });
+
+  server.get('/api/financial/ebitda', (req, res) => {
+    const journal = db.GeneralLedgerEntries.Journal;
+    const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
+    res.json({ebitda: profitLoss(journal, accounts).ebitda});
+  })
+
+  server.get('/api/financial/ebit', (req, res) => {
+    const journal = db.GeneralLedgerEntries.Journal;
+    const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
+    res.json({ebit: profitLoss(journal, accounts).ebit});
+  })
 };

@@ -43,9 +43,8 @@ const totalPurchases = (orders, supplier, year) => {
     const validOrders =  orders.filter(order => 
       order.sellerSupplierParty === supplier &&
       moment(order.documentDate).year() === year);
-
       const total = validOrders.reduce((total, currentOrder) => total + currentOrder.payableAmount.amount, 0);
-      return {totalPrice : total, message : "success", totalOrders: validOrders.length};
+      return {totalPrice : total, message : "success", totalOrders: validOrders.length, orders};
   }
   
    return { message : "There was an error processing the orders"};

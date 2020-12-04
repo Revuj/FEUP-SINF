@@ -10,6 +10,10 @@ const fetchProductData = async(id) => {
   return await axios.get(`/api/products/${id}`);
 } 
 
+const fetchAvg = async(id) => {
+  return await axios.get(`/api/products/${id}/avg-price`)
+}
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -27,11 +31,14 @@ const ProductInfo = () => {
 
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState(null);
+  const [avg, setAvg] = useState(null);
 
   useEffect(() => {
     const fetchData = async() => {
       const {data} = await fetchProductData(id);
+      const prod = await fetchAvg(id);
       setProduct(data);
+      setAvg(prod.data.avg)
       setLoading(false);
     }
     fetchData();
@@ -42,31 +49,32 @@ const ProductInfo = () => {
     return <div className="App">Loading...</div>;
   }
 
-  console.log(product)
-
   return (
     <Paper className={classes.paper}>
       <h3>Product Information</h3>
       <Grid container spacing={3}>
-        <Grid item xs={6}>
+        <Grid item xs={12}>
           <div>
             <span className={classes.item_title}>ID</span>
             <span>{product.itemKey}</span>
           </div>
+          {/** 
           <div>
             <span className={classes.item_title}>Name</span>
             <span></span>
-          </div>
+          </div>*/}
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12}>
           <div>
             <span className={classes.item_title}>Average PVP</span>
-            <span></span>
+            <span>{avg}</span>
           </div>
+
+          {/**
           <div>
             <span className={classes.item_title}>Supplier</span>
             <span></span>
-          </div>
+          </div> */}
         </Grid>
         <Grid item xs={12}>
           <div>

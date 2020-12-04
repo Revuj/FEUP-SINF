@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -9,19 +9,25 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import { formatMoney } from "../../helper/CurrencyFormater";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+
+const fetchSuppliers = async(id) => {
+  return axios.get(`/api/products/${id}/suppliers`);
+}
 
 const columns = [
   { id: "id", label: "ID", minWidth: 70, align: "center" },
   { id: "name", label: "Name", minWidth: 150, align: "center" },
   {
-    id: "quantity",
-    label: "Quantity",
+    id: "value",
+    label: "value",
     minWidth: 150,
     align: "center",
   },
   {
-    id: "amount",
-    label: "Amount",
+    id: "units",
+    label: "Units",
     minWidth: 150,
     align: "center",
     format: (value) => formatMoney(value),
@@ -29,10 +35,7 @@ const columns = [
 ];
 
 const rows = [
-  { id: 1, name: "Abelhas LDA", quantity: 5000, amount: 15 },
-  { id: 2, name: "Abelhas L LDA", quantity: 200, amount: 20 },
-  { id: 3, name: "Abelhas S LDA", quantity: 2300, amount: 45 },
-  { id: 4, name: "Abelhas M LDA", quantity: 5100, amount: 12 },
+
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -46,9 +49,26 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ProductSuppliers() {
+
+  const {id} = useParams();
   const classes = useStyles();
-  const [page, setPage] = React.useState(0);
+  const [page, setPage] =useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [suppliers, setSuppliers] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+
+    const fetchData = async() => {
+      const {data} = await fetchSuppliers(id);
+      setSuppliers(data);
+      setLoading(false);
+    }
+
+    fetchData();
+
+  },[id]);
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -58,6 +78,11 @@ export default function ProductSuppliers() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
 
   return (
     <Paper className={classes.root}>
@@ -77,12 +102,13 @@ export default function ProductSuppliers() {
               ))}
             </TableRow>
           </TableHead>
+          {
           <TableBody>
-            {rows
+            {suppliers
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
@@ -96,7 +122,7 @@ export default function ProductSuppliers() {
                   </TableRow>
                 );
               })}
-          </TableBody>
+          </TableBody>}
         </Table>
       </TableContainer>
       <TablePagination

@@ -1,6 +1,7 @@
 const processSuppliers = require('./processSuppliers');
 
 const calculateStockNumber = (productInfo) => {
+    //console.log(productInfo.materialsItemWarehouses[0]);
     return productInfo.materialsItemWarehouses.reduce((total, currentProduct) => 
         total + currentProduct.stockBalance, 0);
 }
@@ -30,11 +31,14 @@ module.exports = (server, db) => {
 
     server.get('/api/products/:id/units-sold', (req, res) => {
         const {id} = req.params;
-        const  invoices = db.SourceDocuments.SalesInvoices.Invoice;
+        let  invoices = db.SourceDocuments.SalesInvoices.Invoice;
+        if (!Array.isArray(invoices)) {
+            invoices = [invoices];
+        }
         let unitsSold = 0;
         let value = 0;
 
-        invoices.forEach( ({Line}) => {
+        invoices.forEach(({Line}) => {
             if (Array.isArray(Line)){
                 Line.forEach( ({ProductCode, Quantity, UnitPrice}) => {
                     if (ProductCode === id) {
@@ -99,8 +103,8 @@ module.exports = (server, db) => {
             method: 'GET',
             url: `${global.basePrimaveraUrl}/purchases/orders`,
         };
-        //
         const year = 2020;
+        console.log(year)
         return global.request(options, function (error, response, body) {
             if (error) res.json(error);
                 res.json(processSuppliers(id, JSON.parse(body), year));

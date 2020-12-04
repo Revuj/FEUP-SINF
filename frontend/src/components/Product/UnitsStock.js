@@ -1,7 +1,14 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import { formatMoney } from "../../helper/CurrencyFormater";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+
+
+const fetchStockUnits = async(id) => {
+    return axios.get(`/api/products/${id}/stock-units`);
+};
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -16,12 +23,29 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UnitsSold = () => {
+
+  const {id} = useParams();
   const classes = useStyles();
+  const [loading, setLoading] = useState(true);
+  const [info, setInfo] = useState(null);
+
+  useEffect(() => {
+      const getData = async() =>{
+        const {data} = await fetchStockUnits(id);
+        setInfo(data);
+        setLoading(false);
+      };
+      getData();
+  }, [id]);
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
 
   return (
     <Paper className={classes.paper}>
-      <h3>Units in Stock</h3>
-      <p className={classes.value}>10000 ({formatMoney(105000)}€)</p>
+      <h3>Units in Stock (todo money part)</h3>
+    <p className={classes.value}>{info.totalStock}({formatMoney()}€)</p>
     </Paper>
   );
 };

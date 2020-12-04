@@ -6,12 +6,8 @@ import ProductSuppliers from "./ProductSuppliers";
 import ProductTopClients from "./ProductTopClients";
 import ProductProfit from "./ProductProfit";
 import UnitsSold from "./UnitsSold";
+import UnitsStock from "./UnitsStock";
 import axios from "axios";
-
-const fetchUnitsSold = async(id) => {
-  return axios.get('/api/products/units-sold');
-};
-
 
 
 const useStyles = makeStyles((theme) => ({
@@ -31,16 +27,18 @@ export default function Product() {
         <Grid item xs={4}>
           <ProductInfo />
           <UnitsSold />
-          {/*
-          <UnitsStock / */}
+          <UnitsStock />
         </Grid>
         {/** 
         <Grid item xs={8} sm={8}>
           <ProductProfit />
-        </Grid>
+        </Grid> **/}
+        
         <Grid item xs={12} sm={6}>
           <ProductSuppliers />
         </Grid>
+        
+        {/**
         <Grid item xs={12} sm={6}>
           <ProductTopClients />
         </Grid>*/}

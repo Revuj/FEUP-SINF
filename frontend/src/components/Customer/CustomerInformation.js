@@ -1,7 +1,15 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
+import axios from 'axios';
+import { useParams } from "react-router-dom";
+
+
+const fetchCustomerData = async (id) => {
+  return await axios.get(`/api/customer/${id}`);
+}
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -13,8 +21,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CustomerInformation = ({id}) => {
+const CustomerInformation = () => {
   const classes = useStyles();
+  const{id} = useParams();
+  const [customer, setCustomer] = useState(null);
+  const [loading, setloading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async() => {
+      console.log(id);
+      const{data} = await fetchCustomerData(id);
+      setCustomer(data);
+      setloading(false);
+    };
+
+    fetchData();
+  }, [id]);
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+  
+  console.log(customer);
 
   return (
     <Paper className={classes.paper}>

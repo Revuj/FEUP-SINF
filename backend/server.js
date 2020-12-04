@@ -21,6 +21,7 @@ const suppliersAPI = require('./api/suppliers');
 const inventoryAPI = require('./api/inventory');
 const salesAPI = require('./api/sales');
 const productAPI = require("./api/product");
+const clientAPI = require("./api/customer");
 
 
 FinancialController(server, db);
@@ -29,6 +30,8 @@ purchasesAPI(server);
 suppliersAPI(server);
 inventoryAPI(server);
 productAPI(server, db);
+clientAPI(server);
+
 
 server.use(_router);
 

@@ -45,7 +45,7 @@ function App() {
         <Route path="/login" exact component={Login} />
         <Route path="/dashboard" exact component={Dashboard} />
         <Route path="/product/:id" exact component={Product} />
-        <Route path="/customer" exact component={Customer} />
+        <Route path="/customer/:id" exact component={Customer} />
         <Route path="/supplier/:id" exact component={Supplier} />
       </AuthContext.Provider>
     </Router>

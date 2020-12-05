@@ -4,6 +4,7 @@ module.exports = (server, db) => {
   // monthly sales by year
   server.get('/api/sales/:year', (req, res) => {
     const { year } = req.params;
+    console.log(db.SourceDocuments.SalesInvoices.Invoice);
     const salesInvoices = db.SourceDocuments.SalesInvoices.Invoice.filter(
       (invoice) => moment(invoice.InvoiceDate).year() == year
     );

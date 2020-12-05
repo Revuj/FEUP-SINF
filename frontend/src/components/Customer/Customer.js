@@ -23,10 +23,11 @@ export default function Customer() {
         <Grid item xs={8}>
           <CustomerInformation />
         </Grid>
-        {/** 
+
         <Grid item xs={4}>
           <TotalPurchased />
         </Grid>
+      {/** 
         <Grid item xs={12}>
           <TopPurchases />
         </Grid>*/}

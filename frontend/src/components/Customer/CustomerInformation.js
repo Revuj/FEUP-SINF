@@ -43,7 +43,8 @@ const CustomerInformation = () => {
   }
   
   console.log(customer);
-
+ // faltam algum atributos tao a null
+ // temos outros atributos que se calhar deviamos colocar
   return (
     <Paper className={classes.paper}>
       <h3>Customer Information</h3>
@@ -51,29 +52,29 @@ const CustomerInformation = () => {
         <Grid item xs={8}>
           <div>
             <span className={classes.item_title}>ID</span>
-            <span>{id}</span>
+            <span>{customer.partyKey}</span>
           </div>
           <div>
             <span className={classes.item_title}>Name</span>
-            <span>Celeiro</span>
+            <span>{customer.contactName}</span>
           </div>
           <div>
             <span className={classes.item_title}>Address</span>
-            <span>Gaia Shopping, Av. dos Descobrimentos, 549</span>
+            <span>{customer.streetName} {customer.buildingNumber}</span>
           </div>
         </Grid>
         <Grid item xs={4}>
           <div>
             <span className={classes.item_title}>City</span>
-            <span>Vila Nova de Gaia</span>
+            <span>{customer.cityName}</span>
           </div>
           <div>
             <span className={classes.item_title}>Country</span>
-            <span>PT</span>
+            <span>{customer.countryName}</span>
           </div>
           <div>
             <span className={classes.item_title}>Postal Code</span>
-            <span>4400-001</span>
+            <span>{customer.postalZone}</span>
           </div>
         </Grid>
       </Grid>

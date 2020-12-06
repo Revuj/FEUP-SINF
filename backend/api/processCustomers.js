@@ -1,25 +1,25 @@
 const moment = require('moment');
 
 module.exports = (product, orders, year) => {
-    const suppliers = {};
+    const customers = {};
     if (orders) {
       orders
         .filter((order) => moment(order.documentDate).year() == year)
         .forEach((order) => {
           order.documentLines
-            .filter((line) => (product ? line.purchasesItem === product : true))
+            .filter((line) => (product ? line.salesItem === product : true))
             .forEach((lineParsed) => {
-              if (suppliers[order.sellerSupplierParty]) {
-                suppliers[order.sellerSupplierParty].value += Number(
+              if (customers[order.buyerCustomerParty]) {
+                customers[order.buyerCustomerParty].value += Number(
                   lineParsed.grossValue.amount
                 );
-                suppliers[order.sellerSupplierParty].units += Number(
+                customers[order.buyerCustomerParty].units += Number(
                   lineParsed.quantity
                 );
               } else {
-                suppliers[order.sellerSupplierParty] = {
-                  id: order.sellerSupplierParty,
-                  name: order.sellerSupplierPartyName,
+                customers[order.buyerCustomerParty] = {
+                  id: order.buyerCustomerParty,
+                  name: order.buyerCustomerPartyName,
                   value: Number(lineParsed.grossValue.amount),
                   units: Number(lineParsed.quantity),
                 };
@@ -27,5 +27,5 @@ module.exports = (product, orders, year) => {
             });
         });
     }
-    return Object.keys(suppliers).map((supplier) => suppliers[supplier]);
+    return Object.keys(customers).map((customer) => customers[customer]);
 };

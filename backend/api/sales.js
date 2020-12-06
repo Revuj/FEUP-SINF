@@ -1,20 +1,32 @@
 const moment = require('moment');
 
+const processSales = (receipts, year) => {
+  let monthlyCumulativeValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+  receipts
+    .filter((receipt) => moment(receipt.documentDate).year() == year)
+    .forEach(({ documentDate, payableAmount }) => {
+      const month = moment(documentDate).month();
+
+      monthlyCumulativeValue[month] += payableAmount.amount;
+    });
+
+  return monthlyCumulativeValue;
+};
+
 module.exports = (server, db) => {
   // monthly sales by year
   server.get('/api/sales/:year', (req, res) => {
     const { year } = req.params;
-    console.log(db.SourceDocuments.SalesInvoices.Invoice);
-    const salesInvoices = db.SourceDocuments.SalesInvoices.Invoice.filter(
-      (invoice) => moment(invoice.InvoiceDate).year() == year
-    );
-    const monthlyCumulative = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    salesInvoices.forEach((invoice) => {
-      monthlyCumulative[parseInt(invoice.Period, 10) - 1] =
-        parseFloat(invoice.DocumentTotals.GrossTotal) +
-        monthlyCumulative[parseInt(invoice.Period, 10) - 1];
+    const options = {
+      method: 'GET',
+      url: `${global.basePrimaveraUrl}/accountsReceivable/receipts`
+    };
+
+    return global.request(options, function (error, response, body) {
+      if (error) res.json(error);
+      res.json(processSales(JSON.parse(body), year));
     });
-    res.json({ monthlyCumulative });
   });
 
   // net sales

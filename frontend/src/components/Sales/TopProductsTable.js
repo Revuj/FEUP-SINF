@@ -31,7 +31,6 @@ const TopProductsTable = ({
   useEffect(() => {
     showLoader();
 
-    console.log("oioi")
     axios
       .get(`/api/sales/products/${year}`)
       .then((response) => {

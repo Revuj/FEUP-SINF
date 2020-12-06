@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import axios from 'axios';
 import useFullPageLoader from '../../hooks/FullPageLoader';
 import PaginationComponent from '../Pagination';
 import Search from '../Search';
@@ -20,10 +21,10 @@ const SalesBacklogTable = ({
   const ITEMS_PER_PAGE = numberItemsPerPage;
 
   const headers = [
-    { name: 'Date of order', field: 'date_order', sortable: false },
-    { name: 'Customer', field: 'customer_name', sortable: true },
+    { name: 'Date of order', field: 'date', sortable: false },
+    { name: 'Customer', field: 'customer', sortable: true },
     { name: 'Items', field: 'items', sortable: true },
-    { name: 'Total order cost', field: 'total_cost', sortable: false },
+    { name: 'Total order cost', field: 'value', sortable: false },
   ];
 
   /* this is going to be used in the feature when doing the api call */
@@ -33,7 +34,15 @@ const SalesBacklogTable = ({
     const getData = () => {
       showLoader();
 
-      setSales(fetchOngoingSales());
+      axios
+        .get(`/api/sales/backlogProducts`)
+        .then((response) => {
+          console.log(response.data)
+          setSales(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
 
       hideLoader();
     };
@@ -70,18 +79,6 @@ const SalesBacklogTable = ({
     );
   }, [sales, currentPage, search, sorting]);
 
-  const getListOfitemsInOrder = (items) => {
-    var output = [];
-
-    //Loop over your li's and grab the html content
-    items.forEach((item) => {
-      output.push(item.number_units + 'x ' + item.name);
-    });
-
-    //Set the paragraph value by joining the outputs together
-    return output.join('\n');
-  };
-
   return (
     <>
       <section className="table" style={containerStyle}>
@@ -104,10 +101,10 @@ const SalesBacklogTable = ({
           <tbody>
             {clientsData.map((sale) => (
               <tr key={sale.id}>
-                <th scope="row">{sale.date_order}</th>
-                <td>{sale.customer_name}</td>
-                <td>{getListOfitemsInOrder(sale.items)}</td>
-                <td>{sale.total_cost}</td>
+                <th scope="row">{sale.date}</th>
+                <td>{sale.customer}</td>
+                <td>{sale.items}</td>
+                <td>{sale.value}</td>
               </tr>
             ))}
           </tbody>

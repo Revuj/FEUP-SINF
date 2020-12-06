@@ -50,6 +50,42 @@ const getNetSales = (receipts, year) => {
   return netSales;
 };
 
+const processOrders = orders => {
+  let salesBacklog = {}
+  let counter = 0;
+  orders
+    .filter((order) => moment(order.documentDate).isAfter(moment())) //mudar no futuro
+    .forEach(({ buyerCustomerPartyName, documentDate, documentLines, payableAmount }) => {
+
+      salesBacklog[counter] = {
+        date: documentDate.substr(0, 10),
+        customer: buyerCustomerPartyName,
+        items: '',
+        value: Number(payableAmount.amount)
+      }
+
+      documentLines.forEach(item => {
+        salesBacklog[counter].items += item.quantity + 'x ' + item.description + ';  ';
+      })
+
+      counter++;
+    });
+
+  return Object.keys(salesBacklog).map(order => salesBacklog[order]);
+}
+
+const getSalesBacklog = orders => {
+  let salesBacklog = 0;
+  orders
+    .filter((order) => moment(order.documentDate).isAfter(moment())) //mudar no futuro
+    .forEach(({ payableAmount }) => {
+      salesBacklog += payableAmount.amount;
+    });
+
+  return salesBacklog;
+}
+
+
 module.exports = (server, db) => {
   // monthly sales by year
   server.get('/api/sales/:year([0-9]+)', (req, res) => {
@@ -81,7 +117,7 @@ module.exports = (server, db) => {
 
 
   // sales products
-  server.get('/api/sales/products/:year', (req, res) => {
+  server.get('/api/sales/products/:year([0-9]+)', (req, res) => {
     const { year } = req.params;
 
     const options = {
@@ -92,6 +128,32 @@ module.exports = (server, db) => {
     return global.request(options, function (error, response, body) {
       if (error) res.json(error);
       res.json(processSales(JSON.parse(body), year));
+    });
+  });
+
+  // backlog table
+  server.get('/api/sales/backlogProducts', (req, res) => {
+    const options = {
+      method: 'GET',
+      url: `${global.basePrimaveraUrl}/sales/orders`
+    };
+
+    return global.request(options, function (error, response, body) {
+      if (error) res.json(error);
+      res.json(processOrders(JSON.parse(body)));
+    });
+  });
+
+  // backlog value
+  server.get('/api/sales/backlog', (req, res) => {
+    const options = {
+      method: 'GET',
+      url: `${global.basePrimaveraUrl}/sales/orders`
+    };
+
+    return global.request(options, function (error, response, body) {
+      if (error) res.json(error);
+      res.json(getSalesBacklog(JSON.parse(body)));
     });
   });
 

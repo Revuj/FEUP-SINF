@@ -9,19 +9,22 @@ import { formatMoney } from '../../helper/CurrencyFormater';
 import '../../styles/Sales.css';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { fetchGrossProfitMargin, fetchNetSales } from '../../actions/sales';
+import { fetchGrossProfitMargin, fetchNetSales, fetchBacklogValue } from '../../actions/sales';
 
 const Sales = () => {
   const [year, setYear] = useState('2020');
   const [gpm, setGpm] = useState(0);
+  const [backlog, setBacklog] = useState(0);
   const [netSales, setNetSales] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       const gpm = await fetchGrossProfitMargin();
       const sales = await fetchNetSales(year);
+      const backlogValue = await fetchBacklogValue();
       setGpm(gpm.data.gpm);
       setNetSales(sales.data);
+      setBacklog(backlogValue.data);
     };
     fetchData();
   }, []);
@@ -66,7 +69,7 @@ const Sales = () => {
           <GenericCard
             title="Sales Backlog"
             description="Total value in backlog"
-            amount="300000"
+            amount={backlog}
             formatter={formatMoney}
             unit="€"
             styleTitle={{

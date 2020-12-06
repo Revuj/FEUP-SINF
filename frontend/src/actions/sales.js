@@ -144,4 +144,8 @@ const fetchNetSales = (year) => {
   return axios.get(`api/sales/net/${year}`)
 }
 
-export { fetchYearSales, fetchOngoingSales, fetchGrossProfitMargin, fetchNetSales };
+const fetchBacklogValue = () => {
+  return axios.get(`api/sales/backlog`)
+}
+
+export { fetchYearSales, fetchOngoingSales, fetchGrossProfitMargin, fetchNetSales, fetchBacklogValue };

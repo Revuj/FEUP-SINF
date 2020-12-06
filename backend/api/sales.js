@@ -1,6 +1,6 @@
 const moment = require('moment');
 
-const processSales = (receipts, year) => {
+const processMonthlySales = (receipts, year) => {
   let monthlyCumulativeValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   receipts
@@ -13,6 +13,30 @@ const processSales = (receipts, year) => {
 
   return monthlyCumulativeValue;
 };
+
+const processSales = (invoices, year) => {
+  productSales = {}
+  invoices
+    .filter((invoice) => moment(invoice.documentDate).year() == year && invoice.documentStatus == 2)
+    .forEach(({ documentLines, payableAmount }) => {
+      let salesItem = documentLines[0].salesItem;
+      let salesItemDescription = documentLines[0].salesItemDescription;
+      let quantity = documentLines[0].quantity;
+      if (productSales[salesItem]) {
+        productSales[salesItem].value += Number(payableAmount.amount);
+        productSales[salesItem].quantity += Number(quantity);
+      } else {
+        productSales[salesItem] = {
+          id: salesItem,
+          name: salesItemDescription,
+          value: payableAmount.amount,
+          quantity: quantity
+        }
+      }
+    });
+
+  return Object.keys(productSales).map(product => productSales[product]);
+}
 
 const getNetSales = (receipts, year) => {
   let netSales = 0;
@@ -28,7 +52,7 @@ const getNetSales = (receipts, year) => {
 
 module.exports = (server, db) => {
   // monthly sales by year
-  server.get('/api/sales/:year', (req, res) => {
+  server.get('/api/sales/:year([0-9]+)', (req, res) => {
     const { year } = req.params;
     const options = {
       method: 'GET',
@@ -37,7 +61,7 @@ module.exports = (server, db) => {
 
     return global.request(options, function (error, response, body) {
       if (error) res.json(error);
-      res.json(processSales(JSON.parse(body), year));
+      res.json(processMonthlySales(JSON.parse(body), year));
     });
   });
 
@@ -55,50 +79,20 @@ module.exports = (server, db) => {
     });
   });
 
-  server.get('/api/products/random', (req, res) => {
-    const { id } = req.params;
-    const invoices = db.SourceDocuments.SalesInvoices;
-    res.json(invoices);
-  });
 
   // sales products
-  server.get('/api/sales/products', (req, res) => {
-    let products = {};
-    const validTypes = ['FT', 'FS', 'FR', 'VD'];
-    console.log(db.SourceDocuments.SalesInvoices);
-    db.SourceDocuments.SalesInvoices.Invoice.forEach((invoice) => {
-      const type = invoice.InvoiceType;
+  server.get('/api/sales/products/:year', (req, res) => {
+    const { year } = req.params;
 
-      if (!(invoice.Line.length && validTypes.includes(type))) return;
+    const options = {
+      method: 'GET',
+      url: `${global.basePrimaveraUrl}/billing/invoices `
+    };
 
-      invoice.Line.forEach((line) => {
-        const { ProductCode, UnitPrice, ProductDescription, Quantity } = line;
-        if (Object.prototype.hasOwnProperty.call(products, ProductCode)) {
-          products[ProductCode].Quantity += parseInt(Quantity, 10);
-        } else {
-          products[ProductCode] = {
-            ProductDescription,
-            UnitPrice: parseFloat(UnitPrice, 10),
-            Quantity: parseInt(Quantity, 10),
-          };
-        }
-      });
+    return global.request(options, function (error, response, body) {
+      if (error) res.json(error);
+      res.json(processSales(JSON.parse(body), year));
     });
-
-    products = Object.keys(products)
-      .sort((a, b) => products[b].Quantity - products[a].Quantity)
-      .map((productCode) => ({
-        id: productCode,
-        name: products[productCode].ProductDescription,
-        quantity: products[productCode].Quantity,
-        value: Number(
-          (
-            products[productCode].Quantity * products[productCode].UnitPrice
-          ).toFixed(2)
-        ),
-      }));
-
-    res.json(products);
   });
 
   // sales clients

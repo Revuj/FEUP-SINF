@@ -10,6 +10,7 @@ const TopProductsTable = ({
   numberItemsPerPage,
   containerStyle,
   themeColor,
+  year
 }) => {
   const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [totalItems, setTotalItems] = useState(0);
@@ -21,19 +22,20 @@ const TopProductsTable = ({
   const ITEMS_PER_PAGE = numberItemsPerPage;
 
   const headers = [
-    { name: 'No#', field: 'rank', sortable: false },
+    { name: 'ID', field: 'id', sortable: false },
     { name: 'Name', field: 'name', sortable: true },
-    { name: 'Number of sales', field: 'n_sold', sortable: true },
-    { name: 'Value', field: 'stock', sortable: false },
+    { name: 'Sales', field: 'quantity', sortable: true },
+    { name: 'Value', field: 'value', sortable: false },
   ];
 
   useEffect(() => {
     showLoader();
 
+    console.log("oioi")
     axios
-      .get(`/api/sales/products`)
+      .get(`/api/sales/products/${year}`)
       .then((response) => {
-        console.log(response.data);
+        console.log(response.data)
         setProducts(response.data);
       })
       .catch((error) => {
@@ -93,10 +95,10 @@ const TopProductsTable = ({
           <tbody>
             {clientsData.map((product) => (
               <tr key={product.id}>
-                <th scope="row">{product.rank}</th>
+                <th scope="row">{product.id}</th>
                 <td>{product.name}</td>
-                <td>{product.n_sold}</td>
-                <td>{product.stock}</td>
+                <td>{product.quantity}</td>
+                <td>{product.value}</td>
               </tr>
             ))}
           </tbody>

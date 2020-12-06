@@ -86,7 +86,7 @@ const Sales = () => {
             <BestClientsTable numberItemsPerPage={5} />
           </span>
           <span>
-            <TopProductsTable numberItemsPerPage={4} />
+            <TopProductsTable numberItemsPerPage={4} year={year} />
             <SalesBacklogTable numberItemsPerPage={4} />
           </span>
         </section>

@@ -83,7 +83,9 @@ const Sales = () => {
         <section className="row-50-50">
           <span>
             <SalesByTime year={year} />
-            <BestClientsTable numberItemsPerPage={5} />
+            <BestClientsTable 
+              numberItemsPerPage={5}
+              year={year} />
           </span>
           <span>
             <TopProductsTable numberItemsPerPage={4} year={year} />

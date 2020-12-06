@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import axios from 'axios';
 import useFullPageLoader from '../../hooks/FullPageLoader';
 import PaginationComponent from '../Pagination';
 import Search from '../Search';
@@ -10,6 +11,7 @@ const BestClientsTable = ({
   numberItemsPerPage,
   containerStyle,
   themeColor,
+  year,
 }) => {
   const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [totalItems, setTotalItems] = useState(0);
@@ -22,24 +24,26 @@ const BestClientsTable = ({
   const headers = [
     { name: 'No#', field: 'rank', sortable: false },
     { name: 'Name', field: 'name', sortable: true },
-    { name: 'Email', field: 'email', sortable: true },
-    { name: 'Total money spent', field: 'total_spent', sortable: false },
+    { name: 'Units Purchased', field: 'units', sortable: true },
+    { name: 'Value Purchased', field: 'value', sortable: false },
   ];
 
   /* this is going to be used in the feature when doing the api call */
   const [clients, setClients] = useState([]);
-  /* insert the information fetched in the api (now using a dummy api) */
+  /* insert the information fetched in the api */
   useEffect(() => {
-    const getData = () => {
-      showLoader();
+    showLoader();
 
-      setClients(fetchBestClients());
-
-      hideLoader();
-    };
-
-    getData();
-  }, []);
+    axios
+      .get(`/api/customers/${year}`)
+      .then((response) => {
+        setClients(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    hideLoader();
+  }, [year]);
 
   /*to able to sort the data we are going to retrieve */
   const clientsData = useMemo(() => {
@@ -94,8 +98,8 @@ const BestClientsTable = ({
               <tr key={client.id}>
                 <th scope="row">{client.rank}</th>
                 <td>{client.name}</td>
-                <td>{client.email}</td>
-                <td>{client.total_spent}</td>
+                <td>{client.units}</td>
+                <td>{client.value}</td>
               </tr>
             ))}
           </tbody>

@@ -1,3 +1,4 @@
+const processCustomers = require('./processCustomers');
 
 const processCostumerPurchases = (invoices, costumerId) => {
     if (Array.isArray(invoices)) {
@@ -12,21 +13,34 @@ const processCostumerPurchases = (invoices, costumerId) => {
 
 module.exports = (server) => {
 
-   server.get('/api/customer/:id', (req, res) => {
-
-        const {id} = req.params;
+    server.get('/api/customers/:year', (req, res) => {
+        const { year } = req.params;
         const options = {
             method: 'GET',
-            url: `${global.basePrimaveraUrl}/salesCore/customerParties/${id}`
+            url: `${global.basePrimaveraUrl}/sales/orders`,
         };
 
         return global.request(options, function (error, response, body) {
-            if (error) throw new Error(error.message);
-            res.json(JSON.parse(body));
+            if (error) res.json(error);
+            res.json(processCustomers(null, JSON.parse(body), year));
         });
-   });
+        });
 
-   server.get('/api/customer/:id/purchases', (req, res) => {
+    server.get('/api/customer/:id', (req, res) => {
+
+            const {id} = req.params;
+            const options = {
+                method: 'GET',
+                url: `${global.basePrimaveraUrl}/salesCore/customerParties/${id}`
+            };
+
+            return global.request(options, function (error, response, body) {
+                if (error) throw new Error(error.message);
+                res.json(JSON.parse(body));
+            });
+    });
+
+    server.get('/api/customer/:id/purchases', (req, res) => {
 
     const {id} = req.params;
     const options = {

@@ -140,4 +140,8 @@ const fetchGrossProfitMargin = () => {
   return axios.get(`api/financial/gpm`);
 };
 
-export { fetchYearSales, fetchOngoingSales, fetchGrossProfitMargin };
+const fetchNetSales = (year) => {
+  return axios.get(`api/sales/net/${year}`)
+}
+
+export { fetchYearSales, fetchOngoingSales, fetchGrossProfitMargin, fetchNetSales };

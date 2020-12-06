@@ -14,6 +14,18 @@ const processSales = (receipts, year) => {
   return monthlyCumulativeValue;
 };
 
+const getNetSales = (receipts, year) => {
+  let netSales = 0;
+
+  receipts
+    .filter((receipt) => moment(receipt.documentDate).year() == year)
+    .forEach(({ payableAmount }) => {
+      netSales += payableAmount.amount;
+    });
+
+  return netSales;
+};
+
 module.exports = (server, db) => {
   // monthly sales by year
   server.get('/api/sales/:year', (req, res) => {
@@ -30,8 +42,17 @@ module.exports = (server, db) => {
   });
 
   // net sales
-  server.get('/api/netSales', (req, res) => {
-    res.json(db.SourceDocuments.SalesInvoices.TotalCredit);
+  server.get('/api/sales/net/:year', (req, res) => {
+    const { year } = req.params;
+    const options = {
+      method: 'GET',
+      url: `${global.basePrimaveraUrl}/accountsReceivable/receipts`
+    };
+
+    return global.request(options, function (error, response, body) {
+      if (error) res.json(error);
+      res.json(getNetSales(JSON.parse(body), year));
+    });
   });
 
   server.get('/api/products/random', (req, res) => {

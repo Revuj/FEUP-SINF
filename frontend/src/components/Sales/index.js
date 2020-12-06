@@ -9,8 +9,7 @@ import { formatMoney } from '../../helper/CurrencyFormater';
 import '../../styles/Sales.css';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { fetchGrossProfitMargin } from '../../actions/sales';
-import { fetchSales } from '../../actions/financial';
+import { fetchGrossProfitMargin, fetchNetSales } from '../../actions/sales';
 
 const Sales = () => {
   const [year, setYear] = useState('2020');
@@ -20,9 +19,9 @@ const Sales = () => {
   useEffect(() => {
     const fetchData = async () => {
       const gpm = await fetchGrossProfitMargin();
-      const sales = await fetchSales(false);
+      const sales = await fetchNetSales(year);
       setGpm(gpm.data.gpm);
-      setNetSales(sales.data.totalCredit - sales.data.totalDebit);
+      setNetSales(sales.data);
     };
     fetchData();
   }, []);

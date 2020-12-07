@@ -1,30 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import GenericCard from '../GenericCard';
-import StockByTime from './StockByTime';
-
-import StockByProductTable from './StockByProductTable';
-import StockByWarehouseTable from './StockByWarehouseTable';
-import { formatMoney } from '../../helper/CurrencyFormater';
-import '../../styles/Inventory.css';
-import '../../styles/GenericChart.css';
-
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import GenericCard from "../GenericCard";
+import StockByTime from "./StockByTime";
+import StockByProductTable from "./StockByProductTable";
+import StockByWarehouseTable from "./StockByWarehouseTable";
+import { formatMoney } from "../../helper/CurrencyFormater";
+import "../../styles/Inventory.css";
+import "../../styles/GenericChart.css";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import { fetchInventoryTurnover } from "../../actions/stock";
 
 const Index = () => {
-  const [year, setYear] = useState('2020');
+  const [year, setYear] = useState("2020");
   const [stock, setStock] = useState(null);
+  const [inventoryTurnover, setInventoryTurnover] = useState(0);
+  const [avgInventoryPeriod, setAvgInventoryPeriod] = useState(0);
 
   useEffect(() => {
+    const fetchData = async () => {
+      const inventory_turnover = (await fetchInventoryTurnover()).data;
+      setInventoryTurnover(inventory_turnover);
+      setAvgInventoryPeriod(365 / inventory_turnover);
+    };
+
     axios
-      .get('/api/inventory/stock')
+      .get("/api/inventory/stock")
       .then((response) => {
         setStock(response.data);
       })
       .catch((error) => {
         console.error(error);
       });
+
+    fetchData();
   }, []);
 
   return (
@@ -46,42 +55,42 @@ const Index = () => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
+              borderBottom: "1px solid black",
+              backgroundColor: "#37d5d6",
+              color: "white",
             }}
             styleCard={{
-              backgroundColor: 'white',
+              backgroundColor: "white",
             }}
           />
           <GenericCard
-            title="Inventory Days"
+            title="Average Inventory Period"
             description="Average number of days the company holds its inventory before selling it"
-            amount="69"
+            amount={avgInventoryPeriod}
             formatter={formatMoney}
             unit=" days"
             styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
+              borderBottom: "1px solid black",
+              backgroundColor: "#37d5d6",
+              color: "white",
             }}
             styleCard={{
-              backgroundColor: 'white',
+              backgroundColor: "white",
             }}
           />
           <GenericCard
             title="Inventory Turnover"
             description="Ratio showing how many times a company has sold and replaced inventory during a given period"
-            amount="5"
+            amount={inventoryTurnover}
             formatter={formatMoney}
-            unit=" "
+            unit=""
             styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
+              borderBottom: "1px solid black",
+              backgroundColor: "#37d5d6",
+              color: "white",
             }}
             styleCard={{
-              backgroundColor: 'white',
+              backgroundColor: "white",
             }}
           />
           <GenericCard
@@ -91,12 +100,12 @@ const Index = () => {
             formatter={formatMoney}
             unit=" "
             styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
+              borderBottom: "1px solid black",
+              backgroundColor: "#37d5d6",
+              color: "white",
             }}
             styleCard={{
-              backgroundColor: 'white',
+              backgroundColor: "white",
             }}
           />
         </section>
@@ -105,17 +114,17 @@ const Index = () => {
           <span>
             <StockByProductTable
               numberItemsPerPage={4}
-              containerStyle={{ width: '100%' }}
+              containerStyle={{ width: "100%" }}
             />
           </span>
 
-          <span >
+          <span>
             <StockByTime />
           </span>
         </section>
         <StockByWarehouseTable
           numberItemsPerPage={6}
-          containerStyle={{ width: '100%' }}
+          containerStyle={{ width: "100%" }}
         />
       </div>
     </div>

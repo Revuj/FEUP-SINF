@@ -11,6 +11,25 @@ const processCostumerPurchases = (invoices, costumerId) => {
         return {}
 };
 
+/** maybe por mais algum atributo */
+const processTopPurchases = (invoices, costumerId) => {
+    const purchases = [];
+    if (Array.isArray(invoices)) {
+        return invoices.filter( ({accountingParty}) => accountingParty === costumerId)
+            .map(({currency, documentDate, grossValue }) => 
+               {return {currency,  date:documentDate,  amount: grossValue.amount }})
+            .sort((a,b) => a.grossValue.amount - b.grossValue.amount);
+    
+    } else if (invoices.accountingParty === CustomerId) {
+        purchases.push({
+            receiptId: invoices.receiptId,
+            date: invoices.documentDate,
+            amount: invoices.grossValue.amount
+        })
+    } else 
+        return purchases;
+}
+
 module.exports = (server) => {
 
     server.get('/api/customers/:year', (req, res) => {
@@ -53,5 +72,21 @@ module.exports = (server) => {
         res.json(processCostumerPurchases(JSON.parse(body), id));
     });
     
-   })
+   });
+
+
+   server.get('/api/customer/:id/topPurchases', (req, res) => {
+        
+    const {id} = req.params;
+    const options = {
+        method: 'GET',
+        url: `${global.basePrimaveraUrl}/accountsReceivable/receipts`
+    };
+
+    return global.request(options, function (error, response, body) {
+        if (error) res.json(error);
+        res.json(processTopPurchases(JSON.parse(body), id));
+    });
+   });
+
 }

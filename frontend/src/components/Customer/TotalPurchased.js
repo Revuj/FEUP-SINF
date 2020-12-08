@@ -6,7 +6,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 const fetchPurchaseTotalData = async(id) => {
-  return axios.get(`/api/customer/${id}/purchases`);
+  return axios.get(`/api/customer/${id}/TopPurchases`);
 }
 
 const useStyles = makeStyles((theme) => ({

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -9,31 +9,25 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import { formatMoney } from "../../helper/CurrencyFormater";
+import { useParams } from "react-router-dom";
+import axios from 'axios';
+
+const fetchTopPurchases = async(id) => {
+  return axios.get(`/api/customer/${id}/topPurchases`);
+}
 
 const columns = [
-  { id: "id", label: "ID", minWidth: 70, align: "center" },
-  { id: "name", label: "Name", minWidth: 150, align: "center" },
+  { id: "date", label: "date", minWidth: 70, align: "center" },
+  { id: "currency", label: "currency", minWidth: 150, align: "center" },
   {
-    id: "units",
-    label: "Units",
-    minWidth: 150,
-    align: "center",
-  },
-  {
-    id: "value",
-    label: "Value",
+    id: "amount",
+    label: "amount of money",
     minWidth: 150,
     align: "center",
     format: (value) => formatMoney(value),
   },
 ];
 
-const rows = [
-  { id: "A001", name: "Favo de Mel", units: 50, value: 250 },
-  { id: "B003", name: "Mel 250ml", units: 200, value: 1400 },
-  { id: "B006", name: "Bolachas de Mel", units: 20, value: 100 },
-  { id: "C001", name: "Mel 20 Anos", units: 51, value: 300 },
-];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,9 +40,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function TopPurchases() {
+
+  const {id} = useParams();
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const [loading, setLoading] = useState(true);
+  const [tableInfo, setTableInfo] = useState(null);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -59,6 +58,23 @@ export default function TopPurchases() {
     setPage(0);
   };
 
+  useEffect(() => {
+    const fetchTableData = async () => {
+      const {data} = await fetchTopPurchases(id);
+      setTableInfo(data);
+      setLoading(false);
+    };
+    fetchTableData();
+  }, [id]);
+
+  if (loading === true) {
+    return <div>Loading...</div>
+  }
+
+  console.log(tableInfo);
+  const rows = tableInfo;
+
+
   return (
     <Paper className={classes.root}>
       <h3>Top Purchases</h3>
@@ -66,9 +82,9 @@ export default function TopPurchases() {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              {columns.map((column) => (
+              {columns.map((column, id) => (
                 <TableCell
-                  key={column.id}
+                  key={id}
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
                 >
@@ -80,13 +96,13 @@ export default function TopPurchases() {
           <TableBody>
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
+              .map((row, id) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {columns.map((column) => {
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code + id}>
+                    {columns.map((column, id2) => {
                       const value = row[column.id];
                       return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell key={id2} align={column.align}>
                           {column.format && typeof value === "number"
                             ? column.format(value)
                             : value}

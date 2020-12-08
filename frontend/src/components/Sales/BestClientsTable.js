@@ -4,6 +4,7 @@ import useFullPageLoader from '../../hooks/FullPageLoader';
 import PaginationComponent from '../Pagination';
 import Search from '../Search';
 import TableHeader from '../TableHeader';
+import Customer from '../Customer/Customer';
 import { fetchBestClients } from '../../actions/clients';
 import '../../styles/Table.css';
 
@@ -12,6 +13,7 @@ const BestClientsTable = ({
   containerStyle,
   themeColor,
   year,
+  setPage,
 }) => {
   const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [totalItems, setTotalItems] = useState(0);
@@ -22,7 +24,7 @@ const BestClientsTable = ({
   const ITEMS_PER_PAGE = numberItemsPerPage;
 
   const headers = [
-    { name: 'No#', field: 'rank', sortable: false },
+    { name: 'ID', field: 'id', sortable: false },
     { name: 'Name', field: 'name', sortable: true },
     { name: 'Units Purchased', field: 'units', sortable: true },
     { name: 'Value Purchased', field: 'value', sortable: false },
@@ -96,7 +98,15 @@ const BestClientsTable = ({
           <tbody>
             {clientsData.map((client) => (
               <tr key={client.id}>
-                <th scope="row">{client.rank}</th>
+                <th
+                  className="table-link"
+                  scope="row"
+                  onClick={() => {
+                    setPage(<Customer id={client.id} />);
+                  }}
+                >
+                  {client.id}
+                </th>
                 <td>{client.name}</td>
                 <td>{client.units}</td>
                 <td>{client.value}</td>

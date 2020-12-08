@@ -15,9 +15,13 @@ const processMonthlySales = (receipts, year) => {
 };
 
 const processSales = (invoices, year) => {
-  productSales = {}
+  let productSales = {};
   invoices
-    .filter((invoice) => moment(invoice.documentDate).year() == year && invoice.documentStatus == 2)
+    .filter(
+      (invoice) =>
+        moment(invoice.documentDate).year() == year &&
+        invoice.documentStatus == 2
+    )
     .forEach(({ documentLines, payableAmount }) => {
       let salesItem = documentLines[0].salesItem;
       let salesItemDescription = documentLines[0].salesItemDescription;
@@ -30,13 +34,13 @@ const processSales = (invoices, year) => {
           id: salesItem,
           name: salesItemDescription,
           value: payableAmount.amount,
-          quantity: quantity
-        }
+          quantity: quantity,
+        };
       }
     });
 
-  return Object.keys(productSales).map(product => productSales[product]);
-}
+  return Object.keys(productSales).map((product) => productSales[product]);
+};
 
 const getNetSales = (receipts, year) => {
   let netSales = 0;
@@ -50,31 +54,38 @@ const getNetSales = (receipts, year) => {
   return netSales;
 };
 
-const processOrders = orders => {
-  let salesBacklog = {}
+const processOrders = (orders) => {
+  let salesBacklog = {};
   let counter = 0;
   orders
     .filter((order) => moment(order.documentDate).isAfter(moment())) //mudar no futuro
-    .forEach(({ buyerCustomerPartyName, documentDate, documentLines, payableAmount }) => {
+    .forEach(
+      ({
+        buyerCustomerPartyName,
+        documentDate,
+        documentLines,
+        payableAmount,
+      }) => {
+        salesBacklog[counter] = {
+          date: documentDate.substr(0, 10),
+          customer: buyerCustomerPartyName,
+          items: '',
+          value: Number(payableAmount.amount),
+        };
 
-      salesBacklog[counter] = {
-        date: documentDate.substr(0, 10),
-        customer: buyerCustomerPartyName,
-        items: '',
-        value: Number(payableAmount.amount)
+        documentLines.forEach((item) => {
+          salesBacklog[counter].items +=
+            item.quantity + 'x ' + item.description + ';  ';
+        });
+
+        counter++;
       }
+    );
 
-      documentLines.forEach(item => {
-        salesBacklog[counter].items += item.quantity + 'x ' + item.description + ';  ';
-      })
+  return Object.keys(salesBacklog).map((order) => salesBacklog[order]);
+};
 
-      counter++;
-    });
-
-  return Object.keys(salesBacklog).map(order => salesBacklog[order]);
-}
-
-const getSalesBacklog = orders => {
+const getSalesBacklog = (orders) => {
   let salesBacklog = 0;
   orders
     .filter((order) => moment(order.documentDate).isAfter(moment())) //mudar no futuro
@@ -83,8 +94,7 @@ const getSalesBacklog = orders => {
     });
 
   return salesBacklog;
-}
-
+};
 
 module.exports = (server, db) => {
   // monthly sales by year
@@ -92,7 +102,7 @@ module.exports = (server, db) => {
     const { year } = req.params;
     const options = {
       method: 'GET',
-      url: `${global.basePrimaveraUrl}/accountsReceivable/receipts`
+      url: `${global.basePrimaveraUrl}/accountsReceivable/receipts`,
     };
 
     return global.request(options, function (error, response, body) {
@@ -106,7 +116,7 @@ module.exports = (server, db) => {
     const { year } = req.params;
     const options = {
       method: 'GET',
-      url: `${global.basePrimaveraUrl}/accountsReceivable/receipts`
+      url: `${global.basePrimaveraUrl}/accountsReceivable/receipts`,
     };
 
     return global.request(options, function (error, response, body) {
@@ -115,14 +125,13 @@ module.exports = (server, db) => {
     });
   });
 
-
   // sales products
   server.get('/api/sales/products/:year([0-9]+)', (req, res) => {
     const { year } = req.params;
 
     const options = {
       method: 'GET',
-      url: `${global.basePrimaveraUrl}/billing/invoices `
+      url: `${global.basePrimaveraUrl}/billing/invoices `,
     };
 
     return global.request(options, function (error, response, body) {
@@ -135,7 +144,7 @@ module.exports = (server, db) => {
   server.get('/api/sales/backlogProducts', (req, res) => {
     const options = {
       method: 'GET',
-      url: `${global.basePrimaveraUrl}/sales/orders`
+      url: `${global.basePrimaveraUrl}/sales/orders`,
     };
 
     return global.request(options, function (error, response, body) {
@@ -148,7 +157,7 @@ module.exports = (server, db) => {
   server.get('/api/sales/backlog', (req, res) => {
     const options = {
       method: 'GET',
-      url: `${global.basePrimaveraUrl}/sales/orders`
+      url: `${global.basePrimaveraUrl}/sales/orders`,
     };
 
     return global.request(options, function (error, response, body) {

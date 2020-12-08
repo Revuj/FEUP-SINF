@@ -1,13 +1,12 @@
-import React, {useState, useEffect} from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import { formatMoney } from "../../helper/CurrencyFormater";
-import axios from "axios";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import { formatMoney } from '../../helper/CurrencyFormater';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
-
-const fetchStockUnits = async(id) => {
-    return axios.get(`/api/products/${id}/stock-units`);
+const fetchStockUnits = async (id) => {
+  return axios.get(`/api/products/${id}/stock-units`);
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -16,36 +15,36 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
   },
   value: {
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 26,
     color: theme.palette.text.secondary,
   },
 }));
 
-const UnitsSold = () => {
-
-  const {id} = useParams();
+const UnitsSold = ({ id }) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const [info, setInfo] = useState(null);
 
   useEffect(() => {
-      const getData = async() =>{
-        const {data} = await fetchStockUnits(id);
-        setInfo(data);
-        setLoading(false);
-      };
-      getData();
+    const getData = async () => {
+      const { data } = await fetchStockUnits(id);
+      setInfo(data);
+      setLoading(false);
+    };
+    getData();
   }, [id]);
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   return (
     <Paper className={classes.paper}>
       <h3>Units in Stock (todo money part)</h3>
-    <p className={classes.value}>{info.totalStock}({formatMoney()}€)</p>
+      <p className={classes.value}>
+        {info.totalStock}({formatMoney()}€)
+      </p>
     </Paper>
   );
 };

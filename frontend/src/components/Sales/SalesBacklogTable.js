@@ -37,7 +37,7 @@ const SalesBacklogTable = ({
       axios
         .get(`/api/sales/backlogProducts`)
         .then((response) => {
-          console.log(response.data)
+          console.log(response.data);
           setSales(response.data);
         })
         .catch((error) => {

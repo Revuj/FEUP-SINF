@@ -1,4 +1,4 @@
-import { React, useContext, useState } from 'react';
+import { React, useContext, useState, useEffect } from 'react';
 import { auth } from '../firebase/config';
 import { useHistory } from 'react-router-dom';
 import { AuthContext } from '../context';
@@ -8,36 +8,21 @@ import Financial from './Financial';
 import Inventory from './Inventory';
 import Sales from './Sales';
 import Procurement from './Procurement';
+import Product from './Product/Product';
 import '../styles/Dashboard.css';
 
-function Dashboard() {
+function Dashboard({ match }) {
   const history = useHistory();
   const authContext = useContext(AuthContext);
   const [tab, setTab] = useState('main');
+  const [page, setPage] = useState(<Overview />);
 
   const signOut = () => {
     auth.signOut();
     authContext.logout();
   };
 
-  const renderTab = () => {
-    switch (tab) {
-      case 'main':
-        return <Overview />;
-      case 'financial':
-        return <Financial />;
-      case 'sales':
-        return <Sales />;
-      case 'inventory':
-        return <Inventory />;
-      case 'procurement':
-        return <Procurement title="Procurement" />;
-      default:
-        return <Overview />;
-    }
-  };
-
-  return authContext.isLoggedIn ? (
+  return (
     <>
       <nav className="navbar">
         <ul className="navbar-nav">
@@ -45,7 +30,13 @@ function Dashboard() {
             <img src={Honey} alt="assets logo" />
             <h2 id="title">Bee</h2>
           </li>
-          <li className="nav-item" onClick={() => setTab('main')}>
+          <li
+            className="nav-item"
+            onClick={() => {
+              setTab('main');
+              setPage(<Overview setPage={setPage} />);
+            }}
+          >
             <span className={'nav-link' + (tab === 'main' ? ' selected' : '')}>
               <svg
                 width="43"
@@ -64,7 +55,13 @@ function Dashboard() {
             </span>
           </li>
 
-          <li className="nav-item" onClick={() => setTab('financial')}>
+          <li
+            className="nav-item"
+            onClick={() => {
+              setTab('financial');
+              setPage(<Financial setPage={setPage} />);
+            }}
+          >
             <span
               className={'nav-link' + (tab === 'financial' ? ' selected' : '')}
             >
@@ -85,7 +82,13 @@ function Dashboard() {
             </span>
           </li>
 
-          <li className="nav-item" onClick={() => setTab('sales')}>
+          <li
+            className="nav-item"
+            onClick={() => {
+              setTab('sales');
+              setPage(<Sales setPage={setPage} />);
+            }}
+          >
             <span className={'nav-link' + (tab === 'sales' ? ' selected' : '')}>
               <svg
                 width="48"
@@ -104,7 +107,13 @@ function Dashboard() {
             </span>
           </li>
 
-          <li className="nav-item" onClick={() => setTab('inventory')}>
+          <li
+            className="nav-item"
+            onClick={() => {
+              setTab('inventory');
+              setPage(<Inventory setPage={setPage} />);
+            }}
+          >
             <span
               className={'nav-link' + (tab === 'inventory' ? ' selected' : '')}
             >
@@ -124,7 +133,13 @@ function Dashboard() {
               <span className="link-text">Inventory</span>
             </span>
           </li>
-          <li className="nav-item" onClick={() => setTab('procurement')}>
+          <li
+            className="nav-item"
+            onClick={() => {
+              setTab('procurement');
+              setPage(<Procurement setPage={setPage} />);
+            }}
+          >
             <span
               className={
                 'nav-link' + (tab === 'procurement' ? ' selected' : '')
@@ -153,11 +168,9 @@ function Dashboard() {
           </li>
         </ul>
       </nav>
-      <main>{renderTab()}</main>
+      <main>{page}</main>
     </>
-  ) : (
-      <>{history.push('/')}</>
-    );
+  );
 }
 
 export default Dashboard;

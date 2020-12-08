@@ -5,12 +5,14 @@ import PaginationComponent from '../Pagination';
 import Search from '../Search';
 import TableHeader from '../TableHeader';
 import '../../styles/Table.css';
+import Product from '../Product/Product';
 
 const TopProductsTable = ({
   numberItemsPerPage,
   containerStyle,
   themeColor,
-  year
+  year,
+  setPage,
 }) => {
   const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [totalItems, setTotalItems] = useState(0);
@@ -34,7 +36,7 @@ const TopProductsTable = ({
     axios
       .get(`/api/sales/products/${year}`)
       .then((response) => {
-        console.log(response.data)
+        console.log(response.data);
         setProducts(response.data);
       })
       .catch((error) => {
@@ -94,7 +96,15 @@ const TopProductsTable = ({
           <tbody>
             {clientsData.map((product) => (
               <tr key={product.id}>
-                <th scope="row">{product.id}</th>
+                <th
+                  className="table-link"
+                  scope="row"
+                  onClick={() => {
+                    setPage(<Product id={product.id} />);
+                  }}
+                >
+                  {product.id}
+                </th>
                 <td>{product.name}</td>
                 <td>{product.quantity}</td>
                 <td>{product.value}</td>

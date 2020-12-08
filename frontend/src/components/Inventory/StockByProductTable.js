@@ -4,12 +4,14 @@ import useFullPageLoader from '../../hooks/FullPageLoader';
 import PaginationComponent from '../Pagination';
 import Search from '../Search';
 import TableHeader from '../TableHeader';
+import Product from '../Product/Product';
 import '../../styles/Table.css';
 
 const StockByProductTable = ({
   numberItemsPerPage,
   containerStyle,
   themeColor,
+  setPage,
 }) => {
   const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [totalItems, setTotalItems] = useState(0);
@@ -20,7 +22,7 @@ const StockByProductTable = ({
   const ITEMS_PER_PAGE = numberItemsPerPage;
 
   const headers = [
-    { name: 'No#', field: 'rank', sortable: false },
+    { name: 'ID', field: 'id', sortable: false },
     { name: 'Name', field: 'name', sortable: true },
     { name: 'Stock', field: 'stock', sortable: false },
     { name: 'Total value of stock', field: 'total_value', sortable: true },
@@ -92,7 +94,15 @@ const StockByProductTable = ({
           <tbody>
             {clientsData.map((product) => (
               <tr key={product.id}>
-                <th scope="row">{product.rank}</th>
+                <th
+                  className="table-link"
+                  scope="row"
+                  onClick={() => {
+                    setPage(<Product id={product.id} />);
+                  }}
+                >
+                  {product.id}
+                </th>
                 <td>{product.name}</td>
                 <td>{product.quantity}</td>
                 <td>{product.value}</td>

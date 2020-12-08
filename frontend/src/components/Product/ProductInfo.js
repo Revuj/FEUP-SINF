@@ -1,19 +1,16 @@
-import React, {useState, useEffect} from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
-import { useParams } from "react-router-dom";
 
-
-const fetchProductData = async(id) => {
+const fetchProductData = async (id) => {
   return await axios.get(`/api/products/${id}`);
-} 
+};
 
-const fetchAvg = async(id) => {
-  return await axios.get(`/api/products/${id}/avg-price`)
-}
-
+const fetchAvg = async (id) => {
+  return await axios.get(`/api/products/${id}/avg-price`);
+};
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -25,24 +22,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProductInfo = () => {
+const ProductInfo = ({ id }) => {
   const classes = useStyles();
-  const {id} = useParams();
 
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState(null);
   const [avg, setAvg] = useState(null);
 
   useEffect(() => {
-    const fetchData = async() => {
-      const {data} = await fetchProductData(id);
+    const fetchData = async () => {
+      const { data } = await fetchProductData(id);
       const prod = await fetchAvg(id);
       setProduct(data);
-      setAvg(prod.data.avg)
+      setAvg(prod.data.avg);
       setLoading(false);
-    }
+    };
     fetchData();
-
   }, [id]);
 
   if (loading) {
@@ -79,9 +74,7 @@ const ProductInfo = () => {
         <Grid item xs={12}>
           <div>
             <span className={classes.item_title}>Description</span>
-            <span>
-              {product.description}
-            </span>
+            <span>{product.description}</span>
           </div>
         </Grid>
       </Grid>

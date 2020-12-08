@@ -9,9 +9,13 @@ import { formatMoney } from '../../helper/CurrencyFormater';
 import '../../styles/Sales.css';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { fetchGrossProfitMargin, fetchNetSales, fetchBacklogValue } from '../../actions/sales';
+import {
+  fetchGrossProfitMargin,
+  fetchNetSales,
+  fetchBacklogValue,
+} from '../../actions/sales';
 
-const Sales = () => {
+const Sales = ({ setPage }) => {
   const [year, setYear] = useState('2020');
   const [gpm, setGpm] = useState(0);
   const [backlog, setBacklog] = useState(0);
@@ -86,13 +90,19 @@ const Sales = () => {
         <section className="row-50-50">
           <span>
             <SalesByTime year={year} />
-            <BestClientsTable 
+            <BestClientsTable
               numberItemsPerPage={5}
-              year={year} />
+              year={year}
+              setPage={setPage}
+            />
           </span>
           <span>
-            <TopProductsTable numberItemsPerPage={4} year={year} />
-            <SalesBacklogTable numberItemsPerPage={4} />
+            <TopProductsTable
+              numberItemsPerPage={4}
+              year={year}
+              setPage={setPage}
+            />
+            <SalesBacklogTable numberItemsPerPage={4} setPage={setPage} />
           </span>
         </section>
       </div>

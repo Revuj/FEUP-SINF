@@ -4,6 +4,7 @@ import useFullPageLoader from '../../hooks/FullPageLoader';
 import PaginationComponent from '../Pagination';
 import Search from '../Search';
 import TableHeader from '../TableHeader';
+import Supplier from '../Supplier/Supplier';
 import '../../styles/Table.css';
 
 const SuppliersTable = ({
@@ -11,6 +12,7 @@ const SuppliersTable = ({
   containerStyle,
   themeColor,
   year,
+  setPage,
 }) => {
   const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [totalItems, setTotalItems] = useState(0);
@@ -22,7 +24,7 @@ const SuppliersTable = ({
   const ITEMS_PER_PAGE = numberItemsPerPage;
 
   const headers = [
-    { name: 'No#', field: 'rank', sortable: false },
+    { name: 'ID', field: 'id', sortable: false },
     { name: 'Name', field: 'name', sortable: true },
     { name: 'Units Purchased', field: 'units', sortable: true },
     { name: 'Value Purchased', field: 'value', sortable: false },
@@ -93,7 +95,15 @@ const SuppliersTable = ({
           <tbody>
             {suppliersData.map((supplier) => (
               <tr key={supplier.id}>
-                <th scope="row">{supplier.rank}</th>
+                <th
+                  scope="row"
+                  className="table-link"
+                  onClick={() => {
+                    setPage(<Supplier id={supplier.id} />);
+                  }}
+                >
+                  {supplier.id}
+                </th>
                 <td>{supplier.name}</td>
                 <td>{supplier.units}</td>
                 <td>{supplier.value}</td>

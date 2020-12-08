@@ -4,6 +4,7 @@ import useFullPageLoader from '../../hooks/FullPageLoader';
 import PaginationComponent from '../Pagination';
 import Search from '../Search';
 import TableHeader from '../TableHeader';
+import Supplier from '../Supplier/Supplier';
 import { fetchWarehousesInfo } from '../../actions/stock';
 import '../../styles/Table.css';
 
@@ -11,6 +12,7 @@ const StockByWarehouseTable = ({
   numberItemsPerPage,
   containerStyle,
   themeColor,
+  setPage,
 }) => {
   const [loader, showLoader, hideLoader] = useFullPageLoader();
   const [totalItems, setTotalItems] = useState(0);
@@ -21,7 +23,7 @@ const StockByWarehouseTable = ({
   const ITEMS_PER_PAGE = numberItemsPerPage;
 
   const headers = [
-    { name: 'Id', field: 'id', sortable: false },
+    { name: 'ID', field: 'id', sortable: false },
     { name: 'Name', field: 'name', sortable: true },
     { name: 'Stock', field: 'stock', sortable: false },
     { name: 'Total value of stock', field: 'total_value', sortable: true },
@@ -95,7 +97,15 @@ const StockByWarehouseTable = ({
           <tbody>
             {clientsData.map((warehouse) => (
               <tr key={warehouse.id}>
-                <th scope="row">{warehouse.id}</th>
+                <th
+                  className="table-link"
+                  scope="row"
+                  onClick={() => {
+                    setPage(<Supplier id={warehouse.id} />);
+                  }}
+                >
+                  {warehouse.id}
+                </th>
                 <td>{warehouse.name}</td>
                 <td>{warehouse.quantity}</td>
                 <td>{warehouse.value}</td>

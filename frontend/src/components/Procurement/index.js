@@ -7,9 +7,9 @@ import SuppliersTable from '../Procurement/SuppliersTable';
 import '../../styles/Procurement.css';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { fetchAccountsPayable } from "../../actions/financial";
+import { fetchAccountsPayable } from '../../actions/financial';
 
-const Procurement = ({ title }) => {
+const Procurement = ({ title, setPage }) => {
   const [year, setYear] = useState('2020');
   const [accountsPayable, setAccountsPayable] = useState(null);
   const [purchasesBacklog, setPurchasesBacklog] = useState(null);
@@ -40,7 +40,7 @@ const Procurement = ({ title }) => {
         console.error(error);
       });
 
-      fetchData();
+    fetchData();
   }, [year]);
 
   return (
@@ -123,6 +123,7 @@ const Procurement = ({ title }) => {
 
         <Purchases year={year} />
         <SuppliersTable
+          setPage={setPage}
           numberItemsPerPage={4}
           containerStyle={{ width: '100%', marginTop: '2rem' }}
           year={year}

@@ -31,7 +31,7 @@ module.exports = (server) => {
     const { year } = req.params;
     const options = {
       method: 'GET',
-      url: `${global.basePrimaveraUrl}/purchases/orders`
+      url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
     return global.request(options, (error, response, body) => {
@@ -44,16 +44,41 @@ module.exports = (server) => {
   });
 
   server.get('/api/purchasesBacklog', (req, res) => {
-    const options = {
+    const options2 = {
       method: 'GET',
       url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
-    return global.request(options, (error, response, body) => {
-      if (error) res.json(error);
+    const options1 = {
+      method: 'GET',
+      url: `${global.basePrimaveraUrl}/goodsReceipt/processOrders/1/1000?company=${process.env.COMPANY_KEY}`,
+    };
 
+    return global.request(options1, function (error, response, body) {
+      if (error) throw new Error(error);
+
+      let productBacklog = 0;
       if (!JSON.parse(body).message) {
-        res.json(getPurchasesBacklog(JSON.parse(body)));
+        const keys = JSON.parse(body).map(({ sourceDocKey }) => sourceDocKey);
+
+        global.request(options2, (error2, response2, body2) => {
+          if (error2) throw new Error(error2);
+
+          if (!JSON.parse(body2).message) {
+            let receipts = JSON.parse(body2);
+
+            receipts = receipts.filter(
+              ({ naturalKey }) => !keys.find((key) => naturalKey == key)
+            );
+
+            productBacklog = receipts.reduce(
+              (accum, curr) => accum + curr.payableAmount.amount,
+              0
+            );
+
+            res.json(receipts);
+          }
+        });
       }
     });
   });

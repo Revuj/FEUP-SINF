@@ -70,7 +70,7 @@ const CustomerInformation = () => {
           </div>
           <div>
             <span className={classes.item_title}>Country</span>
-            <span>{customer.countryName}</span>
+            <span>{customer.countryDescription}</span>
           </div>
           <div>
             <span className={classes.item_title}>Postal Code</span>

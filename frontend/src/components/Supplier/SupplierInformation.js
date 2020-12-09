@@ -64,7 +64,7 @@ const SupplierInformation = ({id}) => {
           </div>
           <div>
             <span className={classes.item_title}>Country</span>
-            <span>{supplier.country}</span>
+            <span>{supplier.countryDescription}</span>
           </div>
           <div>
             <span className={classes.item_title}>Postal Code</span>

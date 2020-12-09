@@ -31,51 +31,6 @@ const totalPurchases = (orders, supplier, year) => {
   return { message: "There was an error processing the orders" };
 };
 
-const getGoodsReceipts = (id) => {
-  let keys = [];
-  const options = {
-    method: "GET",
-    url: `${global.basePrimaveraUrl}/goodsReceipt/processOrders/1/1000?company=${process.env.COMPANY}`,
-  };
-
-  global.request(options, function (error, response, body) {
-    if (error) return { error: error };
-
-    if (!JSON.parse(body).message) {
-      keys = JSON.parse(body)
-        .filter(({ party }) => party === id)
-        .map(({ sourceDocKey }) => sourceDocKey);
-    }
-  });
-  console.log(keys);
-  return keys;
-};
-
-const pendingPurchases = (keys) => {
-  const options = {
-    method: "GET",
-    url: `${global.basePrimaveraUrl}/purchases/orders`,
-  };
-
-  global.request(options, (error, response, body) => {
-    if (error) return { error: error };
-
-    if (!JSON.parse(body).message) {
-      let pendingPurchases = JSON.parse(body);
-
-      pendingPurchases = pendingPurchases
-        .filter(({ naturalKey }) => keys.find((key) => naturalKey === key))
-        .map(({ naturalKey, documentDate, payableAmount }) => ({
-          id: naturalKey,
-          date: documentDate,
-          value: payableAmount.amount,
-        }));
-
-      res.json(pendingPurchases);
-    }
-  });
-};
-
 module.exports = (server) => {
   server.get("/api/suppliers/:year", (req, res) => {
     const { year } = req.params;
@@ -126,17 +81,44 @@ module.exports = (server) => {
 
   server.get("/api/suppliers/:id/pending-purchases", (req, res) => {
     const { id } = req.params;
+    let options = {
+      method: "GET",
+      url: `${global.basePrimaveraUrl}/goodsReceipt/processOrders/1/1000?company=${process.env.COMPANY_KEY}`,
+    };
 
-    const goodsReceipt = getGoodsReceipts(id);
-    if (!goodsReceipt.error) {
-      const pendingPurchases = pendingPurchases(goodsReceipt);
-      if (pendingPurchases.error) {
-        res.json(pendingPurchases);
-      } else {
-        res.json({ error: pendingPurchases.error });
+    return global.request(options, function (error, response, body) {
+      if (error) res.json(error);
+
+      if (!JSON.parse(body).message) {
+        const keys = JSON.parse(body)
+          .filter(({ party }) => party === id)
+          .map(({ sourceDocKey }) => sourceDocKey);
+
+        options = {
+          method: "GET",
+          url: `${global.basePrimaveraUrl}/purchases/orders`,
+        };
+
+        global.request(options, (e, r, b) => {
+          if (e) res.json(e);
+
+          if (!JSON.parse(b).message) {
+            let pendingPurchases = JSON.parse(b);
+
+            pendingPurchases = pendingPurchases
+              .filter(({ naturalKey }) =>
+                keys.find((key) => naturalKey === key)
+              )
+              .map(({ naturalKey, documentDate, payableAmount }) => ({
+                reference: naturalKey,
+                date: documentDate,
+                value: payableAmount.amount,
+              }));
+
+            res.json(pendingPurchases);
+          }
+        });
       }
-    } else {
-      res.json({ error: goodsReceipt.error });
-    }
+    });
   });
 };

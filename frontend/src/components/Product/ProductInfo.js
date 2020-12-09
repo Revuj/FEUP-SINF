@@ -29,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
 
 const ProductInfo = ({ id }) => {
   const classes = useStyles();
-  const { id } = useParams();
 
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState(null);

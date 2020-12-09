@@ -21,7 +21,6 @@ const UnitsSold = ({ id }) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const [unitsSold, setUnitsSold] = useState(null);
-  const { id } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {

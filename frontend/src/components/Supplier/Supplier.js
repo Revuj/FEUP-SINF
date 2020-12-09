@@ -28,7 +28,7 @@ export default function Customer() {
           <TotalPurchased id={id} />
         </Grid>
         <Grid item xs={12}>
-          <PendingPurchases id={id} />
+          <PendingPurchases id={id} numberItemsPerPage={5} />
         </Grid>
       </Grid>
     </div>

@@ -1,50 +1,29 @@
-import React, { useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
+import React, { useState, useEffect, useMemo } from "react";
+import Search from "../Search";
+import PaginationComponent from "../Pagination";
+import TableHeader from "../TableHeader";
 import { fetchPendingPurchases } from "../../actions/suppliers";
 
-const columns = [
-  { id: "reference", label: "Reference", minWidth: 70, align: "center" },
-  { id: "date", label: "Purchase Date", minWidth: 150, align: "center" },
-  {
-    id: "value",
-    label: "Value",
-    minWidth: 150,
-    align: "center",
-  },
-];
+export default function PendingPurchases({
+  id,
+  numberItemsPerPage,
+  containerStyle,
+  themeColor,
+}) {
+  const [totalItems, setTotalItems] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [sorting, setSorting] = useState({ field: "", order: "" });
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    padding: theme.spacing(2),
-  },
-  container: {
-    maxHeight: 440,
-  },
-}));
+  const ITEMS_PER_PAGE = numberItemsPerPage;
+  const headers = [
+    { name: "Reference", field: "reference", sortable: false },
+    { name: "Date", field: "date", sortable: true },
+    { name: "Units Purchased", field: "units", sortable: true },
+    { name: "Value Purchased", field: "value", sortable: true },
+  ];
 
-export default function PendingPurchases({ id }) {
-  const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [rows, setRows] = React.useState([]);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  const [rows, setRows] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,8 +33,83 @@ export default function PendingPurchases({ id }) {
     fetchData();
   }, [id]);
 
+  const purchasesData = useMemo(() => {
+    if (rows === null) return;
+    let computedRows = rows;
+
+    if (search) {
+      computedRows = computedRows.filter(
+        (row) => row.reference.toLowerCase().includes(search.toLowerCase())
+        // || suppier.email.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    setTotalItems(computedRows.length);
+
+    if (sorting.field) {
+      const reversed = sorting.order === "asc" ? 1 : -1;
+
+      if (sorting.field === "date") {
+        console.log("oioi");
+        computedRows = computedRows.sort(
+          (a, b) => reversed * (Date.parse(a.date) - Date.parse(b.date))
+        );
+        console.log(computedRows);
+      } else {
+        computedRows = computedRows.sort(
+          (a, b) => reversed * (a[sorting.field] - b[sorting.field])
+        );
+      }
+    }
+
+    //Current Page slice
+    return computedRows.slice(
+      (currentPage - 1) * ITEMS_PER_PAGE,
+      (currentPage - 1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE
+    );
+  }, [rows, currentPage, search, sorting]);
+
   return (
-    <Paper className={classes.root}>
+    <>
+      <section className="table" style={containerStyle}>
+        <header className="header_info">
+          <h3 className="table-title">Pending Purchases</h3>
+          <Search
+            onSearch={(value) => {
+              setSearch(value);
+              setCurrentPage(1);
+            }}
+          />
+        </header>
+
+        <table className="content">
+          <TableHeader
+            color={themeColor}
+            headers={headers}
+            onSorting={(field, order) => setSorting({ field, order })}
+          />
+          <tbody>
+            {purchasesData.map((row) => (
+              <tr key={row.reference}>
+                <th>{row.reference}</th>
+                <td>{row.date}</td>
+                <td>{row.units}</td>
+                <td>{row.value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <PaginationComponent
+          color={themeColor}
+          total={totalItems}
+          itemsPerPage={ITEMS_PER_PAGE}
+          currentPage={currentPage}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
+      </section>
+    </>
+    /*<Paper className={classes.root}>
       <h3>Pending Purchases</h3>
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
@@ -103,6 +157,6 @@ export default function PendingPurchases({ id }) {
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
-    </Paper>
+    </Paper>*/
   );
 }

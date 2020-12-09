@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
@@ -14,33 +14,77 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const fetchSupplierData = id => {
+const fetchSupplierData = (id) => {
   return axios.get(`/api/suppliers/identifier/${id}`);
-}
+};
 
-const SupplierInformation = ({id}) => {
+const styleTitle = {
+  borderBottom: "1px solid black",
+  backgroundColor: "#37d5d6",
+  color: "white",
+};
+
+const SupplierInformation = ({ id }) => {
   const classes = useStyles();
-  
+
   const [isLoading, setLoading] = useState(true);
   const [supplier, setSupplier] = useState(null);
 
   useEffect(() => {
-    const fetchSupplier = async() => {
-      const {data} = await fetchSupplierData(id);
+    const fetchSupplier = async () => {
+      const { data } = await fetchSupplierData(id);
       setSupplier(data);
       setLoading(false);
     };
     fetchSupplier();
-    
   }, [id]);
 
   if (isLoading) {
     return <div className="App">Loading...</div>;
   }
 
-
   return (
-    <Paper className={classes.paper}>
+    <div className="card-information">
+      <h3
+        className="card-title"
+        style={styleTitle !== undefined ? styleTitle : {}}
+      >
+        Supplier Information
+      </h3>
+      <Grid container spacing={3} className="card-information-content">
+        <Grid item xs={8}>
+          <div>
+            <span className={classes.item_title}>ID</span>
+            <span>{id}</span>
+          </div>
+          <div>
+            <span className={classes.item_title}>Name</span>
+            <span>{supplier.name}</span>
+          </div>
+          <div>
+            <span className={classes.item_title}>Address</span>
+            <span>
+              {supplier.streetName} {supplier.buildingNumber}
+            </span>
+          </div>
+        </Grid>
+        <Grid item xs={4}>
+          <div>
+            <span className={classes.item_title}>City</span>
+            <span>{supplier.cityName} </span>
+          </div>
+          <div>
+            <span className={classes.item_title}>Country</span>
+            <span>{supplier.countryDescription}</span>
+          </div>
+          <div>
+            <span className={classes.item_title}>Postal Code</span>
+            <span>{supplier.postalZone}</span>
+          </div>
+        </Grid>
+      </Grid>
+    </div>
+    /*<Paper className={classes.paper}>
       <h3>Supplier Information</h3>
       <Grid container spacing={3}>
         <Grid item xs={8}>
@@ -72,7 +116,7 @@ const SupplierInformation = ({id}) => {
           </div>
         </Grid>
       </Grid>
-    </Paper>
+    </Paper>*/
   );
 };
 

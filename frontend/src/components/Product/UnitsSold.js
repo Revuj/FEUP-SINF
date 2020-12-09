@@ -49,7 +49,8 @@ const UnitsSold = ({ id }) => {
       </h3>
       <p style={{ padding: "0.5rem" }} className={classes.value}>
         {" "}
-        {info.unitsSold} ({formatMoney(info.valueTotal)}€)
+        {unitsSold.unitsSold.reduce((a, b) => a + b, 0)} units (
+        {formatMoney(unitsSold.value)}€)
       </p>
     </Paper>
   );

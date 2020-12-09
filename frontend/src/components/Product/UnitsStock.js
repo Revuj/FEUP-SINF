@@ -21,8 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UnitsSold = () => {
-  const { id } = useParams();
+const UnitsStock = ({ id }) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const [info, setInfo] = useState(null);
@@ -49,13 +48,13 @@ const UnitsSold = () => {
           padding: "0.5rem",
         }}
       >
-        Units in Stock (todo money part)
+        Units in Stock
       </h3>
       <p style={{ padding: "0.5rem" }} className={classes.value}>
-        {info.totalStock}({formatMoney()}€)
+        {info.totalStock} units
       </p>
     </Paper>
   );
 };
 
-export default UnitsSold;
+export default UnitsStock;

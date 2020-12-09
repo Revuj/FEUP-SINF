@@ -29,13 +29,11 @@ export default function Product({ id }) {
           <UnitsStock id={id} />
         </Grid>
         <Grid item xs={8} sm={8}>
-          <ProductSales />
+          <ProductSales id={id} />
         </Grid>
 
         <Grid item xs={12} sm={6}>
-          <ProductSuppliers id={id}             
-           numberItemsPerPage={5}
-           />
+          <ProductSuppliers id={id} numberItemsPerPage={5} />
         </Grid>
 
         {/**

@@ -109,11 +109,22 @@ module.exports = (server) => {
               .filter(({ naturalKey }) =>
                 keys.find((key) => naturalKey === key)
               )
-              .map(({ naturalKey, documentDate, payableAmount }) => ({
-                reference: naturalKey,
-                date: documentDate,
-                value: payableAmount.amount,
-              }));
+              .map(
+                ({
+                  naturalKey,
+                  documentDate,
+                  documentLines,
+                  payableAmount,
+                }) => ({
+                  reference: naturalKey,
+                  date: moment(documentDate).calendar(),
+                  units: documentLines.reduce(
+                    (acc, current) => acc + current.quantity,
+                    0
+                  ),
+                  value: payableAmount.amount,
+                })
+              );
 
             res.json(pendingPurchases);
           }

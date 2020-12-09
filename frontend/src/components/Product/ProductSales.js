@@ -43,13 +43,13 @@ const options = {
   },
 };
 
-function ProductSales() {
+function ProductSales({ id }) {
   const [graphData, setGraphData] = useState(initial_data);
-  const { id } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await fetchUnitsSold(id);
+      console.log(data);
       setGraphData({
         labels: initial_data.labels,
         datasets: [

@@ -64,7 +64,8 @@
 
 ### OTHERS
 - [ ] LOADING ANIMATION (Rafa)
-- [ ] UPDATE DRILL DOWN STYLING
+- [ ] UPDATE DRILL DOWN STYLING (🐝)
+- [ ] FIX ROUTING SYSTEM (Rafa)
 - [ ] DROPDOWN DATE
 
 # Getting Started with Create React App

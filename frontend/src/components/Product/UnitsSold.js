@@ -1,24 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
 import { formatMoney } from "../../helper/CurrencyFormater";
-import { useParams } from "react-router-dom";
 import { fetchUnitsSold } from "../../actions/product";
+import "../../styles/GenericCard.css";
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    padding: theme.spacing(2),
-    marginTop: theme.spacing(3),
-  },
-  value: {
-    textAlign: "center",
-    fontSize: 26,
-    color: theme.palette.text.secondary,
-  },
-}));
+const styleTitle = {
+  borderBottom: "1px solid black",
+  backgroundColor: "#37d5d6",
+  color: "white",
+};
 
 const UnitsSold = ({ id }) => {
-  const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const [unitsSold, setUnitsSold] = useState(null);
 
@@ -37,22 +28,21 @@ const UnitsSold = ({ id }) => {
   }
 
   return (
-    <Paper style={{ padding: 0 }} className={classes.paper}>
+    <div className="card">
       <h3
-        style={{
-          backgroundColor: "#37d5d6",
-          color: "white",
-          padding: "0.5rem",
-        }}
+        className="card-title"
+        style={styleTitle !== undefined ? styleTitle : {}}
       >
         Units Sold
       </h3>
-      <p style={{ padding: "0.5rem" }} className={classes.value}>
-        {" "}
+      <div className="card-amount">
         {unitsSold.unitsSold.reduce((a, b) => a + b, 0)} units (
         {formatMoney(unitsSold.value)}€)
-      </p>
-    </Paper>
+      </div>
+      <div className="card-description">
+        Number and amount of units sold for this product
+      </div>
+    </div>
   );
 };
 

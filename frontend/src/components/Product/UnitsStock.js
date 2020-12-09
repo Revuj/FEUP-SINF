@@ -21,6 +21,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const styleTitle = {
+  borderBottom: "1px solid black",
+  backgroundColor: "#37d5d6",
+  color: "white",
+};
+
 const UnitsStock = ({ id }) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
@@ -40,20 +46,18 @@ const UnitsStock = ({ id }) => {
   }
 
   return (
-    <Paper style={{ padding: 0 }} className={classes.paper}>
+    <div className="card">
       <h3
-        style={{
-          backgroundColor: "#37d5d6",
-          color: "white",
-          padding: "0.5rem",
-        }}
+        className="card-title"
+        style={styleTitle !== undefined ? styleTitle : {}}
       >
         Units in Stock
       </h3>
-      <p style={{ padding: "0.5rem" }} className={classes.value}>
-        {info.totalStock} units
-      </p>
-    </Paper>
+      <div className="card-amount">{info.totalStock} units</div>
+      <div className="card-description">
+        Number of units in stock for this product
+      </div>
+    </div>
   );
 };
 

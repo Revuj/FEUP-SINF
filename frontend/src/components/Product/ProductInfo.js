@@ -27,6 +27,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const styleTitle = {
+  borderBottom: "1px solid black",
+  backgroundColor: "#37d5d6",
+  color: "white",
+};
+
 const ProductInfo = ({ id }) => {
   const classes = useStyles();
 
@@ -53,7 +59,37 @@ const ProductInfo = ({ id }) => {
   }
 
   return (
-    <Paper style = {{padding: 0}} className={classes.paper}>
+    <div className="card-information">
+      <h3
+        className="card-title"
+        style={styleTitle !== undefined ? styleTitle : {}}
+      >
+        Product Information
+      </h3>
+      <Grid container spacing={3} className="card-information-content">
+        <Grid item xs={8}>
+          <div>
+            <span className={classes.item_title}>ID</span>
+            <span>{product.itemKey}</span>
+          </div>
+          <div>
+            <span className={classes.item_title}>Description</span>
+            <span>{product.description}</span>
+          </div>
+        </Grid>
+        <Grid item xs={4}>
+          <div>
+            <span className={classes.item_title}>Average Cost</span>
+            <span>{avgCost} €</span>
+          </div>
+          <div>
+            <span className={classes.item_title}>Average PVP</span>
+            <span>{avg} €/unit</span>
+          </div>
+        </Grid>
+      </Grid>
+    </div>
+    /*<Paper style = {{padding: 0}} className={classes.paper}>
       <h3 style = {{
         backgroundColor: "#37d5d6",
         color : "white",
@@ -65,11 +101,7 @@ const ProductInfo = ({ id }) => {
             <span className={classes.item_title}>ID</span>
             <span>{product.itemKey}</span>
           </div>
-          {/** 
-          <div>
-            <span className={classes.item_title}>Name</span>
-            <span></span>
-          </div>*/}
+          
         </Grid>
         <Grid item xs={12}>
           <div>
@@ -81,11 +113,6 @@ const ProductInfo = ({ id }) => {
             <span>{avgCost} €</span>
           </div>
 
-          {/**
-          <div>
-            <span className={classes.item_title}>Supplier</span>
-            <span></span>
-          </div> */}
         </Grid>
         <Grid item xs={12}>
           <div>
@@ -94,7 +121,7 @@ const ProductInfo = ({ id }) => {
           </div>
         </Grid>
       </Grid>
-    </Paper>
+    </Paper>*/
   );
 };
 

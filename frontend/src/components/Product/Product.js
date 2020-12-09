@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import ProductInfo from './ProductInfo';
-import ProductSuppliers from './ProductSuppliers';
-import ProductTopClients from './ProductTopClients';
-import ProductProfit from './ProductProfit';
-import UnitsSold from './UnitsSold';
-import UnitsStock from './UnitsStock';
+import React, { useState, useEffect } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import ProductInfo from "./ProductInfo";
+import ProductSuppliers from "./ProductSuppliers";
+import ProductTopClients from "./ProductTopClients";
+import ProductSales from "./ProductSales";
+import UnitsSold from "./UnitsSold";
+import UnitsStock from "./UnitsStock";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,10 +28,9 @@ export default function Product({ id }) {
           <UnitsSold id={id} />
           <UnitsStock id={id} />
         </Grid>
-        {/** 
         <Grid item xs={8} sm={8}>
-          <ProductProfit />
-        </Grid> **/}
+          <ProductSales />
+        </Grid>
 
         <Grid item xs={12} sm={6}>
           <ProductSuppliers id={id}             

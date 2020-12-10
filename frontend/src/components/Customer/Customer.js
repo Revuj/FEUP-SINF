@@ -28,7 +28,9 @@ export default function Customer() {
           <TotalPurchased />
         </Grid>
         <Grid item xs={12}>
-          <TopPurchases />
+          <TopPurchases 
+            numberItemsPerPage={5}
+          />
         </Grid>
       </Grid>
     </div>

@@ -46,9 +46,13 @@ const CustomerInformation = () => {
  // faltam algum atributos tao a null
  // temos outros atributos que se calhar deviamos colocar
   return (
-    <Paper className={classes.paper}>
-      <h3>Customer Information</h3>
-      <Grid container spacing={3}>
+    <Paper style = {{padding: '0'}} className={classes.paper}>
+      <h3 style = {{
+        backgroundColor: "#37d5d6",
+        color : "white",
+        padding: '0.5rem'
+      }}>Customer Information</h3>
+      <Grid style= {{padding: '0.5rem'}}  container spacing={3}>
         <Grid item xs={8}>
           <div>
             <span className={classes.item_title}>ID</span>

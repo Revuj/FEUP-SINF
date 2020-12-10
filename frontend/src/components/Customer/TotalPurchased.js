@@ -42,9 +42,13 @@ const TotalPurchased = () => {
   }
 
   return (
-    <Paper className={classes.paper}>
-      <h3>Total Purchased</h3>
-      <p className={classes.value}>(what number are suppose to be here?) ({formatMoney(purchase)}€)</p>
+    <Paper style = {{padding: '0'}} className={classes.paper}>
+      <h3 style = {{
+        backgroundColor: "#37d5d6",
+        color : "white",
+        padding: '0.5rem'
+      }}>Total Purchased</h3>
+      <p style= {{padding: '0.5rem'}}  className={classes.value}>(what number are suppose to be here?) ({formatMoney(purchase)}€)</p>
     </Paper>
   );
 };

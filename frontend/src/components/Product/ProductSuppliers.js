@@ -1,21 +1,148 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import { formatMoney } from '../../helper/CurrencyFormater';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
+import useFullPageLoader from '../../hooks/FullPageLoader';
+import Search from '../Search';
+import PaginationComponent from '../Pagination';
+import TableHeader from '../TableHeader';
+import Supplier from '../Supplier/Supplier'
 
 const fetchSuppliers = async (id) => {
   return axios.get(`/api/products/${id}/suppliers`);
 };
 
+export default function ProductSuppliers({
+   id ,
+   numberItemsPerPage,
+   containerStyle,
+   themeColor,
+  })  {
+    //const [loader, showLoader, hideLoader] = useFullPageLoader();
+    const [loading, setLoading] = useState(true);
+    const [totalItems, setTotalItems] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [search, setSearch] = useState('');
+    const [sorting, setSorting] = useState({ field: '', order: '' });
+
+    const ITEMS_PER_PAGE = numberItemsPerPage;
+    const headers = [
+      { name: 'ID', field: 'id', sortable: false },
+      { name: 'Name', field: 'name', sortable: true },
+      { name: 'Units Purchased', field: 'units', sortable: true },
+      { name: 'Value Purchased', field: 'value', sortable: false },
+    ];
+
+    const [suppliers, setSuppliers] = useState(null);
+
+    
+    useEffect(() => {
+      const fetchData = async () => {
+        const { data } = await fetchSuppliers(id);
+        setSuppliers(data);
+        console.log(data);
+        setLoading(false);
+      };
+      fetchData();
+    }, [id]);
+
+
+  /*to able to sort the data we are going to retrieve */
+  const supplierData = useMemo(() => {
+    if (suppliers === null) return;
+    let computedSuppliers = suppliers;
+
+    if (search) {
+      computedSuppliers = computedSuppliers.filter(
+        (supplier) =>
+          supplier.name.toLowerCase().includes(search.toLowerCase()) 
+         // || suppier.email.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    setTotalItems(computedSuppliers.length);
+
+    //Sorting clients
+    console.log(sorting.field);
+    console.log(sorting.order);
+    if (sorting.field && !sorting.field) {
+      const reversed = sorting.order === 'asc' ? 1 : -1;
+
+      if (sorting.field === 'name')
+      {  
+        computedSuppliers = computedSuppliers.sort(
+          (a, b) => reversed * a[sorting.field].localeCompare(b[sorting.field])
+        );
+      }
+      else if (sorting.field === 'units')
+       {
+          computedSuppliers = computedSuppliers.sort(
+          (a, b) => reversed * a[sorting.field] - (b[sorting.field])
+        );
+      }
+    }
+
+    //Current Page slice
+    return computedSuppliers.slice(
+      (currentPage - 1) * ITEMS_PER_PAGE,
+      (currentPage - 1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE
+    );
+  }, [suppliers, currentPage, search, sorting]);
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  console.log(supplierData);
+
+  return (
+    <>
+      <section className="table" style={containerStyle}>
+        <header className="header_info">
+          <h3 className="table-title">Supplier</h3>
+          <Search
+            onSearch={(value) => {
+              setSearch(value);
+              setCurrentPage(1);
+            }}
+          />
+        </header>
+
+        <table className="content">
+          <TableHeader
+            color={themeColor}
+            headers={headers}
+            onSorting={(field, order) => setSorting({ field, order })}
+          />
+          <tbody>
+            {supplierData.map((supplier) => (
+              <tr key={supplier.id}>
+                <th>
+                  {supplier.id}
+                </th>
+                <td>{supplier.name}</td>
+                <td>{supplier.units}</td>
+                <td>{supplier.value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <PaginationComponent
+          color={themeColor}
+          total={totalItems}
+          itemsPerPage={ITEMS_PER_PAGE}
+          currentPage={currentPage}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
+      </section>
+    </>
+
+  );
+
+
+
+}   
+
+/*
 const columns = [
   { id: 'id', label: 'ID', minWidth: 70, align: 'center' },
   { id: 'name', label: 'Name', minWidth: 150, align: 'center' },
@@ -129,4 +256,4 @@ export default function ProductSuppliers({ id }) {
       />
     </Paper>
   );
-}
+}*/

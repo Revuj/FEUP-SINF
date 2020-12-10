@@ -45,9 +45,13 @@ const ProductInfo = ({ id }) => {
   }
 
   return (
-    <Paper className={classes.paper}>
-      <h3>Product Information</h3>
-      <Grid container spacing={3}>
+    <Paper style = {{padding: 0}} className={classes.paper}>
+      <h3 style = {{
+        backgroundColor: "#37d5d6",
+        color : "white",
+        padding: '0.5rem'
+        }}>Product Information</h3>
+      <Grid style= {{padding: '0.5rem'}} container spacing={3}>
         <Grid item xs={12}>
           <div>
             <span className={classes.item_title}>ID</span>

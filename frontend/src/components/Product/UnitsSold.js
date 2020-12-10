@@ -40,9 +40,13 @@ const UnitsSold = ({ id }) => {
   }
 
   return (
-    <Paper className={classes.paper}>
-      <h3>Units Sold</h3>
-      <p className={classes.value}>
+    <Paper  style = {{padding: 0}} className={classes.paper}>
+      <h3 style = {{
+        backgroundColor: "#37d5d6",
+        color : "white",
+        padding: '0.5rem'
+        }}>Units Sold</h3>
+      <p  style= {{padding: '0.5rem'}} className={classes.value}>
         {' '}
         {info.unitsSold} ({formatMoney(info.valueTotal)}€)
       </p>

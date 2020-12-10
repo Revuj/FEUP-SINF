@@ -1,10 +1,10 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import SupplierInformation from "./SupplierInformation";
-import TotalPurchased from "./TotalPurchased";
-import PendingPurchases from "./PendingPurchases";
-import { useParams } from "react-router-dom";
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import SupplierInformation from './SupplierInformation';
+import TotalPurchased from './TotalPurchased';
+import PendingPurchases from './PendingPurchases';
+import { useParams } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,9 +13,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Customer() {
+export default function Supplier({ id }) {
   const classes = useStyles();
-  const { id } = useParams();
 
   return (
     <div className={classes.root}>

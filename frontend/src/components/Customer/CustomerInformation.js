@@ -1,15 +1,13 @@
-import React, {useEffect, useState} from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
+import React, { useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
-import { useParams } from "react-router-dom";
-
+import { useParams } from 'react-router-dom';
 
 const fetchCustomerData = async (id) => {
   return await axios.get(`/api/customer/${id}`);
-}
-
+};
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -21,16 +19,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CustomerInformation = () => {
+const CustomerInformation = ({ id }) => {
   const classes = useStyles();
-  const{id} = useParams();
   const [customer, setCustomer] = useState(null);
   const [loading, setloading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async() => {
-      console.log(id);
-      const{data} = await fetchCustomerData(id);
+    const fetchData = async () => {
+      const { data } = await fetchCustomerData(id);
       setCustomer(data);
       setloading(false);
     };
@@ -39,20 +35,24 @@ const CustomerInformation = () => {
   }, [id]);
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
-  
+
   console.log(customer);
- // faltam algum atributos tao a null
- // temos outros atributos que se calhar deviamos colocar
+  // faltam algum atributos tao a null
+  // temos outros atributos que se calhar deviamos colocar
   return (
-    <Paper style = {{padding: '0'}} className={classes.paper}>
-      <h3 style = {{
-        backgroundColor: "#37d5d6",
-        color : "white",
-        padding: '0.5rem'
-      }}>Customer Information</h3>
-      <Grid style= {{padding: '0.5rem'}}  container spacing={3}>
+    <Paper style={{ padding: '0' }} className={classes.paper}>
+      <h3
+        style={{
+          backgroundColor: '#37d5d6',
+          color: 'white',
+          padding: '0.5rem',
+        }}
+      >
+        Customer Information
+      </h3>
+      <Grid style={{ padding: '0.5rem' }} container spacing={3}>
         <Grid item xs={8}>
           <div>
             <span className={classes.item_title}>ID</span>
@@ -64,7 +64,9 @@ const CustomerInformation = () => {
           </div>
           <div>
             <span className={classes.item_title}>Address</span>
-            <span>{customer.streetName} {customer.buildingNumber}</span>
+            <span>
+              {customer.streetName} {customer.buildingNumber}
+            </span>
           </div>
         </Grid>
         <Grid item xs={4}>

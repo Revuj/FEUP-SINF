@@ -1,21 +1,20 @@
-import React, {useState, useEffect, useMemo} from "react";
-import { formatMoney } from "../../helper/CurrencyFormater";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect, useMemo } from 'react';
+import { formatMoney } from '../../helper/CurrencyFormater';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import Search from "../Search";
-import TableHeader from "../TableHeader";
+import Search from '../Search';
+import TableHeader from '../TableHeader';
 
-const fetchTopPurchases = async(id) => {
+const fetchTopPurchases = async (id) => {
   return axios.get(`/api/customer/${id}/topPurchases`);
-}
+};
 
 export default function TopPurchases({
   numberItemsPerPage,
   containerStyle,
-  themeColor
+  themeColor,
+  id,
 }) {
-  const {id} = useParams();
-
   const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,7 +32,7 @@ export default function TopPurchases({
 
   useEffect(() => {
     const fetchTableData = async () => {
-      const {data} = await fetchTopPurchases(id);
+      const { data } = await fetchTopPurchases(id);
       setTableInfo(data);
       setLoading(false);
     };
@@ -46,13 +45,12 @@ export default function TopPurchases({
 
     if (search) {
       computedInfo = computedInfo.filter(
-        (row) =>
-          row.date.toLowerCase().includes(search.toLowerCase()) 
-         // || suppier.email.toLowerCase().includes(search.toLowerCase())
+        (row) => row.date.toLowerCase().includes(search.toLowerCase())
+        // || suppier.email.toLowerCase().includes(search.toLowerCase())
       );
     }
 
-    setTotalItems(computedInfo .length);
+    setTotalItems(computedInfo.length);
 
     //Sorting clients
     console.log(sorting.field);
@@ -60,10 +58,9 @@ export default function TopPurchases({
     if (sorting.field && !sorting.field) {
       const reversed = sorting.order === 'asc' ? 1 : -1;
 
-      if (sorting.field === 'amount')
-       {
-        computedInfo  = computedInfo.sort(
-          (a, b) => reversed * a[sorting.field] - (b[sorting.field])
+      if (sorting.field === 'amount') {
+        computedInfo = computedInfo.sort(
+          (a, b) => reversed * a[sorting.field] - b[sorting.field]
         );
       }
     }
@@ -75,9 +72,8 @@ export default function TopPurchases({
     );
   }, [tableInfo, currentPage, search, sorting]);
 
-  
   if (loading) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   return (
@@ -101,19 +97,16 @@ export default function TopPurchases({
           <tbody>
             {TableData.map((row, id) => (
               <tr key={id}>
-                <th>
-                  {row.date}
-                </th>
+                <th>{row.date}</th>
                 <td>{row.currency}</td>
                 <td>{row.amount}</td>
               </tr>
             ))}
           </tbody>
         </table>
-        </section>
+      </section>
     </>
   );
-
 
   /*
   const {id} = useParams();

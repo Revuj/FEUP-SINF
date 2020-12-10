@@ -1,9 +1,9 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import CustomerInformation from "./CustomerInformation";
-import TotalPurchased from "./TotalPurchased";
-import TopPurchases from "./TopPurchases";
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import CustomerInformation from './CustomerInformation';
+import TotalPurchased from './TotalPurchased';
+import TopPurchases from './TopPurchases';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Customer() {
+export default function Customer({ id }) {
   const classes = useStyles();
 
   return (
@@ -21,16 +21,14 @@ export default function Customer() {
 
       <Grid container spacing={3}>
         <Grid item xs={8}>
-          <CustomerInformation />
+          <CustomerInformation id={id} />
         </Grid>
 
         <Grid item xs={4}>
-          <TotalPurchased />
+          <TotalPurchased id={id} />
         </Grid>
         <Grid item xs={12}>
-          <TopPurchases 
-            numberItemsPerPage={5}
-          />
+          <TopPurchases numberItemsPerPage={5} id={id} />
         </Grid>
       </Grid>
     </div>

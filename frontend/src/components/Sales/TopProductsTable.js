@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
-import useFullPageLoader from '../../hooks/FullPageLoader';
 import PaginationComponent from '../Pagination';
 import Search from '../Search';
 import TableHeader from '../TableHeader';
 import '../../styles/Table.css';
+import { css } from '@emotion/core';
+import PuffLoader from 'react-spinners/PuffLoader';
 import Product from '../Product/Product';
 
 const TopProductsTable = ({
@@ -14,7 +15,7 @@ const TopProductsTable = ({
   year,
   setPage,
 }) => {
-  const [loader, showLoader, hideLoader] = useFullPageLoader();
+  const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -31,18 +32,16 @@ const TopProductsTable = ({
   ];
 
   useEffect(() => {
-    showLoader();
-
     axios
       .get(`/api/sales/products/${year}`)
       .then((response) => {
         console.log(response.data);
         setProducts(response.data);
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
       });
-    hideLoader();
   }, []);
 
   /*to able to sort the data we are going to retrieve */
@@ -73,6 +72,14 @@ const TopProductsTable = ({
       (currentPage - 1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE
     );
   }, [products, currentPage, search, sorting]);
+
+  const tableStyle = css`
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  `;
 
   return (
     <>
@@ -120,8 +127,18 @@ const TopProductsTable = ({
           currentPage={currentPage}
           onPageChange={(page) => setCurrentPage(page)}
         />
-
-        {loader}
+        <div
+          className="table-loading"
+          style={loading ? { height: '250px' } : {}}
+        >
+          <PuffLoader
+            css={tableStyle}
+            size={60}
+            color={'#37d5d6'}
+            loading={loading}
+            className="loader"
+          />
+        </div>
       </section>
     </>
   );

@@ -17,9 +17,9 @@ import {
 
 const Sales = ({ setPage }) => {
   const [year, setYear] = useState('2020');
-  const [gpm, setGpm] = useState(0);
-  const [backlog, setBacklog] = useState(0);
-  const [netSales, setNetSales] = useState(0);
+  const [gpm, setGpm] = useState(null);
+  const [backlog, setBacklog] = useState(null);
+  const [netSales, setNetSales] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {

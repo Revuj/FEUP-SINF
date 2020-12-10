@@ -1,24 +1,7 @@
 import React from 'react';
+import { css } from '@emotion/core';
+import PuffLoader from 'react-spinners/PuffLoader';
 import '../styles/GenericCard.css';
-
-/**
- * 
- * example of use: 
- *     <GenericCard 
-        title = "Price" 
-        description = "This is all the money they need"
-        amount = "30000"
-        formatter = {formatMoney}
-        unit = "€"
-        styleCard = {{
-          backgroundColor:'white',
-          width:'25%',
-        }}
-        styleTitle = { {
-          borderBottom:'1px solid black'
-        }}
-      />
- */
 
 const GenericCard = ({
   title,
@@ -31,7 +14,14 @@ const GenericCard = ({
   styleAmount,
   styleDescription,
 }) => {
-  console.log(styleAmount);
+  const spinnerStyle = css`
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  `;
+
   return (
     <div className="card" style={styleCard}>
       <h3
@@ -44,8 +34,19 @@ const GenericCard = ({
         className="card-amount"
         style={styleAmount !== undefined ? styleAmount : {}}
       >
-        {formatter && formatter(amount)}
-        {unit}
+        {amount && formatter ? (
+          <>
+            {formatter(amount)} {unit}
+          </>
+        ) : (
+          <PuffLoader
+            css={spinnerStyle}
+            size={60}
+            color={'#37d5d6'}
+            loading={amount == null}
+            className="loader"
+          />
+        )}
       </div>
       <div
         className="card-description"

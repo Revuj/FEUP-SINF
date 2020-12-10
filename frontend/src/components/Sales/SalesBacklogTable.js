@@ -5,6 +5,8 @@ import PaginationComponent from '../Pagination';
 import Search from '../Search';
 import TableHeader from '../TableHeader';
 import { fetchOngoingSales } from '../../actions/sales';
+import { css } from '@emotion/core';
+import PuffLoader from 'react-spinners/PuffLoader';
 import '../../styles/Table.css';
 
 const SalesBacklogTable = ({
@@ -12,7 +14,7 @@ const SalesBacklogTable = ({
   containerStyle,
   themeColor,
 }) => {
-  const [loader, showLoader, hideLoader] = useFullPageLoader();
+  const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -32,19 +34,15 @@ const SalesBacklogTable = ({
   /* insert the information fetched in the api (now using a dummy api) */
   useEffect(() => {
     const getData = () => {
-      showLoader();
-
       axios
         .get(`/api/sales/backlogProducts`)
         .then((response) => {
-          console.log(response.data);
           setSales(response.data);
+          setLoading(false);
         })
         .catch((error) => {
           console.error(error);
         });
-
-      hideLoader();
     };
 
     getData();
@@ -72,12 +70,22 @@ const SalesBacklogTable = ({
       );
     }
 
-    //Current Page slice
-    return computedSales.slice(
+    computedSales = computedSales.slice(
       (currentPage - 1) * ITEMS_PER_PAGE,
       (currentPage - 1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE
     );
+
+    return computedSales;
+    //Current Page slice
   }, [sales, currentPage, search, sorting]);
+
+  const tableStyle = css`
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  `;
 
   return (
     <>
@@ -91,34 +99,47 @@ const SalesBacklogTable = ({
             }}
           />
         </header>
+        {sales && (
+          <>
+            <table className="content">
+              <TableHeader
+                color={themeColor}
+                headers={headers}
+                onSorting={(field, order) => setSorting({ field, order })}
+              />
+              <tbody>
+                {clientsData.map((sale) => (
+                  <tr key={sale.id}>
+                    <th scope="row">{sale.date}</th>
+                    <td>{sale.customer}</td>
+                    <td>{sale.items}</td>
+                    <td>{sale.value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-        <table className="content">
-          <TableHeader
-            color={themeColor}
-            headers={headers}
-            onSorting={(field, order) => setSorting({ field, order })}
+            <PaginationComponent
+              color={themeColor}
+              total={totalItems}
+              itemsPerPage={ITEMS_PER_PAGE}
+              currentPage={currentPage}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
+          </>
+        )}
+        <div
+          className="table-loading"
+          style={loading ? { height: '250px' } : {}}
+        >
+          <PuffLoader
+            css={tableStyle}
+            size={60}
+            color={'#37d5d6'}
+            loading={loading}
+            className="loader"
           />
-          <tbody>
-            {clientsData.map((sale) => (
-              <tr key={sale.id}>
-                <th scope="row">{sale.date}</th>
-                <td>{sale.customer}</td>
-                <td>{sale.items}</td>
-                <td>{sale.value}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <PaginationComponent
-          color={themeColor}
-          total={totalItems}
-          itemsPerPage={ITEMS_PER_PAGE}
-          currentPage={currentPage}
-          onPageChange={(page) => setCurrentPage(page)}
-        />
-
-        {loader}
+        </div>
       </section>
     </>
   );

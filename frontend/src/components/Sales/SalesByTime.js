@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Line } from "react-chartjs-2";
-
+import { css } from '@emotion/core';
+import PuffLoader from 'react-spinners/PuffLoader';
+import { Line } from 'react-chartjs-2';
 
 function SalesByTime({ year }) {
   const [sales, setSales] = useState(null);
@@ -49,18 +50,35 @@ function SalesByTime({ year }) {
     scales: {
       yAxes: [
         {
-          type: "linear",
+          type: 'linear',
           display: true,
-          position: "left",
-          id: "y-axis-1",
+          position: 'left',
+          id: 'y-axis-1',
         },
       ],
     },
   };
 
+  const graphStyle = css`
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  `;
+
   return (
     <div className="chart">
       <h3 className="chart-title">Sales</h3>
+      <div className="graph-loading" style={loading ? { height: '250px' } : {}}>
+        <PuffLoader
+          css={graphStyle}
+          size={60}
+          color={'#37d5d6'}
+          loading={loading}
+          className="loader"
+        />
+      </div>
       {sales && <Line height={115} data={sales} options={options} />}
     </div>
   );

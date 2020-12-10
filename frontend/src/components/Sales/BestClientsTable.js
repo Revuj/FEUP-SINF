@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
-import useFullPageLoader from '../../hooks/FullPageLoader';
 import PaginationComponent from '../Pagination';
 import Search from '../Search';
 import TableHeader from '../TableHeader';
 import Customer from '../Customer/Customer';
 import { fetchBestClients } from '../../actions/clients';
+import { css } from '@emotion/core';
+import PuffLoader from 'react-spinners/PuffLoader';
 import '../../styles/Table.css';
 
 const BestClientsTable = ({
@@ -15,7 +16,7 @@ const BestClientsTable = ({
   year,
   setPage,
 }) => {
-  const [loader, showLoader, hideLoader] = useFullPageLoader();
+  const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -34,17 +35,15 @@ const BestClientsTable = ({
   const [clients, setClients] = useState([]);
   /* insert the information fetched in the api */
   useEffect(() => {
-    showLoader();
-
     axios
       .get(`/api/customers/${year}`)
       .then((response) => {
         setClients(response.data);
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
       });
-    hideLoader();
   }, [year]);
 
   /*to able to sort the data we are going to retrieve */
@@ -76,11 +75,19 @@ const BestClientsTable = ({
     );
   }, [clients, currentPage, search, sorting]);
 
+  const tableStyle = css`
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  `;
+
   return (
     <>
       <section className="table" style={containerStyle}>
         <header className="header_info">
-          <h3 className="table-title">Costumers</h3>
+          <h3 className="table-title">Customers</h3>
           <Search
             onSearch={(value) => {
               setSearch(value);
@@ -122,8 +129,18 @@ const BestClientsTable = ({
           currentPage={currentPage}
           onPageChange={(page) => setCurrentPage(page)}
         />
-
-        {loader}
+        <div
+          className="table-loading"
+          style={loading ? { height: '250px' } : {}}
+        >
+          <PuffLoader
+            css={tableStyle}
+            size={60}
+            color={'#37d5d6'}
+            loading={loading}
+            className="loader"
+          />
+        </div>
       </section>
     </>
   );

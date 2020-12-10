@@ -6,17 +6,22 @@ import { formatMoney } from '../../helper/CurrencyFormater';
 import '../../styles/Finantial.css';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { fetchProfitLoss, fetchBalanceSheet, fetchAccountsReceivable, fetchAccountsPayable } from '../../actions/financial';
+import {
+  fetchProfitLoss,
+  fetchBalanceSheet,
+  fetchAccountsReceivable,
+  fetchAccountsPayable,
+} from '../../actions/financial';
 import ProfitLossStatement from './ProfitLossStatement';
 
 const Index = () => {
   const [year, setYear] = useState('2020');
-  const [ebit, setEbit] = useState(0);
-  const [ebitda, setEbitda] = useState(0);
-  const [accountsReceivable, setAccountsReceivable] = useState(0);
-  const [accountsPayable, setAccountsPayable] = useState(0);
-  const [netIncome, setNetIncome] = useState(0);
-  const [cogs, setCogs] = useState(0);
+  const [ebit, setEbit] = useState(null);
+  const [ebitda, setEbitda] = useState(null);
+  const [accountsReceivable, setAccountsReceivable] = useState(null);
+  const [accountsPayable, setAccountsPayable] = useState(null);
+  const [netIncome, setNetIncome] = useState(null);
+  const [cogs, setCogs] = useState(null);
   const [revenue, setRevenue] = useState(null);
   const [expenses, setExpenses] = useState(null);
   const [assets, setAssets] = useState(null);
@@ -139,28 +144,27 @@ const Index = () => {
         <RevenueVsCost />
 
         <section className="listingInfo">
-          {revenue && expenses && (
-            <ProfitLossStatement
-              title="Profit & Loss Statement"
-              data={[
-                { name: 'revenue', data: revenue },
-                { name: 'expenses', data: expenses },
-              ]}
-              style={{ width: '25%', backgroundColor: 'white' }}
-              itemStyle={{ borderTop: '1px solid black' }}
-            />
-          )}
-
-          {assets && liabilities && equity && (
-            <BalanceSheet
-              title="Balance Sheet"
-              assets={assets}
-              liabilities={liabilities}
-              equity={equity}
-              style={{ width: '25%', backgroundColor: 'white' }}
-              itemStyle={{ borderTop: '1px solid black' }}
-            />
-          )}
+          <ProfitLossStatement
+            title="Profit & Loss Statement"
+            data={
+              !(revenue && expenses)
+                ? null
+                : [
+                    { name: 'revenue', data: revenue },
+                    { name: 'expenses', data: expenses },
+                  ]
+            }
+            style={{ width: '25%', backgroundColor: 'white' }}
+            itemStyle={{ borderTop: '1px solid black' }}
+          />
+          <BalanceSheet
+            title="Balance Sheet"
+            assets={assets}
+            liabilities={liabilities}
+            equity={equity}
+            style={{ width: '25%', backgroundColor: 'white' }}
+            itemStyle={{ borderTop: '1px solid black' }}
+          />
         </section>
       </div>
     </div>

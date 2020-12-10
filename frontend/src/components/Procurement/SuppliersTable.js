@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import axios from 'axios';
-import useFullPageLoader from '../../hooks/FullPageLoader';
-import PaginationComponent from '../Pagination';
-import Search from '../Search';
-import TableHeader from '../TableHeader';
-import Supplier from '../Supplier/Supplier';
-import { css } from '@emotion/core';
-import PuffLoader from 'react-spinners/PuffLoader';
-import '../../styles/Table.css';
+import React, { useEffect, useState, useMemo } from "react";
+import axios from "axios";
+import useFullPageLoader from "../../hooks/FullPageLoader";
+import PaginationComponent from "../Pagination";
+import Search from "../Search";
+import TableHeader from "../TableHeader";
+import Supplier from "../Supplier/Supplier";
+import { css } from "@emotion/core";
+import PuffLoader from "react-spinners/PuffLoader";
+import "../../styles/Table.css";
 
 const SuppliersTable = ({
   numberItemsPerPage,
@@ -19,17 +19,17 @@ const SuppliersTable = ({
   const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [sorting, setSorting] = useState({ field: '', order: '' });
+  const [search, setSearch] = useState("");
+  const [sorting, setSorting] = useState({ field: "", order: "" });
   const [suppliers, setSuppliers] = useState([]);
 
   const ITEMS_PER_PAGE = numberItemsPerPage;
 
   const headers = [
-    { name: 'ID', field: 'id', sortable: false },
-    { name: 'Name', field: 'name', sortable: true },
-    { name: 'Units Purchased', field: 'units', sortable: true },
-    { name: 'Value Purchased', field: 'value', sortable: false },
+    { name: "ID", field: "id", sortable: false },
+    { name: "Name", field: "name", sortable: true },
+    { name: "Units Purchased", field: "units", sortable: true },
+    { name: "Value Purchased", field: "value", sortable: false },
   ];
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const SuppliersTable = ({
 
     //Sorting suppliers
     if (sorting.field) {
-      const reversed = sorting.order === 'asc' ? 1 : -1;
+      const reversed = sorting.order === "asc" ? 1 : -1;
       computedSuppliers = computedSuppliers.sort(
         (a, b) => reversed * a[sorting.field].localeCompare(b[sorting.field])
       );
@@ -114,7 +114,7 @@ const SuppliersTable = ({
                 </th>
                 <td>{supplier.name}</td>
                 <td>{supplier.units}</td>
-                <td>{supplier.value}</td>
+                <td>{formatMoney(supplier.value)}</td>
               </tr>
             ))}
           </tbody>
@@ -130,12 +130,12 @@ const SuppliersTable = ({
 
         <div
           className="table-loading"
-          style={loading ? { height: '250px' } : {}}
+          style={loading ? { height: "250px" } : {}}
         >
           <PuffLoader
             css={tableStyle}
             size={60}
-            color={'#37d5d6'}
+            color={"#37d5d6"}
             loading={loading}
             className="loader"
           />

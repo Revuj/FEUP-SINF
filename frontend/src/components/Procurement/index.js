@@ -1,25 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import GenericCard from '../GenericCard';
-import { formatMoney } from '../../helper/CurrencyFormater';
-import Purchases from './Purchases';
-import SuppliersTable from '../Procurement/SuppliersTable';
-import '../../styles/Procurement.css';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import { fetchAccountsPayable } from '../../actions/financial';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import GenericCard from "../GenericCard";
+import { formatMoney } from "../../helper/CurrencyFormater";
+import Purchases from "./Purchases";
+import SuppliersTable from "../Procurement/SuppliersTable";
+import "../../styles/Procurement.css";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
+import { fetchAccountsPayable } from "../../actions/financial";
+import { fetchDebt } from "../../actions/purchases";
 
 const Procurement = ({ title, setPage }) => {
-  const [year, setYear] = useState('2020');
+  const [year, setYear] = useState("2020");
   const [accountsPayable, setAccountsPayable] = useState(null);
   const [purchasesBacklog, setPurchasesBacklog] = useState(null);
   const [totalOfPurchases, setTotalOfPurchases] = useState(null);
   const [delayInReceivment, setDelayInReceivment] = useState(null);
+  const [debt, setDebt] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       const acPayable = (await fetchAccountsPayable()).data;
+      const debtSuplliers = (await fetchDebt()).data;
       setAccountsPayable(acPayable);
+      setDebt(debtSuplliers.debt);
     };
 
     axios
@@ -70,9 +74,9 @@ const Procurement = ({ title, setPage }) => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
+              borderBottom: "1px solid black",
+              backgroundColor: "#37d5d6",
+              color: "white",
             }}
           />
           <GenericCard
@@ -83,9 +87,9 @@ const Procurement = ({ title, setPage }) => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
+              borderBottom: "1px solid black",
+              backgroundColor: "#37d5d6",
+              color: "white",
             }}
           />
 
@@ -98,9 +102,25 @@ const Procurement = ({ title, setPage }) => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
+              borderBottom: "1px solid black",
+              backgroundColor: "#37d5d6",
+              color: "white",
+            }}
+          />
+
+          <GenericCard
+            title="Debt to suppliers"
+            description="Amount of money in debt to the suplliers"
+            amount={debt || 0}
+            formatter={formatMoney}
+            unit="€"
+            styleTitle={{
+              borderBottom: "1px solid black",
+              backgroundColor: "#37d5d6",
+              color: "white",
+            }}
+            styleCard={{
+              backgroundColor: "white",
             }}
           />
 
@@ -111,12 +131,12 @@ const Procurement = ({ title, setPage }) => {
             formatter={formatMoney}
             unit=" "
             styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
+              borderBottom: "1px solid black",
+              backgroundColor: "#37d5d6",
+              color: "white",
             }}
             styleCard={{
-              backgroundColor: 'white',
+              backgroundColor: "white",
             }}
           />
         </section>
@@ -129,7 +149,7 @@ const Procurement = ({ title, setPage }) => {
             <SuppliersTable
               setPage={setPage}
               numberItemsPerPage={6}
-              containerStyle={{ width: '100%' }}
+              containerStyle={{ width: "100%" }}
               year={year}
             />
           </span>

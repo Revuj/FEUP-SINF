@@ -84,7 +84,7 @@ export default function TopPurchases({
     <>
       <section className="table" style={containerStyle}>
         <header className="header_info">
-          <h3 className="table-title">Supplier</h3>
+          <h3 className="table-title">Top Purchases</h3>
           <Search
             onSearch={(value) => {
               setSearch(value);

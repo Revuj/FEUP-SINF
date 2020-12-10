@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import { formatMoney } from "../../helper/CurrencyFormater";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import PuffLoader from "react-spinners/PuffLoader";
+import { css } from "@emotion/core";
 
 const fetchStockUnits = async (id) => {
   return axios.get(`/api/products/${id}/stock-units`);
@@ -27,8 +26,15 @@ const styleTitle = {
   color: "white",
 };
 
+const spinnerStyle = css`
+  margin: 0;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+`;
+
 const UnitsStock = ({ id }) => {
-  const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const [info, setInfo] = useState(null);
 
@@ -41,10 +47,6 @@ const UnitsStock = ({ id }) => {
     getData();
   }, [id]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="card">
       <h3
@@ -53,7 +55,19 @@ const UnitsStock = ({ id }) => {
       >
         Units in Stock
       </h3>
-      <div className="card-amount">{info.totalStock} units</div>
+      <div className="card-amount">
+        {info ? (
+          <>{info.totalStock} units</>
+        ) : (
+          <PuffLoader
+            css={spinnerStyle}
+            size={60}
+            color={"#37d5d6"}
+            loading={loading == true}
+            className="loader"
+          />
+        )}
+      </div>
       <div className="card-description">
         Number of units in stock for this product
       </div>

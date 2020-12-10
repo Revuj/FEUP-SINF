@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { formatMoney } from "../../helper/CurrencyFormater";
 import axios from "axios";
 import "../../styles/GenericCard.css";
+import PuffLoader from "react-spinners/PuffLoader";
+import { css } from "@emotion/core";
 
 const styleTitle = {
   borderBottom: "1px solid black",
@@ -9,9 +11,17 @@ const styleTitle = {
   color: "white",
 };
 
+const spinnerStyle = css`
+  margin: 0;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+`;
+
 const TotalPurchased = ({ id }) => {
-  const [isLoading, setLoading] = useState(true);
-  const [total, setTotal] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [total, setTotal] = useState(null);
 
   useEffect(() => {
     axios
@@ -25,10 +35,6 @@ const TotalPurchased = ({ id }) => {
       });
   }, [id]);
 
-  if (isLoading) {
-    return <div className="App">Loading...</div>;
-  }
-
   return (
     <div className="card">
       <h3
@@ -38,7 +44,19 @@ const TotalPurchased = ({ id }) => {
         Total Purchased
       </h3>
       <div className="card-amount">
-        {total.totalOrders} orders ({formatMoney(total.totalPrice)}€)
+        {total ? (
+          <>
+            {total.totalOrders} orders ({formatMoney(total.totalPrice)}€)
+          </>
+        ) : (
+          <PuffLoader
+            css={spinnerStyle}
+            size={60}
+            color={"#37d5d6"}
+            loading={loading == true}
+            className="loader"
+          />
+        )}
       </div>
       <div className="card-description">
         Number and amount of purchases orders for the supplier

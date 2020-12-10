@@ -1,46 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
 import ProductInfo from "./ProductInfo";
 import ProductSuppliers from "./ProductSuppliers";
-import ProductTopClients from "./ProductTopClients";
 import ProductSales from "./ProductSales";
 import UnitsSold from "./UnitsSold";
 import UnitsStock from "./UnitsStock";
-import axios from "axios";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-    flexGrow: 1,
-  },
-}));
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
 
 export default function Product({ id }) {
-  const classes = useStyles();
+  const [year, setYear] = useState("2020");
 
   return (
-    <div className={classes.root}>
-      <h1>Product</h1>
-      <Grid container spacing={3}>
-        <Grid item xs={4}>
+    <div>
+      <div className="top-bar">
+        <h1 className="title">Product</h1>
+        <DropdownButton id="dropdown-basic-button" title={year}>
+          <Dropdown.Item href="#/action-1">2020</Dropdown.Item>
+          <Dropdown.Item href="#/action-2">2019</Dropdown.Item>
+          <Dropdown.Item href="#/action-3">2018</Dropdown.Item>
+        </DropdownButton>
+      </div>
+      <div className="main-content">
+        <section className="top-cards">
           <ProductInfo id={id} />
           <UnitsSold id={id} />
           <UnitsStock id={id} />
-        </Grid>
-        <Grid item xs={8} sm={8}>
-          <ProductSales id={id} />
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <ProductSuppliers id={id} numberItemsPerPage={5} />
-        </Grid>
-
-        {/**
-        <Grid item xs={12} sm={6}>
-          <ProductTopClients />
-        </Grid>*/}
-      </Grid>
+        </section>
+        <section className="row-50-50">
+          <span>
+            <ProductSales id={id} />
+          </span>
+          <span>
+            <ProductSuppliers id={id} numberItemsPerPage={5} />
+          </span>
+        </section>
+      </div>
     </div>
   );
 }

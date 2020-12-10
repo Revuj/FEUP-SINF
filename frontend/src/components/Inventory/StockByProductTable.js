@@ -49,10 +49,8 @@ const StockByProductTable = ({
     let computedProducts = products;
 
     if (search) {
-      computedProducts = computedProducts.filter(
-        (product) =>
-          product.name.toLowerCase().includes(search.toLowerCase()) ||
-          product.email.toLowerCase().includes(search.toLowerCase())
+      computedProducts = computedProducts.filter((product) =>
+        product.name.toLowerCase().includes(search.toLowerCase())
       );
     }
 

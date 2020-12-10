@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
-import { useParams } from "react-router-dom";
 import { fetchUnitsSold } from "../../actions/product";
+import { css } from "@emotion/core";
+import PuffLoader from "react-spinners/PuffLoader";
 
 const initial_data = {
   labels: [
@@ -43,8 +44,17 @@ const options = {
   },
 };
 
+const graphStyle = css`
+  margin: 0;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+`;
+
 function ProductSales({ id }) {
   const [graphData, setGraphData] = useState(initial_data);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,6 +73,7 @@ function ProductSales({ id }) {
           },
         ],
       });
+      setLoading(false);
     };
     fetchData();
   }, [id]);
@@ -70,6 +81,15 @@ function ProductSales({ id }) {
   return (
     <div className="chart">
       <h3 className="chart-title">Product Sales</h3>
+      <div className="graph-loading" style={loading ? { height: "250px" } : {}}>
+        <PuffLoader
+          css={graphStyle}
+          size={60}
+          color={"#37d5d6"}
+          loading={loading}
+          className="loader"
+        />
+      </div>
       <Line data={graphData} options={options} />
     </div>
   );

@@ -52,10 +52,8 @@ const StockByWarehouseTable = ({
     let computedWarehouses = warehouses;
 
     if (search) {
-      computedWarehouses = computedWarehouses.filter(
-        (warehouse) =>
-          warehouse.name.toLowerCase().includes(search.toLowerCase()) ||
-          warehouse.email.toLowerCase().includes(search.toLowerCase())
+      computedWarehouses = computedWarehouses.filter((warehouse) =>
+        warehouse.name.toLowerCase().includes(search.toLowerCase())
       );
     }
 

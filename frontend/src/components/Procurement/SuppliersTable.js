@@ -50,10 +50,8 @@ const SuppliersTable = ({
     let computedSuppliers = suppliers;
 
     if (search) {
-      computedSuppliers = computedSuppliers.filter(
-        (supplier) =>
-          supplier.name.toLowerCase().includes(search.toLowerCase()) ||
-          supplier.email.toLowerCase().includes(search.toLowerCase())
+      computedSuppliers = computedSuppliers.filter((supplier) =>
+        supplier.name.toLowerCase().includes(search.toLowerCase())
       );
     }
 

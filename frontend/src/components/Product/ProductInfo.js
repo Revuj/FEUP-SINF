@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import PuffLoader from "react-spinners/PuffLoader";
+import { css } from "@emotion/core";
 
 const fetchProductData = async (id) => {
   return await axios.get(`/api/products/${id}`);
@@ -33,6 +33,14 @@ const styleTitle = {
   color: "white",
 };
 
+const spinnerStyle = css`
+  margin: 0;
+  top: 25%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+`;
+
 const ProductInfo = ({ id }) => {
   const classes = useStyles();
 
@@ -54,10 +62,6 @@ const ProductInfo = ({ id }) => {
     fetchData();
   }, [id]);
 
-  if (loading) {
-    return <div className="App">Loading...</div>;
-  }
-
   return (
     <div className="card-information">
       <h3
@@ -66,28 +70,40 @@ const ProductInfo = ({ id }) => {
       >
         Product Information
       </h3>
-      <Grid container spacing={3} className="card-information-content">
-        <Grid item xs={8}>
-          <div>
-            <span className={classes.item_title}>ID</span>
-            <span>{product.itemKey}</span>
-          </div>
-          <div>
-            <span className={classes.item_title}>Description</span>
-            <span>{product.description}</span>
-          </div>
-        </Grid>
-        <Grid item xs={4}>
-          <div>
-            <span className={classes.item_title}>Average Cost</span>
-            <span>{avgCost} €</span>
-          </div>
-          <div>
-            <span className={classes.item_title}>Average PVP</span>
-            <span>{avg} €/unit</span>
-          </div>
-        </Grid>
-      </Grid>
+      {product && avg && avgCost ? (
+        <>
+          <Grid container spacing={3} className="card-information-content">
+            <Grid item xs={8}>
+              <div>
+                <span className={classes.item_title}>ID</span>
+                <span>{product.itemKey}</span>
+              </div>
+              <div>
+                <span className={classes.item_title}>Description</span>
+                <span>{product.description}</span>
+              </div>
+            </Grid>
+            <Grid item xs={4}>
+              <div>
+                <span className={classes.item_title}>Average Cost</span>
+                <span>{avgCost} €</span>
+              </div>
+              <div>
+                <span className={classes.item_title}>Average PVP</span>
+                <span>{avg} €/unit</span>
+              </div>
+            </Grid>
+          </Grid>
+        </>
+      ) : (
+        <PuffLoader
+          css={spinnerStyle}
+          size={60}
+          color={"#37d5d6"}
+          loading={loading == true}
+          className="loader"
+        />
+      )}
     </div>
   );
 };

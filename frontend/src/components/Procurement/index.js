@@ -50,7 +50,7 @@ const Procurement = ({ title, setPage }) => {
   return (
     <div>
       <div className="top-bar">
-        <h1 className="title">{title}</h1>
+        <h1 className="title">Procurement</h1>
         <DropdownButton id="dropdown-basic-button" title={year}>
           <Dropdown.Item href="#/action-1" onClick={() => setYear(2020)}>
             2020
@@ -111,16 +111,13 @@ const Procurement = ({ title, setPage }) => {
           <GenericCard
             title="Debt to suppliers"
             description="Amount of money in debt to the suplliers"
-            amount={debt || 0}
+            amount={debt}
             formatter={formatMoney}
             unit="€"
             styleTitle={{
               borderBottom: "1px solid black",
               backgroundColor: "#37d5d6",
               color: "white",
-            }}
-            styleCard={{
-              backgroundColor: "white",
             }}
           />
 

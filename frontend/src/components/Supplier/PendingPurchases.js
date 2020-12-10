@@ -3,6 +3,8 @@ import Search from "../Search";
 import PaginationComponent from "../Pagination";
 import TableHeader from "../TableHeader";
 import { fetchPendingPurchases } from "../../actions/suppliers";
+import { css } from "@emotion/core";
+import PuffLoader from "react-spinners/PuffLoader";
 
 export default function PendingPurchases({
   id,
@@ -10,6 +12,7 @@ export default function PendingPurchases({
   containerStyle,
   themeColor,
 }) {
+  const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
@@ -29,6 +32,7 @@ export default function PendingPurchases({
     const fetchData = async () => {
       const { data } = await fetchPendingPurchases(id);
       setRows(data);
+      setLoading(false);
     };
     fetchData();
   }, [id]);
@@ -69,6 +73,14 @@ export default function PendingPurchases({
     );
   }, [rows, currentPage, search, sorting]);
 
+  const tableStyle = css`
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  `;
+
   return (
     <>
       <section className="table" style={containerStyle}>
@@ -107,6 +119,19 @@ export default function PendingPurchases({
           currentPage={currentPage}
           onPageChange={(page) => setCurrentPage(page)}
         />
+
+        <div
+          className="table-loading"
+          style={loading ? { height: "250px" } : {}}
+        >
+          <PuffLoader
+            css={tableStyle}
+            size={60}
+            color={"#37d5d6"}
+            loading={loading}
+            className="loader"
+          />
+        </div>
       </section>
     </>
   );

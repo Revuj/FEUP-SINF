@@ -52,10 +52,8 @@ const BestClientsTable = ({
     let computedClients = clients;
 
     if (search) {
-      computedClients = computedClients.filter(
-        (client) =>
-          client.name.toLowerCase().includes(search.toLowerCase()) ||
-          client.email.toLowerCase().includes(search.toLowerCase())
+      computedClients = computedClients.filter((client) =>
+        client.name.toLowerCase().includes(search.toLowerCase())
       );
     }
 

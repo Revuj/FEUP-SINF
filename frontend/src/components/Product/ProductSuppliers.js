@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
-import useFullPageLoader from "../../hooks/FullPageLoader";
 import Search from "../Search";
 import PaginationComponent from "../Pagination";
 import TableHeader from "../TableHeader";
-import Supplier from "../Supplier/Supplier";
 import { formatMoney } from "../../helper/CurrencyFormater";
+import { css } from "@emotion/core";
+import PuffLoader from "react-spinners/PuffLoader";
 
 const fetchSuppliers = async (id) => {
   return axios.get(`/api/products/${id}/suppliers`);
@@ -72,11 +72,13 @@ export default function ProductSuppliers({
     );
   }, [suppliers, currentPage, search, sorting]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  console.log(supplierData);
+  const tableStyle = css`
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  `;
 
   return (
     <>
@@ -98,14 +100,15 @@ export default function ProductSuppliers({
             onSorting={(field, order) => setSorting({ field, order })}
           />
           <tbody>
-            {supplierData.map((supplier) => (
-              <tr key={supplier.id}>
-                <th>{supplier.id}</th>
-                <td>{supplier.name}</td>
-                <td>{supplier.units}</td>
-                <td>{formatMoney(supplier.value)}</td>
-              </tr>
-            ))}
+            {supplierData &&
+              supplierData.map((supplier) => (
+                <tr key={supplier.id}>
+                  <th>{supplier.id}</th>
+                  <td>{supplier.name}</td>
+                  <td>{supplier.units}</td>
+                  <td>{formatMoney(supplier.value)}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
 
@@ -116,123 +119,19 @@ export default function ProductSuppliers({
           currentPage={currentPage}
           onPageChange={(page) => setCurrentPage(page)}
         />
+        <div
+          className="table-loading"
+          style={loading ? { height: "250px" } : {}}
+        >
+          <PuffLoader
+            css={tableStyle}
+            size={60}
+            color={"#37d5d6"}
+            loading={loading}
+            className="loader"
+          />
+        </div>
       </section>
     </>
   );
 }
-
-/*
-const columns = [
-  { id: 'id', label: 'ID', minWidth: 70, align: 'center' },
-  { id: 'name', label: 'Name', minWidth: 150, align: 'center' },
-  {
-    id: 'value',
-    label: 'value',
-    minWidth: 150,
-    align: 'center',
-  },
-  {
-    id: 'units',
-    label: 'Units',
-    minWidth: 150,
-    align: 'center',
-    format: (value) => formatMoney(value),
-  },
-];
-
-const rows = [];
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-    padding: theme.spacing(2),
-  },
-  container: {
-    maxHeight: 440,
-  },
-}));
-
-export default function ProductSuppliers({ id }) {
-  const classes = useStyles();
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [suppliers, setSuppliers] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data } = await fetchSuppliers(id);
-      setSuppliers(data);
-      setLoading(false);
-    };
-
-    fetchData();
-  }, [id]);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  return (
-    <Paper className={classes.root}>
-      <h3>Suppliers</h3>
-      <TableContainer className={classes.container}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          {
-            <TableBody>
-              {suppliers
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
-                  return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                      {columns.map((column) => {
-                        const value = row[column.id];
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === 'number'
-                              ? column.format(value)
-                              : value}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          }
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
-      />
-    </Paper>
-  );
-}*/

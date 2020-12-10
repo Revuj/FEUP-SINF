@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
-import useFullPageLoader from "../../hooks/FullPageLoader";
 import PaginationComponent from "../Pagination";
 import Search from "../Search";
 import TableHeader from "../TableHeader";
-import { fetchOngoingSales } from "../../actions/sales";
 import { css } from "@emotion/core";
 import PuffLoader from "react-spinners/PuffLoader";
 import "../../styles/Table.css";
@@ -54,10 +52,8 @@ const SalesBacklogTable = ({
     let computedSales = sales;
 
     if (search) {
-      computedSales = computedSales.filter(
-        (sale) =>
-          sale.name.toLowerCase().includes(search.toLowerCase()) ||
-          sale.email.toLowerCase().includes(search.toLowerCase())
+      computedSales = computedSales.filter((sale) =>
+        sale.customer.toLowerCase().includes(search.toLowerCase())
       );
     }
 

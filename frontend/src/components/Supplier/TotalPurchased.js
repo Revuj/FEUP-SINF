@@ -1,24 +1,15 @@
-import React, {useState, useEffect} from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
+import React, { useState, useEffect } from "react";
 import { formatMoney } from "../../helper/CurrencyFormater";
-import axios from 'axios';
-import useFullPageLoader from '../../hooks/FullPageLoader';
+import axios from "axios";
+import "../../styles/GenericCard.css";
 
+const styleTitle = {
+  borderBottom: "1px solid black",
+  backgroundColor: "#37d5d6",
+  color: "white",
+};
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    padding: theme.spacing(2),
-  },
-  value: {
-    textAlign: "center",
-    fontSize: 26,
-    color: theme.palette.text.secondary,
-  },
-}));
-
-const TotalPurchased = ({id}) => {
-  const classes = useStyles();
+const TotalPurchased = ({ id }) => {
   const [isLoading, setLoading] = useState(true);
   const [total, setTotal] = useState({});
 
@@ -32,18 +23,27 @@ const TotalPurchased = ({id}) => {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [id]);
 
   if (isLoading) {
     return <div className="App">Loading...</div>;
   }
 
   return (
-    <Paper className={classes.paper}>
-      <h3>Total Purchased</h3>
-      <p className={classes.value}> {total.totalOrders} orders</p>
-      <p className={classes.value}> ({formatMoney(total.totalPrice)}€)</p>
-    </Paper>
+    <div className="card">
+      <h3
+        className="card-title"
+        style={styleTitle !== undefined ? styleTitle : {}}
+      >
+        Total Purchased
+      </h3>
+      <div className="card-amount">
+        {total.totalOrders} orders ({formatMoney(total.totalPrice)}€)
+      </div>
+      <div className="card-description">
+        Number and amount of purchases orders for the supplier
+      </div>
+    </div>
   );
 };
 

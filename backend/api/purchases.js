@@ -1,4 +1,4 @@
-const moment = require('moment');
+const moment = require("moment");
 
 const processPurchases = (orders, year) => {
   let monthlyCumulativeValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -27,10 +27,14 @@ const getPurchasesBacklog = (orders) => {
 };
 
 module.exports = (server) => {
-  server.get('/api/purchases/:year', (req, res) => {
+  server.get("/api/purchases/:year", (req, res) => {
     const { year } = req.params;
     const options = {
+<<<<<<< HEAD
       method: 'GET',
+=======
+      method: "GET",
+>>>>>>> d26ad0b81d89c108f3cb49622d4aa813a5a9d8d6
       url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
@@ -43,9 +47,24 @@ module.exports = (server) => {
     });
   });
 
-  server.get('/api/purchasesBacklog', (req, res) => {
-    const options2 = {
-      method: 'GET',
+  server.get("/api/purchasesBacklog", (req, res) => {
+    const options = {
+      method: "GET",
+      url: `${global.basePrimaveraUrl}/purchases/orders`,
+    };
+
+    return global.request(options, (error, response, body) => {
+      if (error) res.json(error);
+
+      if (!JSON.parse(body).message) {
+        res.json(getPurchasesBacklog(JSON.parse(body)));
+      }
+    });
+  });
+
+  server.get("/api/purchases/debt", (req, res) => {
+    let options = {
+      method: "GET",
       url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
@@ -59,6 +78,7 @@ module.exports = (server) => {
 
       let productBacklog = 0;
       if (!JSON.parse(body).message) {
+<<<<<<< HEAD
         const keys = JSON.parse(body).map(({ sourceDocKey }) => sourceDocKey);
 
         global.request(options2, (error2, response2, body2) => {
@@ -79,6 +99,17 @@ module.exports = (server) => {
             res.json(receipts);
           }
         });
+=======
+        const totalOrders = JSON.parse(body).reduce((acumulator, order) => {
+          if (order.documentStatus == "2") {
+            acumulator += order.payableAmount.amount;
+          }
+          return acumulator;
+        }, 0);
+
+        options = {};
+        res.json(getPurchasesBacklog(JSON.parse(body)));
+>>>>>>> d26ad0b81d89c108f3cb49622d4aa813a5a9d8d6
       }
     });
   });

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import GenericCard from '../GenericCard';
-import StockByTime from './StockByTime';
 import StockByProductTable from './StockByProductTable';
 import StockByWarehouseTable from './StockByWarehouseTable';
 import { formatMoney } from '../../helper/CurrencyFormater';
@@ -14,8 +13,8 @@ import { fetchInventoryTurnover } from '../../actions/stock';
 const Index = ({ setPage }) => {
   const [year, setYear] = useState('2020');
   const [stock, setStock] = useState(null);
-  const [inventoryTurnover, setInventoryTurnover] = useState(0);
-  const [avgInventoryPeriod, setAvgInventoryPeriod] = useState(0);
+  const [inventoryTurnover, setInventoryTurnover] = useState(null);
+  const [avgInventoryPeriod, setAvgInventoryPeriod] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,7 +50,7 @@ const Index = ({ setPage }) => {
           <GenericCard
             title="Stock"
             description="Current value in stock"
-            amount={stock || 0}
+            amount={stock}
             formatter={formatMoney}
             unit="€"
             styleTitle={{
@@ -113,21 +112,20 @@ const Index = ({ setPage }) => {
         <section className="row-50-50">
           <span>
             <StockByProductTable
-              numberItemsPerPage={4}
+              numberItemsPerPage={6}
               containerStyle={{ width: '100%' }}
               setPage={setPage}
             />
           </span>
 
           <span>
-            <StockByTime />
+            <StockByWarehouseTable
+              numberItemsPerPage={6}
+              containerStyle={{ width: '100%' }}
+              setPage={setPage}
+            />
           </span>
         </section>
-        <StockByWarehouseTable
-          numberItemsPerPage={6}
-          containerStyle={{ width: '100%' }}
-          setPage={setPage}
-        />
       </div>
     </div>
   );

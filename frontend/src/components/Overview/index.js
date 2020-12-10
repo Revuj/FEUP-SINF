@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
-import RevenueVsCost from "../Financial/RevenueVsCost";
-import StockByTime from "../Inventory/StockByTime";
-import GenericCard from "../GenericCard";
-import TopProductsTable from "../Sales/TopProductsTable";
-import SalesBacklogTable from "../Sales/SalesBacklogTable";
-import { formatMoney } from "../../helper/CurrencyFormater";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import { fetchAccountsReceivable, fetchAccountsPayable } from "../../actions/financial";
+import React, { useState, useEffect } from 'react';
+import RevenueVsCost from '../Financial/RevenueVsCost';
+import GenericCard from '../GenericCard';
+import TopProductsTable from '../Sales/TopProductsTable';
+import SalesBacklogTable from '../Sales/SalesBacklogTable';
+import { formatMoney } from '../../helper/CurrencyFormater';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import {
+  fetchAccountsReceivable,
+  fetchAccountsPayable,
+} from '../../actions/financial';
 
 const Overview = () => {
-
   const [accountsReceivable, setAccountsReceivable] = useState(0);
   const [accountsPayable, setAccountsPayable] = useState(0);
 
@@ -24,7 +25,7 @@ const Overview = () => {
     fetchData();
   });
 
-  const [year, setYear] = useState("2020");
+  const [year, setYear] = useState('2020');
   return (
     <div>
       <div className="top-bar">
@@ -45,9 +46,9 @@ const Overview = () => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: "1px solid black",
-              backgroundColor: "#37d5d6",
-              color: "white",
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
             }}
           />
           <GenericCard
@@ -61,7 +62,8 @@ const Overview = () => {
               backgroundColor: '#37d5d6',
               color: 'white',
             }}
-          /><GenericCard
+          />
+          <GenericCard
             title="Net Costs"
             description="Total value in costs"
             amount="50500"
@@ -80,9 +82,9 @@ const Overview = () => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: "1px solid black",
-              backgroundColor: "#37d5d6",
-              color: "white",
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
             }}
           />
           <GenericCard
@@ -92,9 +94,9 @@ const Overview = () => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: "1px solid black",
-              backgroundColor: "#37d5d6",
-              color: "white",
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
             }}
           />
           <GenericCard
@@ -104,12 +106,12 @@ const Overview = () => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: "1px solid black",
-              backgroundColor: "#37d5d6",
-              color: "white",
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
             }}
             styleCard={{
-              backgroundColor: "white",
+              backgroundColor: 'white',
             }}
           />
           <GenericCard
@@ -132,9 +134,6 @@ const Overview = () => {
         <section className="row-50-50">
           <span>
             <RevenueVsCost height="115" />
-          </span>
-          <span>
-            <StockByTime />
           </span>
         </section>
       </div>

@@ -66,7 +66,7 @@ const Procurement = ({ title, setPage }) => {
             className="account-payable"
             title="Accounts payable"
             description="Amounts due to vendors or suppliers for goods that have not yet been paid for."
-            amount={accountsPayable || 0}
+            amount={accountsPayable}
             formatter={formatMoney}
             unit="€"
             styleTitle={{
@@ -79,7 +79,7 @@ const Procurement = ({ title, setPage }) => {
             className="orders-to-arrive"
             title="Purchase backlog"
             description="Amounts of money in orders that are to arrive."
-            amount={purchasesBacklog || 0}
+            amount={purchasesBacklog}
             formatter={formatMoney}
             unit="€"
             styleTitle={{
@@ -94,7 +94,7 @@ const Procurement = ({ title, setPage }) => {
             qName="total-purchases"
             title="total of purchases"
             description="Amount of money spent in purchases"
-            amount={totalOfPurchases || 0}
+            amount={totalOfPurchases}
             formatter={formatMoney}
             unit="€"
             styleTitle={{
@@ -121,13 +121,19 @@ const Procurement = ({ title, setPage }) => {
           />
         </section>
 
-        <Purchases year={year} />
-        <SuppliersTable
-          setPage={setPage}
-          numberItemsPerPage={4}
-          containerStyle={{ width: '100%', marginTop: '2rem' }}
-          year={year}
-        />
+        <section className="row-50-50">
+          <span>
+            <Purchases year={year} />
+          </span>
+          <span>
+            <SuppliersTable
+              setPage={setPage}
+              numberItemsPerPage={6}
+              containerStyle={{ width: '100%' }}
+              year={year}
+            />
+          </span>
+        </section>
       </div>
     </div>
   );

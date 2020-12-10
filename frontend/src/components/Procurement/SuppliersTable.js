@@ -8,6 +8,7 @@ import Supplier from "../Supplier/Supplier";
 import { css } from "@emotion/core";
 import PuffLoader from "react-spinners/PuffLoader";
 import "../../styles/Table.css";
+import { formatMoney } from "../../helper/CurrencyFormater";
 
 const SuppliersTable = ({
   numberItemsPerPage,
@@ -27,9 +28,9 @@ const SuppliersTable = ({
 
   const headers = [
     { name: "ID", field: "id", sortable: false },
-    { name: "Name", field: "name", sortable: true },
+    { name: "Name", field: "name", sortable: false },
     { name: "Units Purchased", field: "units", sortable: true },
-    { name: "Value Purchased", field: "value", sortable: false },
+    { name: "Value Purchased", field: "value", sortable: true },
   ];
 
   useEffect(() => {
@@ -61,8 +62,9 @@ const SuppliersTable = ({
     //Sorting suppliers
     if (sorting.field) {
       const reversed = sorting.order === "asc" ? 1 : -1;
+
       computedSuppliers = computedSuppliers.sort(
-        (a, b) => reversed * a[sorting.field].localeCompare(b[sorting.field])
+        (a, b) => reversed * (a[sorting.field] - b[sorting.field])
       );
     }
 

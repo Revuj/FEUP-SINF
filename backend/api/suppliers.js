@@ -117,7 +117,7 @@ module.exports = (server) => {
                   payableAmount,
                 }) => ({
                   reference: naturalKey,
-                  date: moment(documentDate).calendar(),
+                  date: documentDate.substr(0, 10),
                   units: documentLines.reduce(
                     (acc, current) => acc + current.quantity,
                     0

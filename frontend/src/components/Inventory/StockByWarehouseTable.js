@@ -1,14 +1,15 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import axios from 'axios';
-import useFullPageLoader from '../../hooks/FullPageLoader';
-import PaginationComponent from '../Pagination';
-import Search from '../Search';
-import TableHeader from '../TableHeader';
-import Supplier from '../Supplier/Supplier';
-import { fetchWarehousesInfo } from '../../actions/stock';
-import { css } from '@emotion/core';
-import PuffLoader from 'react-spinners/PuffLoader';
-import '../../styles/Table.css';
+import React, { useEffect, useState, useMemo } from "react";
+import axios from "axios";
+import useFullPageLoader from "../../hooks/FullPageLoader";
+import PaginationComponent from "../Pagination";
+import Search from "../Search";
+import TableHeader from "../TableHeader";
+import Supplier from "../Supplier/Supplier";
+import { fetchWarehousesInfo } from "../../actions/stock";
+import { css } from "@emotion/core";
+import PuffLoader from "react-spinners/PuffLoader";
+import "../../styles/Table.css";
+import { formatMoney } from "../../helper/CurrencyFormater";
 
 const StockByWarehouseTable = ({
   numberItemsPerPage,
@@ -19,16 +20,16 @@ const StockByWarehouseTable = ({
   const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [sorting, setSorting] = useState({ field: '', order: '' });
+  const [search, setSearch] = useState("");
+  const [sorting, setSorting] = useState({ field: "", order: "" });
 
   const ITEMS_PER_PAGE = numberItemsPerPage;
 
   const headers = [
-    { name: 'ID', field: 'id', sortable: false },
-    { name: 'Name', field: 'name', sortable: true },
-    { name: 'Stock', field: 'stock', sortable: false },
-    { name: 'Total value of stock', field: 'total_value', sortable: true },
+    { name: "ID", field: "id", sortable: false },
+    { name: "Name", field: "name", sortable: false },
+    { name: "Stock", field: "quantity", sortable: true },
+    { name: "Total value of stock", field: "value", sortable: true },
   ];
 
   const [warehouses, setWarehouses] = useState([]);
@@ -36,7 +37,7 @@ const StockByWarehouseTable = ({
   const [products, setProducts] = useState([]);
   useEffect(() => {
     axios
-      .get('/api/inventory/warehouses')
+      .get("/api/inventory/warehouses")
       .then((response) => {
         setWarehouses(response.data);
         setLoading(false);
@@ -62,9 +63,9 @@ const StockByWarehouseTable = ({
 
     //Sorting warehouses
     if (sorting.field) {
-      const reversed = sorting.order === 'asc' ? 1 : -1;
+      const reversed = sorting.order === "asc" ? 1 : -1;
       computedWarehouses = computedWarehouses.sort(
-        (a, b) => reversed * a[sorting.field].localeCompare(b[sorting.field])
+        (a, b) => reversed * (a[sorting.field] - b[sorting.field])
       );
     }
 
@@ -116,7 +117,7 @@ const StockByWarehouseTable = ({
                 </th>
                 <td>{warehouse.name}</td>
                 <td>{warehouse.quantity}</td>
-                <td>{warehouse.value}</td>
+                <td>{formatMoney(warehouse.value)}</td>
               </tr>
             ))}
           </tbody>
@@ -131,12 +132,12 @@ const StockByWarehouseTable = ({
         />
         <div
           className="table-loading"
-          style={loading ? { height: '250px' } : {}}
+          style={loading ? { height: "250px" } : {}}
         >
           <PuffLoader
             css={tableStyle}
             size={60}
-            color={'#37d5d6'}
+            color={"#37d5d6"}
             loading={loading}
             className="loader"
           />

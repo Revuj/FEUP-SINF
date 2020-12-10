@@ -1,12 +1,13 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import axios from 'axios';
-import PaginationComponent from '../Pagination';
-import Search from '../Search';
-import TableHeader from '../TableHeader';
-import '../../styles/Table.css';
-import { css } from '@emotion/core';
-import PuffLoader from 'react-spinners/PuffLoader';
-import Product from '../Product/Product';
+import React, { useEffect, useState, useMemo } from "react";
+import axios from "axios";
+import PaginationComponent from "../Pagination";
+import Search from "../Search";
+import TableHeader from "../TableHeader";
+import "../../styles/Table.css";
+import { css } from "@emotion/core";
+import PuffLoader from "react-spinners/PuffLoader";
+import Product from "../Product/Product";
+import { formatMoney } from "../../helper/CurrencyFormater";
 
 const TopProductsTable = ({
   numberItemsPerPage,
@@ -18,17 +19,17 @@ const TopProductsTable = ({
   const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [sorting, setSorting] = useState({ field: '', order: '' });
+  const [search, setSearch] = useState("");
+  const [sorting, setSorting] = useState({ field: "", order: "" });
   const [products, setProducts] = useState([]);
 
   const ITEMS_PER_PAGE = numberItemsPerPage;
 
   const headers = [
-    { name: 'ID', field: 'id', sortable: false },
-    { name: 'Name', field: 'name', sortable: true },
-    { name: 'Sales', field: 'quantity', sortable: true },
-    { name: 'Value', field: 'value', sortable: false },
+    { name: "ID", field: "id", sortable: false },
+    { name: "Name", field: "name", sortable: false },
+    { name: "Sales", field: "quantity", sortable: true },
+    { name: "Value", field: "value", sortable: true },
   ];
 
   useEffect(() => {
@@ -60,9 +61,9 @@ const TopProductsTable = ({
 
     //Sorting products
     if (sorting.field) {
-      const reversed = sorting.order === 'asc' ? 1 : -1;
+      const reversed = sorting.order === "asc" ? 1 : -1;
       computedProducts = computedProducts.sort(
-        (a, b) => reversed * a[sorting.field].localeCompare(b[sorting.field])
+        (a, b) => reversed * (a[sorting.field] - b[sorting.field])
       );
     }
 
@@ -114,7 +115,7 @@ const TopProductsTable = ({
                 </th>
                 <td>{product.name}</td>
                 <td>{product.quantity}</td>
-                <td>{product.value}</td>
+                <td>{formatMoney(product.value)}</td>
               </tr>
             ))}
           </tbody>
@@ -129,12 +130,12 @@ const TopProductsTable = ({
         />
         <div
           className="table-loading"
-          style={loading ? { height: '250px' } : {}}
+          style={loading ? { height: "250px" } : {}}
         >
           <PuffLoader
             css={tableStyle}
             size={60}
-            color={'#37d5d6'}
+            color={"#37d5d6"}
             loading={loading}
             className="loader"
           />

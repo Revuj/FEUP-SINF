@@ -1,13 +1,14 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import axios from 'axios';
-import useFullPageLoader from '../../hooks/FullPageLoader';
-import PaginationComponent from '../Pagination';
-import Search from '../Search';
-import TableHeader from '../TableHeader';
-import { fetchOngoingSales } from '../../actions/sales';
-import { css } from '@emotion/core';
-import PuffLoader from 'react-spinners/PuffLoader';
-import '../../styles/Table.css';
+import React, { useEffect, useState, useMemo } from "react";
+import axios from "axios";
+import useFullPageLoader from "../../hooks/FullPageLoader";
+import PaginationComponent from "../Pagination";
+import Search from "../Search";
+import TableHeader from "../TableHeader";
+import { fetchOngoingSales } from "../../actions/sales";
+import { css } from "@emotion/core";
+import PuffLoader from "react-spinners/PuffLoader";
+import "../../styles/Table.css";
+import { formatMoney } from "../../helper/CurrencyFormater";
 
 const SalesBacklogTable = ({
   numberItemsPerPage,
@@ -17,16 +18,16 @@ const SalesBacklogTable = ({
   const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [sorting, setSorting] = useState({ field: '', order: '' });
+  const [search, setSearch] = useState("");
+  const [sorting, setSorting] = useState({ field: "", order: "" });
 
   const ITEMS_PER_PAGE = numberItemsPerPage;
 
   const headers = [
-    { name: 'Date of order', field: 'date', sortable: false },
-    { name: 'Customer', field: 'customer', sortable: true },
-    { name: 'Items', field: 'items', sortable: true },
-    { name: 'Total order cost', field: 'value', sortable: false },
+    { name: "Date of order", field: "date", sortable: false },
+    { name: "Customer", field: "customer", sortable: false },
+    { name: "Items", field: "items", sortable: true },
+    { name: "Total order cost", field: "value", sortable: true },
   ];
 
   /* this is going to be used in the feature when doing the api call */
@@ -64,10 +65,20 @@ const SalesBacklogTable = ({
 
     //Sorting sales
     if (sorting.field) {
-      const reversed = sorting.order === 'asc' ? 1 : -1;
-      computedSales = computedSales.sort(
-        (a, b) => reversed * a[sorting.field].localeCompare(b[sorting.field])
-      );
+      const reversed = sorting.order === "asc" ? 1 : -1;
+
+      if (sorting.field == "items") {
+        computedSales = computedSales.sort(
+          (a, b) =>
+            reversed *
+            (parseInt(a[sorting.field].split("x")[0], 10) -
+              parseInt(b[sorting.field].split("x")[0], 10))
+        );
+      } else {
+        computedSales = computedSales.sort(
+          (a, b) => reversed * (a[sorting.field] - b[sorting.field])
+        );
+      }
     }
 
     computedSales = computedSales.slice(
@@ -113,7 +124,7 @@ const SalesBacklogTable = ({
                     <th scope="row">{sale.date}</th>
                     <td>{sale.customer}</td>
                     <td>{sale.items}</td>
-                    <td>{sale.value}</td>
+                    <td>{formatMoney(sale.value)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -130,12 +141,12 @@ const SalesBacklogTable = ({
         )}
         <div
           className="table-loading"
-          style={loading ? { height: '250px' } : {}}
+          style={loading ? { height: "250px" } : {}}
         >
           <PuffLoader
             css={tableStyle}
             size={60}
-            color={'#37d5d6'}
+            color={"#37d5d6"}
             loading={loading}
             className="loader"
           />

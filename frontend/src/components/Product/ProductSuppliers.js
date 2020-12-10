@@ -1,49 +1,48 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import axios from 'axios';
-import useFullPageLoader from '../../hooks/FullPageLoader';
-import Search from '../Search';
-import PaginationComponent from '../Pagination';
-import TableHeader from '../TableHeader';
-import Supplier from '../Supplier/Supplier'
+import React, { useEffect, useState, useMemo } from "react";
+import axios from "axios";
+import useFullPageLoader from "../../hooks/FullPageLoader";
+import Search from "../Search";
+import PaginationComponent from "../Pagination";
+import TableHeader from "../TableHeader";
+import Supplier from "../Supplier/Supplier";
+import { formatMoney } from "../../helper/CurrencyFormater";
 
 const fetchSuppliers = async (id) => {
   return axios.get(`/api/products/${id}/suppliers`);
 };
 
 export default function ProductSuppliers({
-   id ,
-   numberItemsPerPage,
-   containerStyle,
-   themeColor,
-  })  {
-    //const [loader, showLoader, hideLoader] = useFullPageLoader();
-    const [loading, setLoading] = useState(true);
-    const [totalItems, setTotalItems] = useState(0);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [search, setSearch] = useState('');
-    const [sorting, setSorting] = useState({ field: '', order: '' });
+  id,
+  numberItemsPerPage,
+  containerStyle,
+  themeColor,
+}) {
+  //const [loader, showLoader, hideLoader] = useFullPageLoader();
+  const [loading, setLoading] = useState(true);
+  const [totalItems, setTotalItems] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [sorting, setSorting] = useState({ field: "", order: "" });
 
-    const ITEMS_PER_PAGE = numberItemsPerPage;
-    const headers = [
-      { name: 'ID', field: 'id', sortable: false },
-      { name: 'Name', field: 'name', sortable: true },
-      { name: 'Units Purchased', field: 'units', sortable: true },
-      { name: 'Value Purchased', field: 'value', sortable: false },
-    ];
+  const ITEMS_PER_PAGE = numberItemsPerPage;
+  const headers = [
+    { name: "ID", field: "id", sortable: false },
+    { name: "Name", field: "name", sortable: false },
+    { name: "Units Purchased", field: "units", sortable: true },
+    { name: "Value Purchased", field: "value", sortable: true },
+  ];
 
-    const [suppliers, setSuppliers] = useState(null);
+  const [suppliers, setSuppliers] = useState(null);
 
-    
-    useEffect(() => {
-      const fetchData = async () => {
-        const { data } = await fetchSuppliers(id);
-        setSuppliers(data);
-        console.log(data);
-        setLoading(false);
-      };
-      fetchData();
-    }, [id]);
-
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await fetchSuppliers(id);
+      setSuppliers(data);
+      console.log(data);
+      setLoading(false);
+    };
+    fetchData();
+  }, [id]);
 
   /*to able to sort the data we are going to retrieve */
   const supplierData = useMemo(() => {
@@ -52,32 +51,18 @@ export default function ProductSuppliers({
 
     if (search) {
       computedSuppliers = computedSuppliers.filter(
-        (supplier) =>
-          supplier.name.toLowerCase().includes(search.toLowerCase()) 
-         // || suppier.email.toLowerCase().includes(search.toLowerCase())
+        (supplier) => supplier.name.toLowerCase().includes(search.toLowerCase())
+        // || suppier.email.toLowerCase().includes(search.toLowerCase())
       );
     }
 
     setTotalItems(computedSuppliers.length);
 
-    //Sorting clients
-    console.log(sorting.field);
-    console.log(sorting.order);
-    if (sorting.field && !sorting.field) {
-      const reversed = sorting.order === 'asc' ? 1 : -1;
-
-      if (sorting.field === 'name')
-      {  
-        computedSuppliers = computedSuppliers.sort(
-          (a, b) => reversed * a[sorting.field].localeCompare(b[sorting.field])
-        );
-      }
-      else if (sorting.field === 'units')
-       {
-          computedSuppliers = computedSuppliers.sort(
-          (a, b) => reversed * a[sorting.field] - (b[sorting.field])
-        );
-      }
+    if (sorting.field) {
+      const reversed = sorting.order === "asc" ? 1 : -1;
+      computedSuppliers = computedSuppliers.sort(
+        (a, b) => reversed * (a[sorting.field] - b[sorting.field])
+      );
     }
 
     //Current Page slice
@@ -88,7 +73,7 @@ export default function ProductSuppliers({
   }, [suppliers, currentPage, search, sorting]);
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   console.log(supplierData);
@@ -115,12 +100,10 @@ export default function ProductSuppliers({
           <tbody>
             {supplierData.map((supplier) => (
               <tr key={supplier.id}>
-                <th>
-                  {supplier.id}
-                </th>
+                <th>{supplier.id}</th>
                 <td>{supplier.name}</td>
                 <td>{supplier.units}</td>
-                <td>{supplier.value}</td>
+                <td>{formatMoney(supplier.value)}</td>
               </tr>
             ))}
           </tbody>
@@ -135,12 +118,8 @@ export default function ProductSuppliers({
         />
       </section>
     </>
-
   );
-
-
-
-}   
+}
 
 /*
 const columns = [

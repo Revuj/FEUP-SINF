@@ -89,39 +89,6 @@ const ProductInfo = ({ id }) => {
         </Grid>
       </Grid>
     </div>
-    /*<Paper style = {{padding: 0}} className={classes.paper}>
-      <h3 style = {{
-        backgroundColor: "#37d5d6",
-        color : "white",
-        padding: '0.5rem'
-        }}>Product Information</h3>
-      <Grid style= {{padding: '0.5rem'}} container spacing={3}>
-        <Grid item xs={12}>
-          <div>
-            <span className={classes.item_title}>ID</span>
-            <span>{product.itemKey}</span>
-          </div>
-          
-        </Grid>
-        <Grid item xs={12}>
-          <div>
-            <span className={classes.item_title}>Average PVP</span>
-            <span>{avg} €/unit</span>
-          </div>
-          <div>
-            <span className={classes.item_title}>Average Cost</span>
-            <span>{avgCost} €</span>
-          </div>
-
-        </Grid>
-        <Grid item xs={12}>
-          <div>
-            <span className={classes.item_title}>Description</span>
-            <span>{product.description}</span>
-          </div>
-        </Grid>
-      </Grid>
-    </Paper>*/
   );
 };
 

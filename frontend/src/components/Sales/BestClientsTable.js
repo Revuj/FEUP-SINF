@@ -1,13 +1,14 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import axios from 'axios';
-import PaginationComponent from '../Pagination';
-import Search from '../Search';
-import TableHeader from '../TableHeader';
-import Customer from '../Customer/Customer';
-import { fetchBestClients } from '../../actions/clients';
-import { css } from '@emotion/core';
-import PuffLoader from 'react-spinners/PuffLoader';
-import '../../styles/Table.css';
+import React, { useEffect, useState, useMemo } from "react";
+import axios from "axios";
+import PaginationComponent from "../Pagination";
+import Search from "../Search";
+import TableHeader from "../TableHeader";
+import Customer from "../Customer/Customer";
+import { fetchBestClients } from "../../actions/clients";
+import { css } from "@emotion/core";
+import PuffLoader from "react-spinners/PuffLoader";
+import "../../styles/Table.css";
+import { formatMoney } from "../../helper/CurrencyFormater";
 
 const BestClientsTable = ({
   numberItemsPerPage,
@@ -19,16 +20,16 @@ const BestClientsTable = ({
   const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [sorting, setSorting] = useState({ field: '', order: '' });
+  const [search, setSearch] = useState("");
+  const [sorting, setSorting] = useState({ field: "", order: "" });
 
   const ITEMS_PER_PAGE = numberItemsPerPage;
 
   const headers = [
-    { name: 'ID', field: 'id', sortable: false },
-    { name: 'Name', field: 'name', sortable: true },
-    { name: 'Units Purchased', field: 'units', sortable: true },
-    { name: 'Value Purchased', field: 'value', sortable: false },
+    { name: "ID", field: "id", sortable: false },
+    { name: "Name", field: "name", sortable: false },
+    { name: "Units Purchased", field: "units", sortable: true },
+    { name: "Value Purchased", field: "value", sortable: true },
   ];
 
   /* this is going to be used in the feature when doing the api call */
@@ -62,9 +63,9 @@ const BestClientsTable = ({
 
     //Sorting clients
     if (sorting.field) {
-      const reversed = sorting.order === 'asc' ? 1 : -1;
+      const reversed = sorting.order === "asc" ? 1 : -1;
       computedClients = computedClients.sort(
-        (a, b) => reversed * a[sorting.field].localeCompare(b[sorting.field])
+        (a, b) => reversed * (a[sorting.field] - b[sorting.field])
       );
     }
 
@@ -116,7 +117,7 @@ const BestClientsTable = ({
                 </th>
                 <td>{client.name}</td>
                 <td>{client.units}</td>
-                <td>{client.value}</td>
+                <td>{formatMoney(client.value)}</td>
               </tr>
             ))}
           </tbody>
@@ -131,12 +132,12 @@ const BestClientsTable = ({
         />
         <div
           className="table-loading"
-          style={loading ? { height: '250px' } : {}}
+          style={loading ? { height: "250px" } : {}}
         >
           <PuffLoader
             css={tableStyle}
             size={60}
-            color={'#37d5d6'}
+            color={"#37d5d6"}
             loading={loading}
             className="loader"
           />

@@ -10,17 +10,73 @@ import Sales from './Sales';
 import Procurement from './Procurement';
 import Product from './Product/Product';
 import '../styles/Dashboard.css';
+import Customer from './Customer/Customer';
+import Supplier from './Supplier/Supplier';
 
 function Dashboard({ match }) {
   const history = useHistory();
   const authContext = useContext(AuthContext);
-  const [tab, setTab] = useState('main');
+  const [tab, setTab] = useState(localStorage.getItem('tab') || 'main');
   const [page, setPage] = useState(<Overview />);
 
   const signOut = () => {
     auth.signOut();
     authContext.logout();
   };
+
+  const savePage = (page) => {
+    const type = page.type.name;
+    const id = page.props.id;
+    console.log(type, id);
+    setPage(page);
+    localStorage.setItem('pageType', type);
+    localStorage.setItem('pageId', id);
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem('pageType') && localStorage.getItem('pageId')) {
+      const type = localStorage.getItem('pageType');
+      const id = localStorage.getItem('pageId');
+
+      switch (type) {
+        case 'Customer':
+          setPage(<Customer id={id} />);
+          break;
+        case 'Supplier':
+          setPage(<Supplier id={id} />);
+          break;
+        case 'Product':
+          setPage(<Product id={id} />);
+          break;
+
+        default:
+          break;
+      }
+
+      return;
+    }
+
+    switch (tab) {
+      case 'main':
+        setPage(<Overview setPage={savePage} />);
+        break;
+      case 'financial':
+        setPage(<Financial setPage={savePage} />);
+        break;
+      case 'sales':
+        setPage(<Sales setPage={savePage} />);
+        break;
+      case 'inventory':
+        setPage(<Inventory setPage={savePage} />);
+        break;
+      case 'procurement':
+        setPage(<Procurement setPage={savePage} />);
+        break;
+
+      default:
+        break;
+    }
+  }, []);
 
   return (
     <>
@@ -34,7 +90,10 @@ function Dashboard({ match }) {
             className="nav-item"
             onClick={() => {
               setTab('main');
-              setPage(<Overview setPage={setPage} />);
+              localStorage.setItem('tab', 'main');
+              setPage(<Overview setPage={savePage} />);
+              localStorage.removeItem('pageType');
+              localStorage.removeItem('pageId');
             }}
           >
             <span className={'nav-link' + (tab === 'main' ? ' selected' : '')}>
@@ -59,7 +118,10 @@ function Dashboard({ match }) {
             className="nav-item"
             onClick={() => {
               setTab('financial');
-              setPage(<Financial setPage={setPage} />);
+              localStorage.setItem('tab', 'financial');
+              setPage(<Financial setPage={savePage} />);
+              localStorage.removeItem('pageType');
+              localStorage.removeItem('pageId');
             }}
           >
             <span
@@ -86,7 +148,10 @@ function Dashboard({ match }) {
             className="nav-item"
             onClick={() => {
               setTab('sales');
-              setPage(<Sales setPage={setPage} />);
+              localStorage.setItem('tab', 'sales');
+              setPage(<Sales setPage={savePage} />);
+              localStorage.removeItem('pageType');
+              localStorage.removeItem('pageId');
             }}
           >
             <span className={'nav-link' + (tab === 'sales' ? ' selected' : '')}>
@@ -111,7 +176,10 @@ function Dashboard({ match }) {
             className="nav-item"
             onClick={() => {
               setTab('inventory');
-              setPage(<Inventory setPage={setPage} />);
+              localStorage.setItem('tab', 'inventory');
+              setPage(<Inventory setPage={savePage} />);
+              localStorage.removeItem('pageType');
+              localStorage.removeItem('pageId');
             }}
           >
             <span
@@ -137,7 +205,10 @@ function Dashboard({ match }) {
             className="nav-item"
             onClick={() => {
               setTab('procurement');
-              setPage(<Procurement setPage={setPage} />);
+              localStorage.setItem('tab', 'procurement');
+              setPage(<Procurement setPage={savePage} />);
+              localStorage.removeItem('pageType');
+              localStorage.removeItem('pageId');
             }}
           >
             <span

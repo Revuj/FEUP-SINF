@@ -12,8 +12,8 @@ import {
 } from '../../actions/financial';
 
 const Overview = () => {
-  const [accountsReceivable, setAccountsReceivable] = useState(0);
-  const [accountsPayable, setAccountsPayable] = useState(0);
+  const [accountsReceivable, setAccountsReceivable] = useState(null);
+  const [accountsPayable, setAccountsPayable] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {

@@ -1263,15 +1263,9 @@ const profitLoss = (journals, accounts) => {
  *
  * GPM = (Net Sales - Cogs)/ Net Sales
  */
-const grossProfitMargin = (journal) => {
-  // 71 corresponde a vendas
-  const revenue = processJournals(journal, "71", false);
+const getCogs = (journal) => {
   // 61 corresponde a custo das mercadorias que foram vendidas
-  const costOfGods = processJournals(journal, "61", false);
-  const netSales = revenue.totalCredit - revenue.totalDebit;
-  return (
-    (netSales - (costOfGods.totalDebit - costOfGods.totalCredit)) / netSales
-  );
+  return  processJournals(journal, "61", false);
 };
 
 const inventoryTurnover = (account, journal) => {
@@ -1352,10 +1346,10 @@ module.exports = (server, db) => {
     res.json({ ebit: profitLoss(journal, accounts).ebit });
   });
 
-  server.get("/api/financial/gpm", (req, res) => {
+  server.get("/api/financial/cogs", (req, res) => {
     const journal = db.GeneralLedgerEntries.Journal;
 
-    res.json({ gpm: grossProfitMargin(journal) });
+    res.json({ cogs: getCogs(journal) });
   });
 
   server.get("/api/financial/inventory-turnover", (req, res) => {

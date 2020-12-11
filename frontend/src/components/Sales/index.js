@@ -10,7 +10,7 @@ import '../../styles/Sales.css';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import {
-  fetchGrossProfitMargin,
+  fetchCogs,
   fetchNetSales,
   fetchBacklogValue,
 } from '../../actions/sales';
@@ -25,15 +25,15 @@ const Sales = ({ setPage }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const gpm = await fetchGrossProfitMargin();
+      const {data} = await fetchCogs();
       const sales = await fetchNetSales(year);
       const backlogValue = await fetchBacklogValue();
-      setGpm(gpm.data.gpm);
       setNetSales(sales.data);
       setBacklog(backlogValue.data);
+      setGpm( netSales === null ? null :(netSales - (data.cogs.totalDebit- data.cogs.totalCredit))/ netSales );
     };
     fetchData();
-  }, []);
+  }, [netSales]);
 
   return (
     <Layout>
@@ -53,7 +53,7 @@ const Sales = ({ setPage }) => {
               title="GPM"
               description="Gross Profit Margin"
               amount={gpm}
-              formatter={null}
+              formatter={(x) => Math.round((x + Number.EPSILON) * 100) / 100}
               unit="%"
               styleTitle={{
                 borderBottom: '1px solid black',

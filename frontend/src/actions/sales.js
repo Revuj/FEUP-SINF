@@ -136,8 +136,8 @@ const fetchOngoingSales = () => {
   ];
 };
 
-const fetchGrossProfitMargin = () => {
-  return axios.get(`api/financial/gpm`);
+const fetchCogs = () => {
+  return axios.get(`api/financial/cogs`);
 };
 
 const fetchNetSales = (year) => {
@@ -148,4 +148,4 @@ const fetchBacklogValue = () => {
   return axios.get(`api/sales/backlog`)
 }
 
-export { fetchYearSales, fetchOngoingSales, fetchGrossProfitMargin, fetchNetSales, fetchBacklogValue };
+export { fetchYearSales, fetchOngoingSales, fetchCogs, fetchNetSales, fetchBacklogValue };

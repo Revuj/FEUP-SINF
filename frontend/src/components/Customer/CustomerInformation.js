@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
+import axios from "axios";
+import PuffLoader from "react-spinners/PuffLoader";
+import { css } from "@emotion/core";
 
 const fetchCustomerData = async (id) => {
   return await axios.get(`/api/customer/${id}`);
@@ -18,6 +19,20 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
 }));
+
+const styleTitle = {
+  borderBottom: "1px solid black",
+  backgroundColor: "#37d5d6",
+  color: "white",
+};
+
+const spinnerStyle = css`
+  margin: 0;
+  top: 25%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+`;
 
 const CustomerInformation = ({ id }) => {
   const classes = useStyles();
@@ -34,57 +49,62 @@ const CustomerInformation = ({ id }) => {
     fetchData();
   }, [id]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   console.log(customer);
   // faltam algum atributos tao a null
   // temos outros atributos que se calhar deviamos colocar
   return (
-    <Paper style={{ padding: '0' }} className={classes.paper}>
+    <div className="card-information">
       <h3
-        style={{
-          backgroundColor: '#37d5d6',
-          color: 'white',
-          padding: '0.5rem',
-        }}
+        className="card-title"
+        style={styleTitle !== undefined ? styleTitle : {}}
       >
         Customer Information
       </h3>
-      <Grid style={{ padding: '0.5rem' }} container spacing={3}>
-        <Grid item xs={8}>
-          <div>
-            <span className={classes.item_title}>ID</span>
-            <span>{customer.partyKey}</span>
-          </div>
-          <div>
-            <span className={classes.item_title}>Name</span>
-            <span>{customer.contactName}</span>
-          </div>
-          <div>
-            <span className={classes.item_title}>Address</span>
-            <span>
-              {customer.streetName} {customer.buildingNumber}
-            </span>
-          </div>
-        </Grid>
-        <Grid item xs={4}>
-          <div>
-            <span className={classes.item_title}>City</span>
-            <span>{customer.cityName}</span>
-          </div>
-          <div>
-            <span className={classes.item_title}>Country</span>
-            <span>{customer.countryDescription}</span>
-          </div>
-          <div>
-            <span className={classes.item_title}>Postal Code</span>
-            <span>{customer.postalZone}</span>
-          </div>
-        </Grid>
-      </Grid>
-    </Paper>
+      {customer ? (
+        <>
+          <Grid container spacing={3} className="card-information-content">
+            <Grid item xs={6}>
+              <div>
+                <span className={classes.item_title}>ID</span>
+                <span>{customer.partyKey}</span>
+              </div>
+              <div>
+                <span className={classes.item_title}>Name</span>
+                <span>{customer.contactName}</span>
+              </div>
+              <div>
+                <span className={classes.item_title}>Address</span>
+                <span>
+                  {customer.streetName} {customer.buildingNumber}
+                </span>
+              </div>
+            </Grid>
+            <Grid item xs={6}>
+              <div>
+                <span className={classes.item_title}>City</span>
+                <span>{customer.cityName} </span>
+              </div>
+              <div>
+                <span className={classes.item_title}>Country</span>
+                <span>{customer.countryDescription}</span>
+              </div>
+              <div>
+                <span className={classes.item_title}>Postal Code</span>
+                <span>{customer.postalZone}</span>
+              </div>
+            </Grid>
+          </Grid>
+        </>
+      ) : (
+        <PuffLoader
+          css={spinnerStyle}
+          size={60}
+          color={"#37d5d6"}
+          loading={loading == true}
+          className="loader"
+        />
+      )}
+    </div>
   );
 };
 

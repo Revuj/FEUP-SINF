@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { formatMoney } from '../../helper/CurrencyFormater';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import Search from '../Search';
-import TableHeader from '../TableHeader';
+import React, { useState, useEffect, useMemo } from "react";
+import { formatMoney } from "../../helper/CurrencyFormater";
+import axios from "axios";
+import Search from "../Search";
+import PaginationComponent from "../Pagination";
+import TableHeader from "../TableHeader";
+import { css } from "@emotion/core";
+import PuffLoader from "react-spinners/PuffLoader";
 
 const fetchTopPurchases = async (id) => {
   return axios.get(`/api/customer/${id}/topPurchases`);
@@ -18,17 +20,17 @@ export default function TopPurchases({
   const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [sorting, setSorting] = useState({ field: '', order: '' });
+  const [search, setSearch] = useState("");
+  const [sorting, setSorting] = useState({ field: "", order: "" });
 
   const ITEMS_PER_PAGE = numberItemsPerPage;
   const headers = [
-    { name: 'Date', field: 'date', sortable: false },
-    { name: 'Currency', field: 'currency', sortable: false },
-    { name: 'Amount money', field: 'amount', sortable: true },
+    { name: "Date", field: "date", sortable: false },
+    { name: "Currency", field: "currency", sortable: false },
+    { name: "Amount money", field: "amount", sortable: true },
   ];
 
-  const [tableInfo, setTableInfo] = useState(null);
+  const [tableInfo, setTableInfo] = useState([]);
 
   useEffect(() => {
     const fetchTableData = async () => {
@@ -56,9 +58,9 @@ export default function TopPurchases({
     console.log(sorting.field);
     console.log(sorting.order);
     if (sorting.field && !sorting.field) {
-      const reversed = sorting.order === 'asc' ? 1 : -1;
+      const reversed = sorting.order === "asc" ? 1 : -1;
 
-      if (sorting.field === 'amount') {
+      if (sorting.field === "amount") {
         computedInfo = computedInfo.sort(
           (a, b) => reversed * a[sorting.field] - b[sorting.field]
         );
@@ -72,9 +74,13 @@ export default function TopPurchases({
     );
   }, [tableInfo, currentPage, search, sorting]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  const tableStyle = css`
+    margin: 0;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  `;
 
   return (
     <>
@@ -104,6 +110,27 @@ export default function TopPurchases({
             ))}
           </tbody>
         </table>
+
+        <PaginationComponent
+          color={themeColor}
+          total={totalItems}
+          itemsPerPage={ITEMS_PER_PAGE}
+          currentPage={currentPage}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
+
+        <div
+          className="table-loading"
+          style={loading ? { height: "250px" } : {}}
+        >
+          <PuffLoader
+            css={tableStyle}
+            size={60}
+            color={"#37d5d6"}
+            loading={loading}
+            className="loader"
+          />
+        </div>
       </section>
     </>
   );

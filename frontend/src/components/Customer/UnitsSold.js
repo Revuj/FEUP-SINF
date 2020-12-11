@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
 import { formatMoney } from "../../helper/CurrencyFormater";
 import axios from "axios";
 import "../../styles/GenericCard.css";
 import PuffLoader from "react-spinners/PuffLoader";
 import { css } from "@emotion/core";
-
-const fetchPurchaseTotalData = async (id) => {
-  return axios.get(`/api/customer/${id}/TopPurchases`);
-};
+import { fetchUnitsSold } from "../../actions/clients";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,19 +32,19 @@ const spinnerStyle = css`
   transform: translate(-50%, -50%);
 `;
 
-const TotalPurchased = ({ id }) => {
-  const classes = useStyles();
+const UnitsSold = ({ id, year }) => {
   const [loading, setLoading] = useState(true);
   const [purchase, setPurchase] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await fetchPurchaseTotalData(id);
+      const { data } = await fetchUnitsSold(id, year, false);
+      console.log(data);
       setPurchase(data);
       setLoading(false);
     };
     fetchData();
-  }, [id]);
+  }, [id, year]);
 
   return (
     <div className="card">
@@ -56,11 +52,13 @@ const TotalPurchased = ({ id }) => {
         className="card-title"
         style={styleTitle !== undefined ? styleTitle : {}}
       >
-        Total Purchased
+        Units Sold
       </h3>
       <div className="card-amount">
         {purchase ? (
-          <>(what number are suppose to be here?) ({formatMoney(purchase)}€)</>
+          <>
+            {purchase.totalOrders} ({formatMoney(purchase.totalPrice)}€)
+          </>
         ) : (
           <PuffLoader
             css={spinnerStyle}
@@ -72,7 +70,7 @@ const TotalPurchased = ({ id }) => {
         )}
       </div>
       <div className="card-description">
-        Number and amount of sales orders for the customer
+        Number and amount of units sold to the customer
       </div>
     </div>
 
@@ -93,4 +91,4 @@ const TotalPurchased = ({ id }) => {
   );
 };
 
-export default TotalPurchased;
+export default UnitsSold;

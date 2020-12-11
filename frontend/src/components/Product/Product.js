@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import ProductInfo from "./ProductInfo";
 import ProductSuppliers from "./ProductSuppliers";
-import ProductSales from "./ProductSales";
+import ProductSalesvsPurchases from "./ProductSalesvsPurchases";
 import UnitsSold from "./UnitsSold";
+import UnitsPurchased from "./UnitsPurchased";
+
 import UnitsStock from "./UnitsStock";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 
-import Layout from '../Layout'
-import { useParams } from 'react-router-dom';
+import Layout from "../Layout";
+import { useParams } from "react-router-dom";
 
 const Product = () => {
   const { id } = useParams();
@@ -28,12 +30,13 @@ const Product = () => {
         <div className="main-content">
           <section className="top-cards">
             <ProductInfo id={id} />
-            <UnitsSold id={id} />
+            <UnitsSold id={id} year={year} />
+            <UnitsPurchased id={id} year={year} />
             <UnitsStock id={id} />
           </section>
           <section className="row-50-50">
             <span>
-              <ProductSales id={id} />
+              <ProductSalesvsPurchases id={id} year={year} />
             </span>
             <span>
               <ProductSuppliers id={id} numberItemsPerPage={5} />
@@ -43,6 +46,6 @@ const Product = () => {
       </div>
     </Layout>
   );
-}
+};
 
 export default Product;

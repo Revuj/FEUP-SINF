@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
-import { fetchUnitsSold } from "../../actions/product";
+import axios from "axios";
 import { css } from "@emotion/core";
 import PuffLoader from "react-spinners/PuffLoader";
+import { fetchUnitsOrdered } from "../../actions/suppliers";
+import { fetchUnitsPurchased } from "../../actions/suppliers";
 
 const initial_data = {
   labels: [
@@ -21,7 +23,7 @@ const initial_data = {
   ],
   datasets: [
     {
-      label: "Units Sold",
+      label: "Units Purchased",
       data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       fill: false,
       backgroundColor: "rgb(255, 99, 132)",
@@ -52,35 +54,45 @@ const graphStyle = css`
   transform: translate(-50%, -50%);
 `;
 
-function ProductSales({ id }) {
-  const [graphData, setGraphData] = useState(initial_data);
+function SupplierPurchases({ id, year }) {
+  const [graphData, setGraphData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await fetchUnitsSold(id);
-      console.log(data);
+      const ordered = await fetchUnitsOrdered(id, year, true);
+      const purchased = await fetchUnitsPurchased(id, year, true);
+
       setGraphData({
         labels: initial_data.labels,
         datasets: [
           {
-            label: "Units Sold",
-            data: data.unitsSold,
+            label: "Units Purchased",
+            data: purchased.data,
             fill: false,
             backgroundColor: "rgb(255, 99, 132)",
             borderColor: "rgba(255, 99, 132, 0.2)",
+            yAxisID: "y-axis-1",
+          },
+          {
+            label: "Units Ordered",
+            data: ordered.data,
+            fill: false,
+            backgroundColor: "rgb(54, 162, 235)",
+            borderColor: "rgba(54, 162, 235, 0.2)",
             yAxisID: "y-axis-1",
           },
         ],
       });
       setLoading(false);
     };
+
     fetchData();
-  }, [id]);
+  }, [id, year]);
 
   return (
     <div className="chart">
-      <h3 className="chart-title">Product Sales</h3>
+      <h3 className="chart-title">Supplier Purchases</h3>
       <div className="graph-loading" style={loading ? { height: "250px" } : {}}>
         <PuffLoader
           css={graphStyle}
@@ -90,9 +102,14 @@ function ProductSales({ id }) {
           className="loader"
         />
       </div>
-      <Line data={graphData} options={options} />
+      {graphData && (
+        <>
+          {" "}
+          <Line data={graphData} options={options} />
+        </>
+      )}
     </div>
   );
 }
 
-export default ProductSales;
+export default SupplierPurchases;

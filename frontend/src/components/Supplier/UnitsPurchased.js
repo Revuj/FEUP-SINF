@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { formatMoney } from "../../helper/CurrencyFormater";
-import { fetchUnitsSold } from "../../actions/product";
+import axios from "axios";
 import "../../styles/GenericCard.css";
 import PuffLoader from "react-spinners/PuffLoader";
 import { css } from "@emotion/core";
+import { fetchUnitsPurchased } from "../../actions/suppliers";
 
 const styleTitle = {
   borderBottom: "1px solid black",
@@ -19,16 +20,17 @@ const spinnerStyle = css`
   transform: translate(-50%, -50%);
 `;
 
-const UnitsSold = ({ id, year }) => {
+const UnitsPurchased = ({ id, year }) => {
   const [loading, setLoading] = useState(true);
-  const [unitsSold, setUnitsSold] = useState(null);
+  const [total, setTotal] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await fetchUnitsSold(id, year);
-      setUnitsSold(data);
+      const { data } = await fetchUnitsPurchased(id, year, false);
+      setTotal(data);
       setLoading(false);
     };
+
     fetchData();
   }, [id, year]);
 
@@ -38,13 +40,12 @@ const UnitsSold = ({ id, year }) => {
         className="card-title"
         style={styleTitle !== undefined ? styleTitle : {}}
       >
-        Units Sold
+        Units Purchased
       </h3>
       <div className="card-amount">
-        {unitsSold ? (
+        {total ? (
           <>
-            {unitsSold.units.reduce((a, b) => a + b, 0)} (
-            {formatMoney(unitsSold.value)}€)
+            {total.totalOrders} ({formatMoney(total.totalPrice)}€)
           </>
         ) : (
           <PuffLoader
@@ -57,10 +58,10 @@ const UnitsSold = ({ id, year }) => {
         )}
       </div>
       <div className="card-description">
-        Number and amount of units sold for this product
+        Number and amount of products purchased from the supplier
       </div>
     </div>
   );
 };
 
-export default UnitsSold;
+export default UnitsPurchased;

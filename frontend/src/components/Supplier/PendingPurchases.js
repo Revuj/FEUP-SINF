@@ -5,6 +5,7 @@ import TableHeader from "../TableHeader";
 import { fetchPendingPurchases } from "../../actions/suppliers";
 import { css } from "@emotion/core";
 import PuffLoader from "react-spinners/PuffLoader";
+import { formatMoney } from "../../helper/CurrencyFormater";
 
 export default function PendingPurchases({
   id,
@@ -106,7 +107,7 @@ export default function PendingPurchases({
                 <th>{row.reference}</th>
                 <td>{row.date}</td>
                 <td>{row.units}</td>
-                <td>{row.value}</td>
+                <td>{formatMoney(row.value)}</td>
               </tr>
             ))}
           </tbody>

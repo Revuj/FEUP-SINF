@@ -10,7 +10,7 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import { fetchAccountsPayable } from "../../actions/financial";
 import { fetchDebt } from "../../actions/purchases";
 
-import Layout from '../Layout'
+import Layout from "../Layout";
 
 const Procurement = ({ title, setPage }) => {
   const [year, setYear] = useState("2020");

@@ -7,11 +7,11 @@ import TableHeader from "../TableHeader";
 import { css } from "@emotion/core";
 import PuffLoader from "react-spinners/PuffLoader";
 
-const fetchTopPurchases = async (id) => {
-  return axios.get(`/api/customer/${id}/topPurchases`);
+const fetchTopPurchases = (id) => {
+  return axios.get(`/api/customer/${id}/pending-sales`);
 };
 
-export default function TopPurchases({
+export default function PendingSales({
   numberItemsPerPage,
   containerStyle,
   themeColor,
@@ -25,9 +25,10 @@ export default function TopPurchases({
 
   const ITEMS_PER_PAGE = numberItemsPerPage;
   const headers = [
-    { name: "Date", field: "date", sortable: false },
-    { name: "Currency", field: "currency", sortable: false },
-    { name: "Amount money", field: "amount", sortable: true },
+    { name: "Reference", field: "reference", sortable: false },
+    { name: "Date", field: "date", sortable: true },
+    { name: "Units", field: "units", sortable: true },
+    { name: "Value", field: "value", sortable: true },
   ];
 
   const [tableInfo, setTableInfo] = useState([]);
@@ -47,22 +48,25 @@ export default function TopPurchases({
 
     if (search) {
       computedInfo = computedInfo.filter(
-        (row) => row.date.toLowerCase().includes(search.toLowerCase())
+        (row) => row.reference.toLowerCase().includes(search.toLowerCase())
         // || suppier.email.toLowerCase().includes(search.toLowerCase())
       );
     }
 
     setTotalItems(computedInfo.length);
 
-    //Sorting clients
-    console.log(sorting.field);
-    console.log(sorting.order);
-    if (sorting.field && !sorting.field) {
+    if (sorting.field) {
       const reversed = sorting.order === "asc" ? 1 : -1;
 
-      if (sorting.field === "amount") {
+      if (sorting.field === "date") {
+        console.log("oioi");
         computedInfo = computedInfo.sort(
-          (a, b) => reversed * a[sorting.field] - b[sorting.field]
+          (a, b) => reversed * (Date.parse(a.date) - Date.parse(b.date))
+        );
+        console.log(computedInfo);
+      } else {
+        computedInfo = computedInfo.sort(
+          (a, b) => reversed * (a[sorting.field] - b[sorting.field])
         );
       }
     }
@@ -86,7 +90,7 @@ export default function TopPurchases({
     <>
       <section className="table" style={containerStyle}>
         <header className="header_info">
-          <h3 className="table-title">Top Purchases</h3>
+          <h3 className="table-title">Pending Sales</h3>
           <Search
             onSearch={(value) => {
               setSearch(value);
@@ -101,11 +105,12 @@ export default function TopPurchases({
             onSorting={(field, order) => setSorting({ field, order })}
           />
           <tbody>
-            {TableData.map((row, id) => (
-              <tr key={id}>
-                <th>{row.date}</th>
-                <td>{row.currency}</td>
-                <td>{row.amount}</td>
+            {TableData.map((row) => (
+              <tr key={row.reference}>
+                <th>{row.reference}</th>
+                <td>{row.date}</td>
+                <td>{row.units}</td>
+                <td>{formatMoney(row.value)}</td>
               </tr>
             ))}
           </tbody>

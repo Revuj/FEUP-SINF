@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import CustomerInformation from "./CustomerInformation";
-import TotalPurchased from "./TotalPurchased";
-import TopPurchases from "./TopPurchases";
+import UnitsSold from "./UnitsSold";
+import UnitsOrdered from "./UnitsOrdered";
+import PendingSales from "./PendingSales";
+import CustomerSales from "./CustomerSales";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Layout from "../Layout";
@@ -25,10 +27,16 @@ const Customer = () => {
         <div className="main-content">
           <section className="top-cards">
             <CustomerInformation id={id} />
-            <TotalPurchased id={id} />
+            <UnitsSold id={id} year={year} />
+            <UnitsOrdered id={id} year={year} />
           </section>
-          <section>
-            <TopPurchases numberItemsPerPage={5} id={id} />
+          <section className="row-50-50">
+            <span>
+              <CustomerSales id={id} year={year} />
+            </span>
+            <span>
+              <PendingSales id={id} numberItemsPerPage={5} />
+            </span>
           </section>
         </div>
       </div>

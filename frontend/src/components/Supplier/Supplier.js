@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import SupplierInformation from "./SupplierInformation";
-import TotalPurchased from "./TotalPurchased";
+import UnitsPurchased from "./UnitsPurchased";
+import UnitsOrdered from "./UnitsOrdered";
+import SupplierPurchases from "./SupplierPurchases";
 import PendingPurchases from "./PendingPurchases";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
 
-import Layout from '../Layout'
-import { useParams } from 'react-router-dom';
+import Layout from "../Layout";
+import { useParams } from "react-router-dom";
 
 const Supplier = () => {
   const { id } = useParams();
@@ -27,15 +29,21 @@ const Supplier = () => {
         <div className="main-content">
           <section className="top-cards">
             <SupplierInformation id={id} />
-            <TotalPurchased id={id} />
+            <UnitsPurchased id={id} year={year} />
+            <UnitsOrdered id={id} year={year} />
           </section>
-          <section>
-            <PendingPurchases id={id} numberItemsPerPage={5} />
+          <section className="row-50-50">
+            <span>
+              <SupplierPurchases id={id} year={year} />
+            </span>
+            <span>
+              <PendingPurchases id={id} numberItemsPerPage={5} />
+            </span>
           </section>
         </div>
       </div>
     </Layout>
   );
-}
+};
 
 export default Supplier;

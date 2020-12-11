@@ -89,8 +89,17 @@ const fetchProducts = () => {
   ];
 };
 
-const fetchUnitsSold = (id) => {
-  return axios.get(`/api/products/${id}/units-sold`);
+const fetchUnitsSold = (id, year) => {
+  return axios.get(`/api/products/${id}/units-sold/${year}`);
 };
 
-export { fetchYearProductProfit, fetchProducts, fetchUnitsSold };
+const fetchUnitsPurchased = (id, year) => {
+  return axios.get(`/api/products/${id}/units-purchased/${year}`);
+};
+
+export {
+  fetchYearProductProfit,
+  fetchProducts,
+  fetchUnitsSold,
+  fetchUnitsPurchased,
+};

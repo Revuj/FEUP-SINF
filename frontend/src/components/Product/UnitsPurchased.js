@@ -4,6 +4,7 @@ import axios from "axios";
 import "../../styles/GenericCard.css";
 import PuffLoader from "react-spinners/PuffLoader";
 import { css } from "@emotion/core";
+import { fetchUnitsPurchased } from "../../actions/product";
 
 const styleTitle = {
   borderBottom: "1px solid black",
@@ -19,21 +20,20 @@ const spinnerStyle = css`
   transform: translate(-50%, -50%);
 `;
 
-const TotalPurchased = ({ id }) => {
+const UnitsPurchased = ({ id, year }) => {
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(null);
 
   useEffect(() => {
-    axios
-      .get(`/api/suppliers/${id}/purchases`)
-      .then((response) => {
-        setTotal(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [id]);
+    const fetchData = async () => {
+      const { data } = await fetchUnitsPurchased(id, year);
+      console.log(data);
+      setTotal(data);
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [id, year]);
 
   return (
     <div className="card">
@@ -41,12 +41,13 @@ const TotalPurchased = ({ id }) => {
         className="card-title"
         style={styleTitle !== undefined ? styleTitle : {}}
       >
-        Total Purchased
+        Units Purchased
       </h3>
       <div className="card-amount">
         {total ? (
           <>
-            {total.totalOrders} orders ({formatMoney(total.totalPrice)}€)
+            {total.units.reduce((a, b) => a + b, 0)} ({formatMoney(total.value)}
+            €)
           </>
         ) : (
           <PuffLoader
@@ -59,10 +60,10 @@ const TotalPurchased = ({ id }) => {
         )}
       </div>
       <div className="card-description">
-        Number and amount of purchases orders for the supplier
+        Number and amount of units purchased for this product
       </div>
     </div>
   );
 };
 
-export default TotalPurchased;
+export default UnitsPurchased;

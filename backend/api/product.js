@@ -1,4 +1,5 @@
 const processSuppliers = require("./processSuppliers");
+const moment = require("moment");
 
 const calculateStockNumber = (productInfo) => {
   //console.log(productInfo.materialsItemWarehouses[0]);
@@ -33,28 +34,27 @@ const calculateAvgCost = (orders, id) => {
   return avgCost / number_orders;
 };
 
-const processUnitsSold = (invoices, id) => {
-  let unitsSold = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+const processUnits = (invoices, id, year, party) => {
+  let units = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let value = 0;
 
-  invoices.forEach(({ Line, Period }) => {
-    if (Array.isArray(Line)) {
-      Line.forEach(({ ProductCode, Quantity, UnitPrice }) => {
-        if (ProductCode === id) {
-          unitsSold[parseInt(Period, 10) - 1] =
-            unitsSold[parseInt(Period, 10) - 1] + parseInt(Quantity, 10);
-          value += parseFloat(Quantity * UnitPrice, 10);
+  if (invoices) {
+    const validInvoices = invoices.filter(
+      (invoice) => moment(invoice.documentDate).year() == year
+    );
+
+    validInvoices.map((invoice) => {
+      let month = moment(invoice.documentDate).month();
+      invoice.documentLines.forEach((line) => {
+        if (line[party] == id) {
+          units[month] += line.quantity;
+          value += line.quantity * line.unitPrice.amount;
         }
       });
-    } else if (Line.ProductCode === id) {
-      unitsSold[parseInt(Period, 10) - 1] = parseInt(Line.Quantity, 10);
-      value = parseFloat(Line.Quantity * Line.UnitPrice, 10);
-    }
-  });
+    });
+  }
 
-  console.log(unitsSold);
-
-  return { unitsSold, value };
+  return { units, value };
 };
 
 module.exports = (server, db) => {
@@ -74,16 +74,41 @@ module.exports = (server, db) => {
     });
   });
 
-  server.get("/api/products/:id/units-sold", (req, res) => {
-    const { id } = req.params;
-    let invoices = db.SourceDocuments.SalesInvoices.Invoice;
-    if (!Array.isArray(invoices)) {
-      invoices = [invoices];
-    }
+  server.get("/api/products/:id/units-sold/:year", (req, res) => {
+    const { id, year } = req.params;
 
-    const unitsSold = processUnitsSold(invoices, id);
+    const options = {
+      method: "GET",
+      url: `${global.basePrimaveraUrl}/billing/invoices`,
+    };
 
-    return res.json(unitsSold);
+    return global.request(options, function (error, _response, body) {
+      if (error) res.json(error);
+
+      const unitsSold = processUnits(JSON.parse(body), id, year, "salesItem");
+      return res.json(unitsSold);
+    });
+  });
+
+  server.get("/api/products/:id/units-purchased/:year", (req, res) => {
+    const { id, year } = req.params;
+
+    const options = {
+      method: "GET",
+      url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
+    };
+
+    return global.request(options, function (error, _response, body) {
+      if (error) res.json(error);
+
+      const unitsPurchased = processUnits(
+        JSON.parse(body),
+        id,
+        year,
+        "purchasesItem"
+      );
+      return res.json(unitsPurchased);
+    });
   });
 
   server.get("/api/products/:id/stock-units", (req, res) => {

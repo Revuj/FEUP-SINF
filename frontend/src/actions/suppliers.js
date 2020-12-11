@@ -79,4 +79,19 @@ const fetchPendingPurchases = (id) => {
   return axios.get(`/api/suppliers/${id}/pending-purchases`);
 };
 
-export { fetchSuppliers, fetchPendingPurchases };
+const fetchUnitsPurchased = (id, year, monthly) => {
+  return axios.get(`/api/suppliers/${id}/purchases/${year}?monthly=${monthly}`);
+};
+
+const fetchUnitsOrdered = (id, year, monthly) => {
+  return axios.get(
+    `/api/suppliers/${id}/purchases-orders/${year}?monthly=${monthly}`
+  );
+};
+
+export {
+  fetchSuppliers,
+  fetchPendingPurchases,
+  fetchUnitsPurchased,
+  fetchUnitsOrdered,
+};

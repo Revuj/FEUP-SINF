@@ -19,7 +19,8 @@ function Login() {
     auth.signInWithPopup(provider).then(async () => {
       console.log(user);
       authContext.login();
-      history.push('/dashboard');
+      localStorage.setItem('auth-token', 'TOKEN');
+      history.push('/overview');
     });
   };
 
@@ -30,7 +31,8 @@ function Login() {
       .then(async () => {
         console.log(user);
         authContext.login();
-        history.push('/dashboard');
+        localStorage.setItem('auth-token', 'TOKEN');
+        history.push('/overview');
       });
   };
 

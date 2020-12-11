@@ -1,13 +1,8 @@
-import { React, useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { React, useState, useEffect, Fragment } from 'react';
 import { firebase } from './firebase/config';
 import { AuthContext } from './context';
-import Home from './components/Home';
-import Login from './components/Login';
-import Dashboard from './components/Dashboard';
-import Product from './components/Product/Product';
-import Customer from './components/Customer/Customer';
-import Supplier from './components/Supplier/Supplier';
+
+import Router from './Router';
 
 import './styles/App.css';
 
@@ -32,7 +27,7 @@ function App() {
   };
 
   return (
-    <Router>
+    <Fragment>
       <AuthContext.Provider
         value={{
           isLoggedIn,
@@ -40,15 +35,9 @@ function App() {
           logout: logout,
         }}
       >
-        {/* <Navbar /> */}
-        <Route path="/" exact component={Home} />
-        <Route path="/login" exact component={Login} />
-        <Route path="/dashboard" exact component={Dashboard} />
-        {/* <Route path="/product/:id" exact component={Dashboard} />
-        <Route path="/customer/:id" exact component={Customer} />
-        <Route path="/supplier/:id" exact component={Supplier} /> */}
+      <Router />
       </AuthContext.Provider>
-    </Router>
+    </Fragment>
   );
 }
 

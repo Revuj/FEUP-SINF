@@ -1,12 +1,13 @@
-import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
-import PaginationComponent from "../Pagination";
-import Search from "../Search";
-import TableHeader from "../TableHeader";
-import "../../styles/Table.css";
-import { css } from "@emotion/core";
-import PuffLoader from "react-spinners/PuffLoader";
-import Product from "../Product/Product";
+import React, { useEffect, useState, useMemo } from 'react';
+import axios from 'axios';
+import PaginationComponent from '../Pagination';
+import Search from '../Search';
+import TableHeader from '../TableHeader';
+import '../../styles/Table.css';
+import { css } from '@emotion/core';
+import PuffLoader from 'react-spinners/PuffLoader';
+import Product from '../Product/Product';
+import { useHistory } from 'react-router-dom';
 import { formatMoney } from "../../helper/CurrencyFormater";
 
 const TopProductsTable = ({
@@ -31,6 +32,8 @@ const TopProductsTable = ({
     { name: "Sales", field: "quantity", sortable: true },
     { name: "Value", field: "value", sortable: true },
   ];
+
+  const history = useHistory();
 
   useEffect(() => {
     axios
@@ -106,7 +109,7 @@ const TopProductsTable = ({
                   className="table-link"
                   scope="row"
                   onClick={() => {
-                    setPage(<Product id={product.id} />);
+                    history.push('/product/'+product.id);
                   }}
                 >
                   {product.id}

@@ -14,6 +14,8 @@ import {
 } from '../../actions/financial';
 import ProfitLossStatement from './ProfitLossStatement';
 
+import Layout from '../Layout'
+
 const Index = () => {
   const [year, setYear] = useState('2020');
   const [ebit, setEbit] = useState(null);
@@ -56,118 +58,120 @@ const Index = () => {
   }, []);
 
   return (
-    <div>
-      <div className="top-bar">
-        <h1 className="title">Financial</h1>
-        <DropdownButton id="dropdown-basic-button" title={year}>
-          <Dropdown.Item href="#/action-1">2020</Dropdown.Item>
-          <Dropdown.Item href="#/action-2">2019</Dropdown.Item>
-          <Dropdown.Item href="#/action-3">2018</Dropdown.Item>
-        </DropdownButton>
-      </div>
+    <Layout>
+      <div>
+        <div className="top-bar">
+          <h1 className="title">Financial</h1>
+          <DropdownButton id="dropdown-basic-button" title={year}>
+            <Dropdown.Item href="#/action-1">2020</Dropdown.Item>
+            <Dropdown.Item href="#/action-2">2019</Dropdown.Item>
+            <Dropdown.Item href="#/action-3">2018</Dropdown.Item>
+          </DropdownButton>
+        </div>
 
-      <div className="main-content">
-        <section className="top-cards">
-          <GenericCard
-            title="EBIT"
-            description="Earnings Before Interest and Taxes"
-            amount={ebit}
-            formatter={formatMoney}
-            unit="€"
-            styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
-            }}
-          />
-          <GenericCard
-            title="EBITDA"
-            description="Earnings before interest, taxes, depreciation and amortization"
-            amount={ebitda}
-            formatter={formatMoney}
-            unit="€"
-            styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
-            }}
-          />
-          <GenericCard
-            title="Accounts Receivable"
-            description="Amount of money owed by customers for purchases made on credit"
-            amount={accountsReceivable}
-            formatter={formatMoney}
-            unit="€"
-            styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
-            }}
-          />
-          <GenericCard
-            title="Accounts Payable"
-            description="Amount of money owed to suppliers"
-            amount={accountsPayable}
-            formatter={formatMoney}
-            unit="€"
-            styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
-            }}
-          />
-          <GenericCard
-            title="Net Income"
-            description="Amount of profit "
-            amount={netIncome}
-            formatter={formatMoney}
-            unit="€"
-            styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
-            }}
-          />
-          <GenericCard
-            title="Cogs"
-            description="Cost of goods sold"
-            amount={cogs}
-            formatter={formatMoney}
-            unit="€"
-            styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
-            }}
-          />
-        </section>
-        <RevenueVsCost />
+        <div className="main-content">
+          <section className="top-cards">
+            <GenericCard
+              title="EBIT"
+              description="Earnings Before Interest and Taxes"
+              amount={ebit}
+              formatter={formatMoney}
+              unit="€"
+              styleTitle={{
+                borderBottom: '1px solid black',
+                backgroundColor: '#37d5d6',
+                color: 'white',
+              }}
+            />
+            <GenericCard
+              title="EBITDA"
+              description="Earnings before interest, taxes, depreciation and amortization"
+              amount={ebitda}
+              formatter={formatMoney}
+              unit="€"
+              styleTitle={{
+                borderBottom: '1px solid black',
+                backgroundColor: '#37d5d6',
+                color: 'white',
+              }}
+            />
+            <GenericCard
+              title="Accounts Receivable"
+              description="Amount of money owed by customers for purchases made on credit"
+              amount={accountsReceivable}
+              formatter={formatMoney}
+              unit="€"
+              styleTitle={{
+                borderBottom: '1px solid black',
+                backgroundColor: '#37d5d6',
+                color: 'white',
+              }}
+            />
+            <GenericCard
+              title="Accounts Payable"
+              description="Amount of money owed to suppliers"
+              amount={accountsPayable}
+              formatter={formatMoney}
+              unit="€"
+              styleTitle={{
+                borderBottom: '1px solid black',
+                backgroundColor: '#37d5d6',
+                color: 'white',
+              }}
+            />
+            <GenericCard
+              title="Net Income"
+              description="Amount of profit "
+              amount={netIncome}
+              formatter={formatMoney}
+              unit="€"
+              styleTitle={{
+                borderBottom: '1px solid black',
+                backgroundColor: '#37d5d6',
+                color: 'white',
+              }}
+            />
+            <GenericCard
+              title="Cogs"
+              description="Cost of goods sold"
+              amount={cogs}
+              formatter={formatMoney}
+              unit="€"
+              styleTitle={{
+                borderBottom: '1px solid black',
+                backgroundColor: '#37d5d6',
+                color: 'white',
+              }}
+            />
+          </section>
+          <RevenueVsCost />
 
-        <section className="listingInfo">
-          <ProfitLossStatement
-            title="Profit & Loss Statement"
-            data={
-              !(revenue && expenses)
-                ? null
-                : [
-                    { name: 'revenue', data: revenue },
-                    { name: 'expenses', data: expenses },
-                  ]
-            }
-            style={{ width: '25%', backgroundColor: 'white' }}
-            itemStyle={{ borderTop: '1px solid black' }}
-          />
-          <BalanceSheet
-            title="Balance Sheet"
-            assets={assets}
-            liabilities={liabilities}
-            equity={equity}
-            style={{ width: '25%', backgroundColor: 'white' }}
-            itemStyle={{ borderTop: '1px solid black' }}
-          />
-        </section>
+          <section className="listingInfo">
+            <ProfitLossStatement
+              title="Profit & Loss Statement"
+              data={
+                !(revenue && expenses)
+                  ? null
+                  : [
+                      { name: 'revenue', data: revenue },
+                      { name: 'expenses', data: expenses },
+                    ]
+              }
+              style={{ width: '25%', backgroundColor: 'white' }}
+              itemStyle={{ borderTop: '1px solid black' }}
+            />
+            <BalanceSheet
+              title="Balance Sheet"
+              assets={assets}
+              liabilities={liabilities}
+              equity={equity}
+              style={{ width: '25%', backgroundColor: 'white' }}
+              itemStyle={{ borderTop: '1px solid black' }}
+            />
+          </section>
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

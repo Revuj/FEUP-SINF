@@ -35,6 +35,7 @@ const StockByWarehouseTable = ({
   const [warehouses, setWarehouses] = useState([]);
 
   const [products, setProducts] = useState([]);
+
   useEffect(() => {
     axios
       .get("/api/inventory/warehouses")
@@ -107,9 +108,6 @@ const StockByWarehouseTable = ({
                 <th
                   className="table-link"
                   scope="row"
-                  onClick={() => {
-                    setPage(<Supplier id={warehouse.id} />);
-                  }}
                 >
                   {warehouse.id}
                 </th>

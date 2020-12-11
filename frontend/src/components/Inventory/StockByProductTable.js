@@ -1,14 +1,15 @@
-import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
-import useFullPageLoader from "../../hooks/FullPageLoader";
-import PaginationComponent from "../Pagination";
-import Search from "../Search";
-import TableHeader from "../TableHeader";
-import Product from "../Product/Product";
-import { css } from "@emotion/core";
-import PuffLoader from "react-spinners/PuffLoader";
-import "../../styles/Table.css";
+import React, { useEffect, useState, useMemo } from 'react';
+import axios from 'axios';
+import useFullPageLoader from '../../hooks/FullPageLoader';
+import PaginationComponent from '../Pagination';
+import Search from '../Search';
+import TableHeader from '../TableHeader';
+import Product from '../Product/Product';
+import { css } from '@emotion/core';
+import PuffLoader from 'react-spinners/PuffLoader';
+import { useHistory } from 'react-router-dom';
 import { formatMoney } from "../../helper/CurrencyFormater";
+import '../../styles/Table.css';
 
 const StockByProductTable = ({
   numberItemsPerPage,
@@ -32,6 +33,9 @@ const StockByProductTable = ({
   ];
 
   const [products, setProducts] = useState([]);
+
+  const history = useHistory();
+
   useEffect(() => {
     axios
       .get("/api/inventory/products")
@@ -105,7 +109,7 @@ const StockByProductTable = ({
                   className="table-link"
                   scope="row"
                   onClick={() => {
-                    setPage(<Product id={product.id} />);
+                    history.push('/product/'+product.id);
                   }}
                 >
                   {product.id}

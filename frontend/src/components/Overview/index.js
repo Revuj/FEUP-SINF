@@ -11,6 +11,8 @@ import {
   fetchAccountsPayable,
 } from '../../actions/financial';
 
+import Layout from '../Layout'
+
 const Overview = () => {
   const [accountsReceivable, setAccountsReceivable] = useState(null);
   const [accountsPayable, setAccountsPayable] = useState(null);
@@ -27,117 +29,119 @@ const Overview = () => {
 
   const [year, setYear] = useState('2020');
   return (
-    <div>
-      <div className="top-bar">
-        <h1 className="title">Overview</h1>
-        <DropdownButton id="dropdown-basic-button" title={year}>
-          <Dropdown.Item href="#/action-1">2020</Dropdown.Item>
-          <Dropdown.Item href="#/action-2">2019</Dropdown.Item>
-          <Dropdown.Item href="#/action-3">2018</Dropdown.Item>
-        </DropdownButton>
-      </div>
+    <Layout>
+      <div>
+        <div className="top-bar">
+          <h1 className="title">Overview</h1>
+          <DropdownButton id="dropdown-basic-button" title={year}>
+            <Dropdown.Item href="#/action-1">2020</Dropdown.Item>
+            <Dropdown.Item href="#/action-2">2019</Dropdown.Item>
+            <Dropdown.Item href="#/action-3">2018</Dropdown.Item>
+          </DropdownButton>
+        </div>
 
-      <div className="main-content">
-        <section className="top-cards">
-          <GenericCard
-            title="GPM"
-            description="Gross Profit Margin"
-            amount="70000"
-            formatter={formatMoney}
-            unit="€"
-            styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
-            }}
-          />
-          <GenericCard
-            title="Net Sales"
-            description="Total value in sales"
-            amount="6100000"
-            formatter={formatMoney}
-            unit="€"
-            styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
-            }}
-          />
-          <GenericCard
-            title="Net Costs"
-            description="Total value in costs"
-            amount="50500"
-            formatter={formatMoney}
-            unit="€"
-            styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
-            }}
-          />
-          <GenericCard
-            title="Accounts Receivable"
-            description="Amount of money owed by customers"
-            amount={accountsReceivable}
-            formatter={formatMoney}
-            unit="€"
-            styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
-            }}
-          />
-          <GenericCard
-            title="Accounts Payable"
-            description="Amount of money owed to suppliers"
-            amount={accountsPayable}
-            formatter={formatMoney}
-            unit="€"
-            styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
-            }}
-          />
-          <GenericCard
-            title="Inventory value"
-            description="Current total stock"
-            amount="300000"
-            formatter={formatMoney}
-            unit="€"
-            styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
-            }}
-            styleCard={{
-              backgroundColor: 'white',
-            }}
-          />
-          <GenericCard
-            title="Sales Backlog"
-            description="Total value in backlog"
-            amount="300000"
-            formatter={formatMoney}
-            unit="€"
-            styleTitle={{
-              borderBottom: '1px solid black',
-              backgroundColor: '#37d5d6',
-              color: 'white',
-            }}
-            styleCard={{
-              backgroundColor: 'white',
-            }}
-          />
-        </section>
+        <div className="main-content">
+          <section className="top-cards">
+            <GenericCard
+              title="GPM"
+              description="Gross Profit Margin"
+              amount="70000"
+              formatter={formatMoney}
+              unit="€"
+              styleTitle={{
+                borderBottom: '1px solid black',
+                backgroundColor: '#37d5d6',
+                color: 'white',
+              }}
+            />
+            <GenericCard
+              title="Net Sales"
+              description="Total value in sales"
+              amount="6100000"
+              formatter={formatMoney}
+              unit="€"
+              styleTitle={{
+                borderBottom: '1px solid black',
+                backgroundColor: '#37d5d6',
+                color: 'white',
+              }}
+            />
+            <GenericCard
+              title="Net Costs"
+              description="Total value in costs"
+              amount="50500"
+              formatter={formatMoney}
+              unit="€"
+              styleTitle={{
+                borderBottom: '1px solid black',
+                backgroundColor: '#37d5d6',
+                color: 'white',
+              }}
+            />
+            <GenericCard
+              title="Accounts Receivable"
+              description="Amount of money owed by customers"
+              amount={accountsReceivable}
+              formatter={formatMoney}
+              unit="€"
+              styleTitle={{
+                borderBottom: '1px solid black',
+                backgroundColor: '#37d5d6',
+                color: 'white',
+              }}
+            />
+            <GenericCard
+              title="Accounts Payable"
+              description="Amount of money owed to suppliers"
+              amount={accountsPayable}
+              formatter={formatMoney}
+              unit="€"
+              styleTitle={{
+                borderBottom: '1px solid black',
+                backgroundColor: '#37d5d6',
+                color: 'white',
+              }}
+            />
+            <GenericCard
+              title="Inventory value"
+              description="Current total stock"
+              amount="300000"
+              formatter={formatMoney}
+              unit="€"
+              styleTitle={{
+                borderBottom: '1px solid black',
+                backgroundColor: '#37d5d6',
+                color: 'white',
+              }}
+              styleCard={{
+                backgroundColor: 'white',
+              }}
+            />
+            <GenericCard
+              title="Sales Backlog"
+              description="Total value in backlog"
+              amount="300000"
+              formatter={formatMoney}
+              unit="€"
+              styleTitle={{
+                borderBottom: '1px solid black',
+                backgroundColor: '#37d5d6',
+                color: 'white',
+              }}
+              styleCard={{
+                backgroundColor: 'white',
+              }}
+            />
+          </section>
 
-        <section className="row-50-50">
-          <span>
-            <RevenueVsCost height="115" />
-          </span>
-        </section>
+          <section className="row-50-50">
+            <span>
+              <RevenueVsCost height="115" />
+            </span>
+          </section>
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

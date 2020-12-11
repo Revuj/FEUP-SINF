@@ -10,6 +10,8 @@ import DropdownButton from "react-bootstrap/DropdownButton";
 import { fetchAccountsPayable } from "../../actions/financial";
 import { fetchDebt } from "../../actions/purchases";
 
+import Layout from '../Layout'
+
 const Procurement = ({ title, setPage }) => {
   const [year, setYear] = useState("2020");
   const [accountsPayable, setAccountsPayable] = useState(null);
@@ -48,7 +50,7 @@ const Procurement = ({ title, setPage }) => {
   }, [year]);
 
   return (
-    <div>
+    <Layout>
       <div className="top-bar">
         <h1 className="title">Procurement</h1>
         <DropdownButton id="dropdown-basic-button" title={year}>
@@ -152,7 +154,7 @@ const Procurement = ({ title, setPage }) => {
           </span>
         </section>
       </div>
-    </div>
+    </Layout>
   );
 };
 

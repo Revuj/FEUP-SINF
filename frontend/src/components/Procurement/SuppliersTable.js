@@ -1,13 +1,14 @@
-import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
-import useFullPageLoader from "../../hooks/FullPageLoader";
-import PaginationComponent from "../Pagination";
-import Search from "../Search";
-import TableHeader from "../TableHeader";
-import Supplier from "../Supplier/Supplier";
-import { css } from "@emotion/core";
-import PuffLoader from "react-spinners/PuffLoader";
-import "../../styles/Table.css";
+import React, { useEffect, useState, useMemo } from 'react';
+import axios from 'axios';
+import useFullPageLoader from '../../hooks/FullPageLoader';
+import PaginationComponent from '../Pagination';
+import Search from '../Search';
+import TableHeader from '../TableHeader';
+import Supplier from '../Supplier/Supplier';
+import { css } from '@emotion/core';
+import PuffLoader from 'react-spinners/PuffLoader';
+import '../../styles/Table.css';
+import { useHistory } from 'react-router-dom';
 import { formatMoney } from "../../helper/CurrencyFormater";
 
 const SuppliersTable = ({
@@ -32,6 +33,8 @@ const SuppliersTable = ({
     { name: "Units Purchased", field: "units", sortable: true },
     { name: "Value Purchased", field: "value", sortable: true },
   ];
+
+  const history = useHistory();
 
   useEffect(() => {
     axios
@@ -107,7 +110,7 @@ const SuppliersTable = ({
                   scope="row"
                   className="table-link"
                   onClick={() => {
-                    setPage(<Supplier id={supplier.id} />);
+                    history.push('/supplier/'+supplier.id);
                   }}
                 >
                   {supplier.id}

@@ -12,7 +12,7 @@ function Navbar() {
           <Link to="/login">Login</Link>
         </li>
         <li>
-          <Link to="/dashboard">Dashboard</Link>
+          <Link to="/overview">Overview</Link>
         </li>
       </ul>
     </nav>

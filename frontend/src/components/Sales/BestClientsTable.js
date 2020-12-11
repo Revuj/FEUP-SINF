@@ -1,13 +1,14 @@
-import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
-import PaginationComponent from "../Pagination";
-import Search from "../Search";
-import TableHeader from "../TableHeader";
-import Customer from "../Customer/Customer";
-import { fetchBestClients } from "../../actions/clients";
-import { css } from "@emotion/core";
-import PuffLoader from "react-spinners/PuffLoader";
-import "../../styles/Table.css";
+import React, { useEffect, useState, useMemo } from 'react';
+import axios from 'axios';
+import PaginationComponent from '../Pagination';
+import Search from '../Search';
+import TableHeader from '../TableHeader';
+import Customer from '../Customer/Customer';
+import { fetchBestClients } from '../../actions/clients';
+import { css } from '@emotion/core';
+import PuffLoader from 'react-spinners/PuffLoader';
+import '../../styles/Table.css';
+import { useHistory } from 'react-router-dom';
 import { formatMoney } from "../../helper/CurrencyFormater";
 
 const BestClientsTable = ({
@@ -34,6 +35,8 @@ const BestClientsTable = ({
 
   /* this is going to be used in the feature when doing the api call */
   const [clients, setClients] = useState([]);
+
+  const history = useHistory();
   /* insert the information fetched in the api */
   useEffect(() => {
     axios
@@ -108,7 +111,7 @@ const BestClientsTable = ({
                   className="table-link"
                   scope="row"
                   onClick={() => {
-                    setPage(<Customer id={client.id} />);
+                    history.push("/customer/"+client.id);
                   }}
                 >
                   {client.id}

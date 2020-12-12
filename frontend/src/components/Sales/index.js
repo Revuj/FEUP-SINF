@@ -22,6 +22,8 @@ const Sales = ({ setPage }) => {
   const [netSales, setNetSales] = useState(null);
 
   useEffect(() => {
+    setNetSales(null);
+    setGpm(null);
     const fetchData = async () => {
       const { data } = await fetchCogs();
       const sales = await fetchNetSales(year);
@@ -29,14 +31,14 @@ const Sales = ({ setPage }) => {
       setNetSales(sales.data);
       setBacklog(backlogValue.data);
       setGpm(
-        netSales === null
+        !sales.data
           ? null
-          : (netSales - (data.cogs.totalDebit - data.cogs.totalCredit)) /
-              netSales
+          : (sales.data - (data.cogs.totalDebit - data.cogs.totalCredit)) /
+              sales.data
       );
     };
     fetchData();
-  }, [netSales]);
+  }, [year]);
 
   return (
     <Layout>

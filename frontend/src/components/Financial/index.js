@@ -4,7 +4,6 @@ import GenericCard from '../GenericCard';
 import BalanceSheet from './BalanceSheet';
 import { formatMoney } from '../../helper/CurrencyFormater';
 import '../../styles/Finantial.css';
-import { YearPicker } from '../YearPicker';
 import {
   fetchProfitLoss,
   fetchBalanceSheet,
@@ -16,7 +15,6 @@ import ProfitLossStatement from './ProfitLossStatement';
 import Layout from '../Layout';
 
 const Index = () => {
-  const [year, setYear] = useState('2020');
   const [ebit, setEbit] = useState(null);
   const [ebitda, setEbitda] = useState(null);
   const [accountsReceivable, setAccountsReceivable] = useState(null);
@@ -61,7 +59,6 @@ const Index = () => {
       <div>
         <div className="top-bar">
           <h1 className="title">Financial</h1>
-          <YearPicker year={year} setYear={setYear} />
         </div>
 
         <div className="main-content">

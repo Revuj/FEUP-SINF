@@ -37,6 +37,7 @@ const SuppliersTable = ({
   const history = useHistory();
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`/api/suppliers/${year}`)
       .then((response) => {
@@ -104,32 +105,35 @@ const SuppliersTable = ({
             onSorting={(field, order) => setSorting({ field, order })}
           />
           <tbody>
-            {suppliersData.map((supplier) => (
-              <tr key={supplier.id}>
-                <th
-                  scope="row"
-                  className="table-link"
-                  onClick={() => {
-                    history.push('/supplier/' + supplier.id);
-                  }}
-                >
-                  {supplier.id}
-                </th>
-                <td>{supplier.name}</td>
-                <td>{supplier.units}</td>
-                <td>{formatMoney(supplier.value)}</td>
-              </tr>
-            ))}
+            {!loading &&
+              suppliersData.map((supplier) => (
+                <tr key={supplier.id}>
+                  <th
+                    scope="row"
+                    className="table-link"
+                    onClick={() => {
+                      history.push('/supplier/' + supplier.id);
+                    }}
+                  >
+                    {supplier.id}
+                  </th>
+                  <td>{supplier.name}</td>
+                  <td>{supplier.units}</td>
+                  <td>{formatMoney(supplier.value)}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
 
-        <PaginationComponent
-          color={themeColor}
-          total={totalItems}
-          itemsPerPage={ITEMS_PER_PAGE}
-          currentPage={currentPage}
-          onPageChange={(page) => setCurrentPage(page)}
-        />
+        {!loading && (
+          <PaginationComponent
+            color={themeColor}
+            total={totalItems}
+            itemsPerPage={ITEMS_PER_PAGE}
+            currentPage={currentPage}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
+        )}
 
         <div
           className="table-loading"

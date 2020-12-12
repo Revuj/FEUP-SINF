@@ -39,6 +39,7 @@ const BestClientsTable = ({
   const history = useHistory();
   /* insert the information fetched in the api */
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`/api/customers/${year}`)
       .then((response) => {
@@ -105,32 +106,35 @@ const BestClientsTable = ({
             onSorting={(field, order) => setSorting({ field, order })}
           />
           <tbody>
-            {clientsData.map((client) => (
-              <tr key={client.id}>
-                <th
-                  className="table-link"
-                  scope="row"
-                  onClick={() => {
-                    history.push('/customer/' + client.id);
-                  }}
-                >
-                  {client.id}
-                </th>
-                <td>{client.name}</td>
-                <td>{client.units}</td>
-                <td>{formatMoney(client.value)}</td>
-              </tr>
-            ))}
+            {!loading &&
+              clientsData.map((client) => (
+                <tr key={client.id}>
+                  <th
+                    className="table-link"
+                    scope="row"
+                    onClick={() => {
+                      history.push('/customer/' + client.id);
+                    }}
+                  >
+                    {client.id}
+                  </th>
+                  <td>{client.name}</td>
+                  <td>{client.units}</td>
+                  <td>{formatMoney(client.value)}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
 
-        <PaginationComponent
-          color={themeColor}
-          total={totalItems}
-          itemsPerPage={ITEMS_PER_PAGE}
-          currentPage={currentPage}
-          onPageChange={(page) => setCurrentPage(page)}
-        />
+        {!loading && (
+          <PaginationComponent
+            color={themeColor}
+            total={totalItems}
+            itemsPerPage={ITEMS_PER_PAGE}
+            currentPage={currentPage}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
+        )}
         <div
           className="table-loading"
           style={loading ? { height: '250px' } : {}}

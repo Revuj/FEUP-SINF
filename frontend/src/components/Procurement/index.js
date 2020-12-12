@@ -16,7 +16,6 @@ const Procurement = ({ title, setPage }) => {
   const [accountsPayable, setAccountsPayable] = useState(null);
   const [purchasesBacklog, setPurchasesBacklog] = useState(null);
   const [totalOfPurchases, setTotalOfPurchases] = useState(null);
-  const [delayInReceivment, setDelayInReceivment] = useState(null);
   const [debt, setDebt] = useState(null);
 
   useEffect(() => {
@@ -27,6 +26,7 @@ const Procurement = ({ title, setPage }) => {
       setDebt(debtSuplliers.debt);
     };
 
+    setTotalOfPurchases(null);
     axios
       .get(`/api/purchases/${year}`)
       .then((response) => {

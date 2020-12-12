@@ -6,13 +6,11 @@ import StockByWarehouseTable from './StockByWarehouseTable';
 import { formatMoney } from '../../helper/CurrencyFormater';
 import '../../styles/Inventory.css';
 import '../../styles/GenericChart.css';
-import { YearPicker } from '../YearPicker';
 import { fetchInventoryTurnover } from '../../actions/stock';
 
 import Layout from '../Layout';
 
 const Index = ({ setPage }) => {
-  const [year, setYear] = useState('2020');
   const [stock, setStock] = useState(null);
   const [inventoryTurnover, setInventoryTurnover] = useState(null);
   const [avgInventoryPeriod, setAvgInventoryPeriod] = useState(null);
@@ -41,7 +39,6 @@ const Index = ({ setPage }) => {
       <div>
         <div className="top-bar">
           <h1 className="title">Inventory</h1>
-          <YearPicker year={year} setYear={setYear} />
         </div>
         <div className="main-content">
           <section className="top-cards">

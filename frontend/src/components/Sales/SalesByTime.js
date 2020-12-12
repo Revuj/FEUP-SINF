@@ -9,6 +9,7 @@ function SalesByTime({ year }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`/api/sales/${year}`)
       .then((response) => {
@@ -79,7 +80,9 @@ function SalesByTime({ year }) {
           className="loader"
         />
       </div>
-      {sales && <Line height={115} data={sales} options={options} />}
+      {!loading && sales && (
+        <Line height={115} data={sales} options={options} />
+      )}
     </div>
   );
 }

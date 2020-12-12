@@ -9,6 +9,7 @@ function PurchasesByTime({ year }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`/api/purchases/${year}`)
       .then((response) => {
@@ -79,7 +80,9 @@ function PurchasesByTime({ year }) {
           className="loader"
         />
       </div>
-      {purchases && <Line height={148} data={purchases} options={options} />}
+      {!loading && purchases && (
+        <Line height={148} data={purchases} options={options} />
+      )}
     </div>
   );
 }

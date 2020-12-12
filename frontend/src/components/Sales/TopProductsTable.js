@@ -36,6 +36,7 @@ const TopProductsTable = ({
   const history = useHistory();
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`/api/sales/products/${year}`)
       .then((response) => {
@@ -46,7 +47,7 @@ const TopProductsTable = ({
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [year]);
 
   /*to able to sort the data we are going to retrieve */
   const clientsData = useMemo(() => {
@@ -103,32 +104,35 @@ const TopProductsTable = ({
             onSorting={(field, order) => setSorting({ field, order })}
           />
           <tbody>
-            {clientsData.map((product) => (
-              <tr key={product.id}>
-                <th
-                  className="table-link"
-                  scope="row"
-                  onClick={() => {
-                    history.push('/product/' + product.id);
-                  }}
-                >
-                  {product.id}
-                </th>
-                <td>{product.name}</td>
-                <td>{product.quantity}</td>
-                <td>{formatMoney(product.value)}</td>
-              </tr>
-            ))}
+            {!loading &&
+              clientsData.map((product) => (
+                <tr key={product.id}>
+                  <th
+                    className="table-link"
+                    scope="row"
+                    onClick={() => {
+                      history.push('/product/' + product.id);
+                    }}
+                  >
+                    {product.id}
+                  </th>
+                  <td>{product.name}</td>
+                  <td>{product.quantity}</td>
+                  <td>{formatMoney(product.value)}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
 
-        <PaginationComponent
-          color={themeColor}
-          total={totalItems}
-          itemsPerPage={ITEMS_PER_PAGE}
-          currentPage={currentPage}
-          onPageChange={(page) => setCurrentPage(page)}
-        />
+        {!loading && (
+          <PaginationComponent
+            color={themeColor}
+            total={totalItems}
+            itemsPerPage={ITEMS_PER_PAGE}
+            currentPage={currentPage}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
+        )}
         <div
           className="table-loading"
           style={loading ? { height: '250px' } : {}}

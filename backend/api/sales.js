@@ -54,11 +54,22 @@ const getNetSales = (receipts, year) => {
   return netSales;
 };
 
-const processOrders = (orders) => {
+const processSalesBacklog = (orders, invoices) => {
   let salesBacklog = {};
   let counter = 0;
   orders
-    .filter((order) => moment(order.documentDate).isAfter(moment())) //mudar no futuro
+    .filter((order) => {
+        for (const invoice of invoices){
+          for (const docLine of invoice.documentLines){
+            if (order.naturalKey === docLine.sourceDoc
+              // && docLine.documentLineStatus === 2   // E para usar so os invoices completed?
+              ){
+              return false;
+            }
+          }
+        }
+        return true;
+    })
     .forEach(
       ({
         buyerCustomerPartyName,
@@ -85,10 +96,21 @@ const processOrders = (orders) => {
   return Object.keys(salesBacklog).map((order) => salesBacklog[order]);
 };
 
-const getSalesBacklog = (orders) => {
+const getSalesBacklog = (orders, invoices) => {
   let salesBacklog = 0;
   orders
-    .filter((order) => moment(order.documentDate).isAfter(moment())) //mudar no futuro
+    .filter((order) => {
+      for (const invoice of invoices){
+        for (const docLine of invoice.documentLines){
+          if (order.naturalKey === docLine.sourceDoc
+            // && docLine.documentLineStatus === 2   // E para usar so os invoices completed?
+            ){
+            return false;
+          }
+        }
+      }
+      return true;
+    }) //mudar no futuro
     .forEach(({ payableAmount }) => {
       salesBacklog += payableAmount.amount;
     });
@@ -142,27 +164,43 @@ module.exports = (server, db) => {
 
   // backlog table
   server.get('/api/sales/backlogProducts', (req, res) => {
-    const options = {
+    const options_sales = {
       method: 'GET',
       url: `${global.basePrimaveraUrl}/sales/orders`,
     };
 
-    return global.request(options, function (error, response, body) {
-      if (error) res.json(error);
-      res.json(processOrders(JSON.parse(body)));
+    const options_invoices = {
+      method: 'GET',
+      url: `${global.basePrimaveraUrl}/billing/invoices`,
+    };
+
+    return global.request(options_sales, function (errorSales, response, bodySales) {
+      if (errorSales) res.json(errorSales);
+      return global.request(options_invoices, function (errorInvoices, response, bodyInvoices) {
+        if (errorInvoices) res.json(errorInvoices);
+        res.json(processSalesBacklog(JSON.parse(bodySales), JSON.parse(bodyInvoices)));
+      });
     });
   });
 
   // backlog value
   server.get('/api/sales/backlog', (req, res) => {
-    const options = {
+    const options_sales = {
       method: 'GET',
       url: `${global.basePrimaveraUrl}/sales/orders`,
     };
 
-    return global.request(options, function (error, response, body) {
-      if (error) res.json(error);
-      res.json(getSalesBacklog(JSON.parse(body)));
+    const options_invoices = {
+      method: 'GET',
+      url: `${global.basePrimaveraUrl}/billing/invoices`,
+    };
+
+    return global.request(options_sales, function (errorSales, response, bodySales) {
+      if (errorSales) res.json(errorSales);
+      return global.request(options_invoices, function (errorInvoices, response, bodyInvoices) {
+        if (errorInvoices) res.json(errorInvoices);
+        res.json(getSalesBacklog(JSON.parse(bodySales), JSON.parse(bodyInvoices)));
+      });
     });
   });
 

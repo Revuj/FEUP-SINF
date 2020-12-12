@@ -1,4 +1,3 @@
-const processSuppliers = require("./processSuppliers");
 const moment = require("moment");
 
 const calculateStockNumber = (productInfo) => {
@@ -40,7 +39,9 @@ const processUnits = (invoices, id, year, party) => {
 
   if (invoices) {
     const validInvoices = invoices.filter(
-      (invoice) => moment(invoice.documentDate).year() == year
+      (invoice) =>
+        moment(invoice.documentDate).year() == year &&
+        invoice.isDeleted == false
     );
 
     validInvoices.map((invoice) => {
@@ -48,7 +49,10 @@ const processUnits = (invoices, id, year, party) => {
       invoice.documentLines.forEach((line) => {
         if (line[party] == id) {
           units[month] += line.quantity;
-          value += line.quantity * line.unitPrice.amount;
+          value +=
+            party == "purchasesItem"
+              ? line.lineExtensionAmount.amount
+              : line.quantity * line.unitPrice.amount;
         }
       });
     });
@@ -70,11 +74,51 @@ const processCustomers = (invoices, id, year) => {
               customers[invoice.buyerCustomerParty].units += Number(
                 lineParsed.quantity
               );
+              customers[invoice.buyerCustomerParty].value += Number(
+                lineParsed.quantity * lineParsed.unitPrice.amount
+              );
             } else {
               customers[invoice.buyerCustomerParty] = {
                 id: invoice.buyerCustomerParty,
                 name: invoice.buyerCustomerPartyName,
-                value: Number(invoice.taxExclusiveAmount.amount),
+                value:
+                  Number(lineParsed.quantity) *
+                  Number(lineParsed.unitPrice.amount),
+                units: Number(lineParsed.quantity),
+              };
+            }
+          });
+      });
+  }
+
+  return Object.keys(customers).map((customer) => customers[customer]);
+};
+
+const processSuppliers = (invoices, id, year) => {
+  const customers = {};
+  if (invoices) {
+    invoices
+      .filter(
+        (invoice) =>
+          moment(invoice.documentDate).year() == year &&
+          invoice.isDeleted == false
+      )
+      .forEach((invoice) => {
+        invoice.documentLines
+          .filter((line) => (id ? line.purchasesItem === id : true))
+          .forEach((lineParsed) => {
+            if (customers[invoice.sellerSupplierParty]) {
+              customers[invoice.sellerSupplierParty].units += Number(
+                lineParsed.quantity
+              );
+              customers[invoice.sellerSupplierParty].value += Number(
+                lineParsed.lineExtensionAmount.amount
+              );
+            } else {
+              customers[invoice.sellerSupplierParty] = {
+                id: invoice.sellerSupplierParty,
+                name: invoice.sellerSupplierPartyName,
+                value: Number(lineParsed.lineExtensionAmount.amount),
                 units: Number(lineParsed.quantity),
               };
             }
@@ -165,6 +209,8 @@ module.exports = (server, db) => {
       if (error) res.json(error);
       if (!JSON.parse(body).message) {
         res.json({ avg: calculateAvgPrice(JSON.parse(body)) });
+      } else {
+        res.json({ avg: 0 });
       }
     });
   });
@@ -177,7 +223,7 @@ module.exports = (server, db) => {
     };
 
     return global.request(options, function (error, response, body) {
-      if (error) res.json(error);
+      if (error) res.json({ avg: 0 });
       if (!JSON.parse(body).message) {
         res.json({ avg: calculateAvgCost(JSON.parse(body), id) });
       }
@@ -193,7 +239,7 @@ module.exports = (server, db) => {
     console.log(year);
     return global.request(options, function (error, response, body) {
       if (error) res.json(error);
-      res.json(processSuppliers(id, JSON.parse(body), year));
+      res.json(processSuppliers(JSON.parse(body), id, year));
     });
   });
 

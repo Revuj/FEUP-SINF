@@ -61,6 +61,44 @@ const purchasesByMonth = (invoices, supplier, year) => {
   return { message: "There was an error processing the orders" };
 };
 
+const getPurchasesBacklog = (orders, invoices, id) => {
+  let purchasesBacklog = {};
+  let counter = 0;
+  orders
+    .filter((order) => order.sellerSupplierParty === id)
+    .filter((order) => {
+      for (const invoice of invoices) {
+        let sourceDoc = false;
+        for (const docLine of invoice.documentLines) {
+          if (order.naturalKey === docLine.sourceDoc) {
+            sourceDoc = true;
+            break;
+          }
+        }
+
+        if (invoice.documentStatus === 2 && sourceDoc) {
+          return false;
+        }
+      }
+      return true;
+    })
+    .forEach(({ naturalKey, documentDate, documentLines, payableAmount }) => {
+      purchasesBacklog[counter] = {
+        reference: naturalKey,
+        date: documentDate.substr(0, 10),
+        units: documentLines.reduce(
+          (acc, current) => acc + current.quantity,
+          0
+        ),
+        value: payableAmount.amount,
+      };
+
+      counter++;
+    });
+
+  return Object.keys(purchasesBacklog).map((order) => purchasesBacklog[order]);
+};
+
 module.exports = (server) => {
   server.get("/api/suppliers/:year", (req, res) => {
     const { year } = req.params;
@@ -133,55 +171,35 @@ module.exports = (server) => {
 
   server.get("/api/suppliers/:id/pending-purchases", (req, res) => {
     const { id } = req.params;
-    let options = {
+
+    const options_purchases = {
       method: "GET",
-      url: `${global.basePrimaveraUrl}/goodsReceipt/processOrders/1/1000?company=${process.env.COMPANY_KEY}`,
+      url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
-    return global.request(options, function (error, response, body) {
-      if (error) res.json(error);
+    const options_invoices = {
+      method: "GET",
+      url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
+    };
 
-      if (!JSON.parse(body).message) {
-        const keys = JSON.parse(body)
-          .filter(({ party }) => party === id)
-          .map(({ sourceDocKey }) => sourceDocKey);
-
-        options = {
-          method: "GET",
-          url: `${global.basePrimaveraUrl}/purchases/orders`,
-        };
-
-        global.request(options, (e, r, b) => {
-          if (e) res.json(e);
-
-          if (!JSON.parse(b).message) {
-            let pendingPurchases = JSON.parse(b);
-
-            pendingPurchases = pendingPurchases
-              .filter(({ naturalKey }) =>
-                keys.find((key) => naturalKey === key)
+    return global.request(
+      options_purchases,
+      function (errorSales, response, bodySales) {
+        if (errorSales) res.json(errorSales);
+        return global.request(
+          options_invoices,
+          function (errorInvoices, response, bodyInvoices) {
+            if (errorInvoices) res.json(errorInvoices);
+            res.json(
+              getPurchasesBacklog(
+                JSON.parse(bodySales),
+                JSON.parse(bodyInvoices),
+                id
               )
-              .map(
-                ({
-                  naturalKey,
-                  documentDate,
-                  documentLines,
-                  taxExclusiveAmount,
-                }) => ({
-                  reference: naturalKey,
-                  date: documentDate.substr(0, 10),
-                  units: documentLines.reduce(
-                    (acc, current) => acc + current.quantity,
-                    0
-                  ),
-                  value: taxExclusiveAmount.amount,
-                })
-              );
-
-            res.json(pendingPurchases);
+            );
           }
-        });
+        );
       }
-    });
+    );
   });
 };

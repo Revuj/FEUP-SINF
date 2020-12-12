@@ -14,25 +14,6 @@ const processCostumerPurchases = (invoices, costumerId) => {
   } else return {};
 };
 
-/** maybe por mais algum atributo */
-const processTopPurchases = (invoices, costumerId) => {
-  const purchases = [];
-  if (Array.isArray(invoices)) {
-    return invoices
-      .filter(({ accountingParty }) => accountingParty === costumerId)
-      .map(({ currency, documentDate, grossValue }) => {
-        return { currency, date: documentDate, amount: grossValue.amount };
-      })
-      .sort((a, b) => a.grossValue.amount - b.grossValue.amount);
-  } else if (invoices.accountingParty === CustomerId) {
-    purchases.push({
-      receiptId: invoices.receiptId,
-      date: invoices.documentDate,
-      amount: invoices.grossValue.amount,
-    });
-  } else return purchases;
-};
-
 const totalSales = (invoices, customer, year) => {
   if (invoices) {
     const validOrders = invoices.filter(
@@ -83,6 +64,43 @@ const salesByMonth = (invoices, customer, year) => {
   }
 
   return { message: "There was an error processing the orders" };
+};
+
+const processSalesBacklog = (orders, invoices, id) => {
+  let salesBacklog = {};
+  let counter = 0;
+  orders
+    .filter((order) => {
+      for (const invoice of invoices) {
+        for (const docLine of invoice.documentLines) {
+          if (
+            (order.naturalKey === docLine.sourceDoc &&
+              docLine.documentLineStatus === 2) ||
+            order.buyerCustomerParty != id
+          ) {
+            return false;
+          }
+        }
+      }
+      return true;
+    })
+    .forEach(
+      ({ naturalKey, documentDate, documentLines, taxExclusiveAmount }) => {
+        salesBacklog[counter] = {
+          reference: naturalKey,
+          date: documentDate.substr(0, 10),
+          units: documentLines.reduce(
+            (acc, current) => acc + current.quantity,
+            0
+          ),
+          value: taxExclusiveAmount.amount,
+        };
+
+        counter++;
+      }
+    );
+
+  return Object.keys(salesBacklog).map((order) => salesBacklog[order]);
 };
 
 module.exports = (server) => {
@@ -167,55 +185,34 @@ module.exports = (server) => {
 
   server.get("/api/customer/:id/pending-sales", (req, res) => {
     const { id } = req.params;
-    let options = {
+    const options_sales = {
       method: "GET",
-      url: `${global.basePrimaveraUrl}/shipping/processOrders/1/1000?company=${process.env.COMPANY_KEY}`,
+      url: `${global.basePrimaveraUrl}/sales/orders`,
     };
 
-    return global.request(options, function (error, response, body) {
-      if (error) res.json(error);
+    const options_invoices = {
+      method: "GET",
+      url: `${global.basePrimaveraUrl}/billing/invoices`,
+    };
 
-      if (!JSON.parse(body).message) {
-        const keys = JSON.parse(body)
-          .filter(({ party }) => party === id)
-          .map(({ sourceDocKey }) => sourceDocKey);
-
-        options = {
-          method: "GET",
-          url: `${global.basePrimaveraUrl}/sales/orders`,
-        };
-
-        global.request(options, (e, r, b) => {
-          if (e) res.json(e);
-
-          if (!JSON.parse(b).message) {
-            let pendingSales = JSON.parse(b);
-
-            pendingSales = pendingSales
-              .filter(({ naturalKey }) =>
-                keys.find((key) => naturalKey === key)
+    return global.request(
+      options_sales,
+      function (errorSales, response, bodySales) {
+        if (errorSales) res.json(errorSales);
+        return global.request(
+          options_invoices,
+          function (errorInvoices, response, bodyInvoices) {
+            if (errorInvoices) res.json(errorInvoices);
+            res.json(
+              processSalesBacklog(
+                JSON.parse(bodySales),
+                JSON.parse(bodyInvoices),
+                id
               )
-              .map(
-                ({
-                  naturalKey,
-                  documentDate,
-                  documentLines,
-                  taxExclusiveAmount,
-                }) => ({
-                  reference: naturalKey,
-                  date: documentDate.substr(0, 10),
-                  units: documentLines.reduce(
-                    (acc, current) => acc + current.quantity,
-                    0
-                  ),
-                  value: taxExclusiveAmount.amount,
-                })
-              );
-
-            res.json(pendingSales);
+            );
           }
-        });
+        );
       }
-    });
+    );
   });
 };

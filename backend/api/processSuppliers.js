@@ -17,7 +17,7 @@ module.exports = (product, orders, year) => {
               suppliers[order.sellerSupplierParty] = {
                 id: order.sellerSupplierParty,
                 name: order.sellerSupplierPartyName,
-                value: Number(order.taxExclusiveAmount.amount),
+                value: Number(order.payableAmount.amount),
                 units: Number(lineParsed.quantity),
               };
             }

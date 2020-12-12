@@ -139,7 +139,7 @@ const processDebtCustomers = (invoices) => {
     .reduce((acc, invoice) => acc + invoice.taxExclusiveAmount.amount, 0);
 };
 
-module.exports = (server, db) => {
+module.exports = (server, db, client) => {
   // monthly sales by year
   server.get("/api/sales/:year([0-9]+)", (req, res) => {
     const { year } = req.params;
@@ -174,10 +174,30 @@ module.exports = (server, db) => {
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
-    return global.request(options, function (error, response, body) {
-      if (error) res.json(error);
-      res.json(getNetSales(JSON.parse(body), year));
+    const key = 'net_sales' + year;
+    try {
+       client.get(key, async (err, payload) => {
+        // return res.status(200).json(JSON.parse(payload));
+
+        if (payload != null) {
+          console.log("Sent " + payload);
+          return res.json(
+           JSON.parse(payload)
+          )
+          
+        }
+        return global.request(options, function (error, response, body) {
+          if (error) res.json(error);
+          const netSales=getNetSales(JSON.parse(body), year);
+          client.setex(key, 1440, JSON.stringify(netSales));
+          res.json(netSales);
+        });
+          
     });
+  } catch(error) {
+    console.log(error);
+  }
+
   });
 
   // sales products

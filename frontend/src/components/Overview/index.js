@@ -35,14 +35,14 @@ const Overview = () => {
     setGpm(null);
     setTotalOfPurchases(null);
     const fetchData = async () => {
-      const { data } = await fetchCogs();
       const sales = await fetchNetSales(year);
+      setNetSales(sales.data);
+      const { data } = await fetchCogs();
       const backlogValue = await fetchBacklogValue();
       const acReceivable = (await fetchAccountsReceivable()).data;
       const acPayable = (await fetchAccountsPayable()).data;
       setAccountsReceivable(acReceivable);
       setAccountsPayable(acPayable);
-      setNetSales(sales.data);
       setSalesBacklog(backlogValue.data);
       setGpm(
         !sales.data

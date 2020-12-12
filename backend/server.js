@@ -9,6 +9,13 @@ const _router = router("db.json");
 const middlewares = defaults({ noCors: false });
 const db = _router.db.__wrapped__;
 
+const redis = require('redis');
+const client = redis.createClient(6379);
+client.on("error", (error) => {
+  console.error(error);
+ });
+
+
 server.use(cors());
 server.use(middlewares);
 server.use(bodyParser);
@@ -24,7 +31,7 @@ const productAPI = require("./api/product");
 const clientAPI = require("./api/customer");
 
 FinancialController(server, db);
-salesAPI(server, db);
+salesAPI(server, db, client);
 purchasesAPI(server);
 suppliersAPI(server);
 inventoryAPI(server);

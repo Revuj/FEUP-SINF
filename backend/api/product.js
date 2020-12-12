@@ -21,14 +21,16 @@ const calculateAvgCost = (orders, id) => {
   let avgCost = 0;
   let number_orders = 0;
 
-  orders.forEach(({ documentLines }) => {
-    documentLines.forEach((line) => {
-      if (line.purchasesItem === id) {
-        avgCost += line.unitPrice.amount;
-        number_orders++;
-      }
+  orders
+    .filter((order) => order.isDeleted == false)
+    .forEach(({ documentLines }) => {
+      documentLines.forEach((line) => {
+        if (line.purchasesItem === id) {
+          avgCost += line.unitPrice.amount;
+          number_orders++;
+        }
+      });
     });
-  });
 
   return avgCost / number_orders;
 };
@@ -65,7 +67,11 @@ const processCustomers = (invoices, id, year) => {
   const customers = {};
   if (invoices) {
     invoices
-      .filter((invoice) => moment(invoice.documentDate).year() == year)
+      .filter(
+        (invoice) =>
+          moment(invoice.documentDate).year() == year &&
+          invoice.isDeleted == false
+      )
       .forEach((invoice) => {
         invoice.documentLines
           .filter((line) => (id ? line.salesItem === id : true))

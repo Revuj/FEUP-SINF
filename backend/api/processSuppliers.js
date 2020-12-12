@@ -4,7 +4,10 @@ module.exports = (product, orders, year) => {
   const suppliers = {};
   if (orders) {
     orders
-      .filter((order) => moment(order.documentDate).year() == year)
+      .filter(
+        (order) =>
+          moment(order.documentDate).year() == year && order.isDeleted == false
+      )
       .forEach((order) => {
         order.documentLines
           .filter((line) => (product ? line.purchasesItem === product : true))

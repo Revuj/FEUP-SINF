@@ -4,7 +4,10 @@ const processPurchases = (orders, year) => {
   let monthlyCumulativeValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   orders
-    .filter((order) => moment(order.documentDate).year() == year)
+    .filter(
+      (order) =>
+        moment(order.documentDate).year() == year && order.isDeleted == false
+    )
     .forEach(({ documentDate, taxExclusiveAmount }) => {
       const month = moment(documentDate).month();
 
@@ -17,6 +20,7 @@ const processPurchases = (orders, year) => {
 const getPurchasesBacklog = (orders, invoices) => {
   let purchasesBacklog = 0;
   orders
+    .filter((order) => order.isDeleted == false)
     .filter((order) => {
       for (const invoice of invoices) {
         for (const docLine of invoice.documentLines) {
@@ -38,7 +42,7 @@ const getPurchasesBacklog = (orders, invoices) => {
 };
 
 const processDebtToSuppliers = (invoices) => {
-  let temp = invoices;
+  let temp = invoices.filter((invoice) => invoice.isDeleted == false);
   if (!Array.isArray(temp)) temp = [temp];
 
   return temp

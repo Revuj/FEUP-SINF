@@ -14,7 +14,8 @@ const totalPurchases = (invoices, supplier, year) => {
     const validOrders = invoices.filter(
       (invoice) =>
         invoice.sellerSupplierParty === supplier &&
-        moment(invoice.documentDate).year() == year
+        moment(invoice.documentDate).year() == year &&
+        invoice.isDeleted == false
     );
 
     const total = validOrders.reduce(
@@ -45,7 +46,8 @@ const purchasesByMonth = (invoices, supplier, year) => {
     const validOrders = invoices.filter(
       (invoice) =>
         invoice.sellerSupplierParty === supplier &&
-        moment(invoice.documentDate).year() == year
+        moment(invoice.documentDate).year() == year &&
+        invoice.isDeleted == false
     );
 
     validOrders.map((invoice) => {
@@ -65,7 +67,9 @@ const getPurchasesBacklog = (orders, invoices, id) => {
   let purchasesBacklog = {};
   let counter = 0;
   orders
-    .filter((order) => order.sellerSupplierParty === id)
+    .filter(
+      (order) => order.sellerSupplierParty === id && order.isDeleted == false
+    )
     .filter((order) => {
       for (const invoice of invoices) {
         let sourceDoc = false;

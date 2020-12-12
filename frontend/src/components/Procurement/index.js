@@ -24,7 +24,7 @@ const Procurement = ({ title, setPage }) => {
       const acPayable = (await fetchAccountsPayable()).data;
       const debtSuplliers = (await fetchDebt()).data;
       setAccountsPayable(acPayable);
-      setDebt(debtSuplliers.debt);
+      setDebt(debtSuplliers);
     };
 
     setTotalOfPurchases(null);

@@ -4,7 +4,10 @@ const moment = require("moment");
 const processCostumerPurchases = (invoices, costumerId) => {
   if (Array.isArray(invoices)) {
     return invoices
-      .filter(({ accountingParty }) => accountingParty === costumerId)
+      .filter(
+        ({ accountingParty, isDeleted }) =>
+          accountingParty === costumerId && isDeleted == false
+      )
       .reduce(
         (total, currentInvoice) => total + currentInvoice.grossValue.amount,
         0
@@ -19,7 +22,8 @@ const totalSales = (invoices, customer, year) => {
     const validOrders = invoices.filter(
       (invoice) =>
         invoice.buyerCustomerParty === customer &&
-        moment(invoice.documentDate).year() == year
+        moment(invoice.documentDate).year() == year &&
+        invoice.isDeleted == false
     );
 
     const total = validOrders.reduce(
@@ -50,7 +54,8 @@ const salesByMonth = (invoices, customer, year) => {
     const validOrders = invoices.filter(
       (invoice) =>
         invoice.buyerCustomerParty === customer &&
-        moment(invoice.documentDate).year() == year
+        moment(invoice.documentDate).year() == year &&
+        invoice.isDeleted == false
     );
 
     validOrders.map((invoice) => {
@@ -70,6 +75,7 @@ const processSalesBacklog = (orders, invoices, id) => {
   let salesBacklog = {};
   let counter = 0;
   orders
+    .filter((order) => order.isDeleted == false)
     .filter((order) => {
       for (const invoice of invoices) {
         for (const docLine of invoice.documentLines) {

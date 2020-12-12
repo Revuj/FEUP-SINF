@@ -1,11 +1,13 @@
-const moment = require('moment');
+const moment = require("moment");
 
 const processMonthlySales = (invoices, year) => {
   let monthlyCumulativeValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   invoices
     .filter(
-      (invoice) => moment(invoice.documentDate).year() == parseInt(year, 10)
+      (invoice) =>
+        moment(invoice.documentDate).year() == parseInt(year, 10) &&
+        invoice.isDeleted == false
     )
     .forEach(({ documentDate, grossValue }) => {
       const month = moment(documentDate).month();
@@ -19,7 +21,11 @@ const processMonthlySales = (invoices, year) => {
 const processSales = (invoices, year) => {
   let productSales = {};
   invoices
-    .filter((invoice) => moment(invoice.documentDate).year() == year)
+    .filter(
+      (invoice) =>
+        moment(invoice.documentDate).year() == year &&
+        invoice.isDeleted == false
+    )
     .forEach(({ documentLines }) => {
       documentLines.forEach((line) => {
         let salesItem = line.salesItem;
@@ -45,7 +51,11 @@ const processSales = (invoices, year) => {
 
 const getNetSales = (invoices, year) => {
   return invoices
-    .filter((invoice) => moment(invoice.documentDate).year() == year)
+    .filter(
+      (invoice) =>
+        moment(invoice.documentDate).year() == year &&
+        invoice.isDeleted == false
+    )
     .reduce(
       (current, invoice) => current + invoice.taxExclusiveAmount.amount,
       0
@@ -56,6 +66,7 @@ const processSalesBacklog = (orders, invoices) => {
   let salesBacklog = {};
   let counter = 0;
   orders
+    .filter((order) => order.isDeleted == false)
     .filter((order) => {
       for (const invoice of invoices) {
         for (const docLine of invoice.documentLines) {
@@ -79,13 +90,13 @@ const processSalesBacklog = (orders, invoices) => {
         salesBacklog[counter] = {
           date: documentDate.substr(0, 10),
           customer: buyerCustomerPartyName,
-          items: '',
+          items: "",
           value: Number(payableAmount.amount),
         };
 
         documentLines.forEach((item) => {
           salesBacklog[counter].items +=
-            item.quantity + 'x ' + item.description + ';  ';
+            item.quantity + "x " + item.description + ";  ";
         });
 
         counter++;
@@ -98,6 +109,7 @@ const processSalesBacklog = (orders, invoices) => {
 const getSalesBacklog = (orders, invoices) => {
   let salesBacklog = 0;
   orders
+    .filter((order) => order.isDeleted == false)
     .filter((order) => {
       for (const invoice of invoices) {
         for (const docLine of invoice.documentLines) {
@@ -120,10 +132,10 @@ const getSalesBacklog = (orders, invoices) => {
 
 module.exports = (server, db) => {
   // monthly sales by year
-  server.get('/api/sales/:year([0-9]+)', (req, res) => {
+  server.get("/api/sales/:year([0-9]+)", (req, res) => {
     const { year } = req.params;
     const options = {
-      method: 'GET',
+      method: "GET",
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
@@ -134,10 +146,10 @@ module.exports = (server, db) => {
   });
 
   // net sales
-  server.get('/api/sales/net/:year', (req, res) => {
+  server.get("/api/sales/net/:year", (req, res) => {
     const { year } = req.params;
     const options = {
-      method: 'GET',
+      method: "GET",
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
@@ -148,11 +160,11 @@ module.exports = (server, db) => {
   });
 
   // sales products
-  server.get('/api/sales/products/:year([0-9]+)', (req, res) => {
+  server.get("/api/sales/products/:year([0-9]+)", (req, res) => {
     const { year } = req.params;
 
     const options = {
-      method: 'GET',
+      method: "GET",
       url: `${global.basePrimaveraUrl}/billing/invoices `,
     };
 
@@ -163,14 +175,14 @@ module.exports = (server, db) => {
   });
 
   // backlog table
-  server.get('/api/sales/backlogProducts', (req, res) => {
+  server.get("/api/sales/backlogProducts", (req, res) => {
     const options_sales = {
-      method: 'GET',
+      method: "GET",
       url: `${global.basePrimaveraUrl}/sales/orders`,
     };
 
     const options_invoices = {
-      method: 'GET',
+      method: "GET",
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
@@ -195,14 +207,14 @@ module.exports = (server, db) => {
   });
 
   // backlog value
-  server.get('/api/sales/backlog', (req, res) => {
+  server.get("/api/sales/backlog", (req, res) => {
     const options_sales = {
-      method: 'GET',
+      method: "GET",
       url: `${global.basePrimaveraUrl}/sales/orders`,
     };
 
     const options_invoices = {
-      method: 'GET',
+      method: "GET",
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 

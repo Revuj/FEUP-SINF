@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { formatMoney } from '../../helper/CurrencyFormater';
-import axios from 'axios';
-import '../../styles/GenericCard.css';
-import PuffLoader from 'react-spinners/PuffLoader';
-import { css } from '@emotion/core';
-import { fetchUnitsSold } from '../../actions/clients';
+import React, { useState, useEffect } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { formatMoney } from "../../helper/CurrencyFormater";
+import axios from "axios";
+import "../../styles/GenericCard.css";
+import PuffLoader from "react-spinners/PuffLoader";
+import { css } from "@emotion/core";
+import { fetchUnitsSold } from "../../actions/clients";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
   value: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 26,
     color: theme.palette.text.secondary,
   },
 }));
 
 const styleTitle = {
-  borderBottom: '1px solid black',
-  backgroundColor: '#ffbf54',
-  color: 'white',
+  borderBottom: "1px solid black",
+  backgroundColor: "#ffbf54",
+  color: "white",
 };
 
 const spinnerStyle = css`
@@ -37,6 +37,8 @@ const UnitsSold = ({ id, year }) => {
   const [purchase, setPurchase] = useState(null);
 
   useEffect(() => {
+    setPurchase(null);
+    setLoading(true);
     const fetchData = async () => {
       const { data } = await fetchUnitsSold(id, year, false);
       console.log(data);
@@ -63,7 +65,7 @@ const UnitsSold = ({ id, year }) => {
           <PuffLoader
             css={spinnerStyle}
             size={60}
-            color={'#ffbf54'}
+            color={"#ffbf54"}
             loading={loading == true}
             className="loader"
           />
@@ -73,21 +75,6 @@ const UnitsSold = ({ id, year }) => {
         Number and amount of units sold to the customer
       </div>
     </div>
-
-    /*<Paper style={{ padding: "0" }} className={classes.paper}>
-      <h3
-        style={{
-          backgroundColor: "#ffbf54",
-          color: "white",
-          padding: "0.5rem",
-        }}
-      >
-        Total Purchased
-      </h3>
-      <p style={{ padding: "0.5rem" }} className={classes.value}>
-        (what number are suppose to be here?) ({formatMoney(purchase)}€)
-      </p>
-    </Paper>*/
   );
 };
 

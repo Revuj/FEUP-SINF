@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { formatMoney } from '../../helper/CurrencyFormater';
-import { fetchUnitsSold } from '../../actions/product';
-import '../../styles/GenericCard.css';
-import PuffLoader from 'react-spinners/PuffLoader';
-import { css } from '@emotion/core';
+import React, { useState, useEffect } from "react";
+import { formatMoney } from "../../helper/CurrencyFormater";
+import { fetchUnitsSold } from "../../actions/product";
+import "../../styles/GenericCard.css";
+import PuffLoader from "react-spinners/PuffLoader";
+import { css } from "@emotion/core";
 
 const styleTitle = {
-  borderBottom: '1px solid black',
-  backgroundColor: '#ffbf54',
-  color: 'white',
+  borderBottom: "1px solid black",
+  backgroundColor: "#ffbf54",
+  color: "white",
 };
 
 const spinnerStyle = css`
@@ -24,6 +24,8 @@ const UnitsSold = ({ id, year }) => {
   const [unitsSold, setUnitsSold] = useState(null);
 
   useEffect(() => {
+    setUnitsSold(null);
+    setLoading(true);
     const fetchData = async () => {
       const { data } = await fetchUnitsSold(id, year);
       setUnitsSold(data);
@@ -50,7 +52,7 @@ const UnitsSold = ({ id, year }) => {
           <PuffLoader
             css={spinnerStyle}
             size={60}
-            color={'#ffbf54'}
+            color={"#ffbf54"}
             loading={loading == true}
             className="loader"
           />

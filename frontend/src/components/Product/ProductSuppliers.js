@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import axios from 'axios';
-import Search from '../Search';
-import PaginationComponent from '../Pagination';
-import TableHeader from '../TableHeader';
-import { formatMoney } from '../../helper/CurrencyFormater';
-import { css } from '@emotion/core';
-import PuffLoader from 'react-spinners/PuffLoader';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect, useState, useMemo } from "react";
+import axios from "axios";
+import Search from "../Search";
+import PaginationComponent from "../Pagination";
+import TableHeader from "../TableHeader";
+import { formatMoney } from "../../helper/CurrencyFormater";
+import { css } from "@emotion/core";
+import PuffLoader from "react-spinners/PuffLoader";
+import { useHistory } from "react-router-dom";
 
 const fetchSuppliers = async (id, year) => {
   return axios.get(`/api/products/${id}/suppliers/${year}`);
@@ -23,21 +23,23 @@ export default function ProductSuppliers({
   const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [sorting, setSorting] = useState({ field: '', order: '' });
+  const [search, setSearch] = useState("");
+  const [sorting, setSorting] = useState({ field: "", order: "" });
 
   const ITEMS_PER_PAGE = numberItemsPerPage;
   const headers = [
-    { name: 'ID', field: 'id', sortable: false },
-    { name: 'Name', field: 'name', sortable: false },
-    { name: 'Units Purchased', field: 'units', sortable: true },
-    { name: 'Value Purchased', field: 'value', sortable: true },
+    { name: "ID", field: "id", sortable: false },
+    { name: "Name", field: "name", sortable: false },
+    { name: "Units Purchased", field: "units", sortable: true },
+    { name: "Value Purchased", field: "value", sortable: true },
   ];
 
   const history = useHistory();
   const [suppliers, setSuppliers] = useState(null);
 
   useEffect(() => {
+    setSuppliers(null);
+    setLoading(true);
     const fetchData = async () => {
       const { data } = await fetchSuppliers(id, year);
       setSuppliers(data);
@@ -61,7 +63,7 @@ export default function ProductSuppliers({
     setTotalItems(computedSuppliers.length);
 
     if (sorting.field) {
-      const reversed = sorting.order === 'asc' ? 1 : -1;
+      const reversed = sorting.order === "asc" ? 1 : -1;
       computedSuppliers = computedSuppliers.sort(
         (a, b) => reversed * (a[sorting.field] - b[sorting.field])
       );
@@ -109,7 +111,7 @@ export default function ProductSuppliers({
                     scope="row"
                     className="table-link"
                     onClick={() => {
-                      history.push('/supplier/' + supplier.id);
+                      history.push("/supplier/" + supplier.id);
                     }}
                   >
                     {supplier.id}
@@ -131,12 +133,12 @@ export default function ProductSuppliers({
         />
         <div
           className="table-loading"
-          style={loading ? { height: '250px' } : {}}
+          style={loading ? { height: "250px" } : {}}
         >
           <PuffLoader
             css={tableStyle}
             size={60}
-            color={'#ffbf54'}
+            color={"#ffbf54"}
             loading={loading}
             className="loader"
           />

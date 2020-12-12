@@ -59,6 +59,8 @@ function SupplierPurchases({ id, year }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setGraphData(null);
+    setLoading(true);
     const fetchData = async () => {
       const purchased = await fetchUnitsPurchased(id, year, true);
 

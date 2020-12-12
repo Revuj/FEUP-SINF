@@ -141,11 +141,22 @@ const fetchCogs = () => {
 };
 
 const fetchNetSales = (year) => {
-  return axios.get(`api/sales/net/${year}`)
-}
+  return axios.get(`api/sales/net/${year}`);
+};
 
 const fetchBacklogValue = () => {
-  return axios.get(`api/sales/backlog`)
-}
+  return axios.get(`api/sales/backlog`);
+};
 
-export { fetchYearSales, fetchOngoingSales, fetchCogs, fetchNetSales, fetchBacklogValue };
+const fetchDebt = () => {
+  return axios.get(`api/sales/debt-customers`);
+};
+
+export {
+  fetchYearSales,
+  fetchOngoingSales,
+  fetchCogs,
+  fetchNetSales,
+  fetchBacklogValue,
+  fetchDebt,
+};

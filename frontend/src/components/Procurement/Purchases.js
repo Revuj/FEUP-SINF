@@ -14,7 +14,6 @@ function PurchasesByTime({ year }) {
     axios
       .get(`/api/purchases/${year}`)
       .then((response) => {
-        setPurchases(response.data);
         setPurchases({
           labels: [
             "Jan",

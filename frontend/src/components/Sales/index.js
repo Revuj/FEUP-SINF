@@ -1,25 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import GenericCard from '../GenericCard';
-import SalesByTime from './SalesByTime';
-import BestClientsTable from './BestClientsTable';
-import SalesBacklogTable from './SalesBacklogTable';
-import TopProductsTable from './TopProductsTable';
-import { YearPicker } from '../YearPicker';
-import { formatMoney } from '../../helper/CurrencyFormater';
-import '../../styles/Sales.css';
+import React, { useState, useEffect } from "react";
+import GenericCard from "../GenericCard";
+import SalesByTime from "./SalesByTime";
+import BestClientsTable from "./BestClientsTable";
+import SalesBacklogTable from "./SalesBacklogTable";
+import TopProductsTable from "./TopProductsTable";
+import { YearPicker } from "../YearPicker";
+import { formatMoney } from "../../helper/CurrencyFormater";
+import "../../styles/Sales.css";
 import {
   fetchCogs,
   fetchNetSales,
   fetchBacklogValue,
-} from '../../actions/sales';
+  fetchDebt,
+} from "../../actions/sales";
 
-import Layout from '../Layout';
+import Layout from "../Layout";
 
 const Sales = ({ setPage }) => {
-  const [year, setYear] = useState('2020');
+  const [year, setYear] = useState("2020");
   const [gpm, setGpm] = useState(null);
   const [backlog, setBacklog] = useState(null);
   const [netSales, setNetSales] = useState(null);
+  const [debt, setDebt] = useState(null);
 
   useEffect(() => {
     setNetSales(null);
@@ -28,14 +30,16 @@ const Sales = ({ setPage }) => {
       const { data } = await fetchCogs();
       const sales = await fetchNetSales(year);
       const backlogValue = await fetchBacklogValue();
+      const debt = await fetchDebt();
       setNetSales(sales.data);
       setBacklog(backlogValue.data);
-      setGpm(
-        !sales.data
-          ? 'N/A'
+      const grossProfitMargin =
+        sales.data == 0
+          ? 0
           : (sales.data - (data.cogs.totalDebit - data.cogs.totalCredit)) /
-              sales.data
-      );
+            sales.data;
+      setGpm(grossProfitMargin);
+      setDebt(debt.data);
     };
     fetchData();
   }, [year]);
@@ -57,9 +61,9 @@ const Sales = ({ setPage }) => {
               formatter={(x) => Math.round((x + Number.EPSILON) * 100) / 100}
               unit="%"
               styleTitle={{
-                borderBottom: '1px solid black',
-                backgroundColor: '#ffbf54',
-                color: 'white',
+                borderBottom: "1px solid black",
+                backgroundColor: "#ffbf54",
+                color: "white",
               }}
             />
             <GenericCard
@@ -69,9 +73,9 @@ const Sales = ({ setPage }) => {
               formatter={formatMoney}
               unit="€"
               styleTitle={{
-                borderBottom: '1px solid black',
-                backgroundColor: '#ffbf54',
-                color: 'white',
+                borderBottom: "1px solid black",
+                backgroundColor: "#ffbf54",
+                color: "white",
               }}
             />
             <GenericCard
@@ -81,12 +85,27 @@ const Sales = ({ setPage }) => {
               formatter={formatMoney}
               unit="€"
               styleTitle={{
-                borderBottom: '1px solid black',
-                backgroundColor: '#ffbf54',
-                color: 'white',
+                borderBottom: "1px solid black",
+                backgroundColor: "#ffbf54",
+                color: "white",
               }}
               styleCard={{
-                backgroundColor: 'white',
+                backgroundColor: "white",
+              }}
+            />
+            <GenericCard
+              title="Customer Debt"
+              description="Amount of money in debt from customers"
+              amount={debt}
+              formatter={formatMoney}
+              unit="€"
+              styleTitle={{
+                borderBottom: "1px solid black",
+                backgroundColor: "#ffbf54",
+                color: "white",
+              }}
+              styleCard={{
+                backgroundColor: "white",
               }}
             />
           </section>

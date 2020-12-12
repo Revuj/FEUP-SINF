@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import axios from 'axios';
-import PuffLoader from 'react-spinners/PuffLoader';
-import { css } from '@emotion/core';
+import React, { useState, useEffect } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import axios from "axios";
+import PuffLoader from "react-spinners/PuffLoader";
+import { css } from "@emotion/core";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -20,9 +20,9 @@ const fetchSupplierData = (id) => {
 };
 
 const styleTitle = {
-  borderBottom: '1px solid black',
-  backgroundColor: '#ffbf54',
-  color: 'white',
+  borderBottom: "1px solid black",
+  backgroundColor: "#ffbf54",
+  color: "white",
 };
 
 const spinnerStyle = css`
@@ -95,7 +95,7 @@ const SupplierInformation = ({ id }) => {
         <PuffLoader
           css={spinnerStyle}
           size={60}
-          color={'#ffbf54'}
+          color={"#ffbf54"}
           loading={loading == true}
           className="loader"
         />

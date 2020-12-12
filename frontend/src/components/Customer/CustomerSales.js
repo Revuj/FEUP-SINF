@@ -48,6 +48,8 @@ function CustomerSales({ id, year }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setGraphData(null);
+    setLoading(true);
     const fetchData = async () => {
       const sold = await fetchUnitsSold(id, year, true);
 

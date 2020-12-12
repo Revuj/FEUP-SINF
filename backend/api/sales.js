@@ -130,6 +130,15 @@ const getSalesBacklog = (orders, invoices) => {
   return salesBacklog;
 };
 
+const processDebtCustomers = (invoices) => {
+  let temp = invoices.filter((invoice) => invoice.isDeleted == false);
+  if (!Array.isArray(temp)) temp = [temp];
+
+  return temp
+    .filter(({ documentStatus }) => documentStatus === 1)
+    .reduce((acc, invoice) => acc + invoice.taxExclusiveAmount.amount, 0);
+};
+
 module.exports = (server, db) => {
   // monthly sales by year
   server.get("/api/sales/:year([0-9]+)", (req, res) => {
@@ -142,6 +151,18 @@ module.exports = (server, db) => {
     return global.request(options, function (error, response, body) {
       if (error) res.json(error);
       res.json(processMonthlySales(JSON.parse(body), year));
+    });
+  });
+
+  server.get("/api/sales/debt-customers", (req, res) => {
+    let options = {
+      method: "GET",
+      url: `${global.basePrimaveraUrl}/billing/invoices`,
+    };
+
+    return global.request(options, (error, response, body) => {
+      if (error) res.json(error);
+      res.json(processDebtCustomers(JSON.parse(body)));
     });
   });
 

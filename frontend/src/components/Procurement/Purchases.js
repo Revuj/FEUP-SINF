@@ -6,6 +6,7 @@ import { Line } from 'react-chartjs-2';
 
 function PurchasesByTime({ year }) {
   const [purchases, setPurchases] = useState(null);
+  const [sales, setSales] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,7 +33,7 @@ function PurchasesByTime({ year }) {
           datasets: [
             {
               label: 'Purchases',
-              data: response.data,
+              data: purchases,
               fill: false,
               backgroundColor: 'rgb(255, 99, 132)',
               borderColor: 'rgba(255, 99, 132, 0.2)',

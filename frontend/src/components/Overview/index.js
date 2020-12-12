@@ -15,6 +15,7 @@ import {
   fetchAccountsReceivable,
   fetchAccountsPayable,
 } from '../../actions/financial';
+import SalesAndPurchases from './salesAndPurchases';
 
 import Layout from '../Layout';
 
@@ -198,6 +199,11 @@ const Overview = () => {
           <section className="row-50-50">
             <span>
               <RevenueVsCost height="115" />
+            </span>
+          </section>
+          <section className="row-50-50">
+            <span>
+              <SalesAndPurchases height="115" year = {year} />
             </span>
           </section>
         </div>

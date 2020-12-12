@@ -1,17 +1,17 @@
 const moment = require('moment');
 
-const processMonthlySales = (receipts, year) => {
+const processMonthlySales = (invoices, year) => {
   let monthlyCumulativeValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-  receipts
-    .filter((receipt) => moment(receipt.documentDate).year() == year)
-    .forEach(({ documentDate, payableAmount }) => {
+  
+  invoices
+    .filter((invoice) => moment(invoice.documentDate).year() == parseInt(year,10))
+    .forEach(({ documentDate, grossValue }) => {
       const month = moment(documentDate).month();
-
-      monthlyCumulativeValue[month] += payableAmount.amount;
+     // monthlyCumulativeValue[month] += payableAmount.amount;
+     monthlyCumulativeValue[month] += grossValue.amount;
     });
 
-  return monthlyCumulativeValue;
+  return monthlyCumulativeValue
 };
 
 const processSales = (invoices, year) => {
@@ -131,7 +131,7 @@ module.exports = (server, db) => {
     const { year } = req.params;
     const options = {
       method: 'GET',
-      url: `${global.basePrimaveraUrl}/accountsReceivable/receipts`,
+      url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
     return global.request(options, function (error, response, body) {

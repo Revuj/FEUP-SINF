@@ -19,45 +19,33 @@ const processMonthlySales = (invoices, year) => {
 const processSales = (invoices, year) => {
   let productSales = {};
   invoices
-    .filter(
-      (invoice) =>
-        moment(invoice.documentDate).year() == year &&
-        invoice.documentStatus == 2
-    )
-    .forEach(({ documentLines, payableAmount }) => {
-      let salesItem = documentLines[0].salesItem;
-      let salesItemDescription = documentLines[0].salesItemDescription;
-      let quantity = documentLines[0].quantity;
-      if (productSales[salesItem]) {
-        productSales[salesItem].value += Number(payableAmount.amount);
-        productSales[salesItem].quantity += Number(quantity);
-      } else {
-        productSales[salesItem] = {
-          id: salesItem,
-          name: salesItemDescription,
-          value: payableAmount.amount,
-          quantity: quantity,
-        };
-      }
+    .filter((invoice) => moment(invoice.documentDate).year() == year)
+    .forEach(({ documentLines }) => {
+      documentLines.forEach((line) => {
+        let salesItem = line.salesItem;
+        let salesItemDescription = line.salesItemDescription;
+        let quantity = line.quantity;
+        let value = line.unitPrice.amount;
+        if (productSales[salesItem]) {
+          productSales[salesItem].quantity += quantity;
+          productSales[salesItem].value += value * quantity;
+        } else {
+          productSales[salesItem] = {
+            id: salesItem,
+            name: salesItemDescription,
+            value: quantity * value,
+            quantity: quantity,
+          };
+        }
+      });
     });
 
   return Object.keys(productSales).map((product) => productSales[product]);
 };
 
 const getNetSales = (invoices, year) => {
-  /*let netSales = 0;
-  receipts
-    .filter((receipt) => moment(receipt.documentDate).year() == year)
-    .forEach(({ payableAmount }) => {
-      netSales += payableAmount.amount;
-    });
-
-
-*/
   return invoices
-    .filter(
-      (invoice) => moment(invoice.documentDate).year() === parseInt(year, 10)
-    )
+    .filter((invoice) => moment(invoice.documentDate).year() == year)
     .reduce(
       (current, invoice) => current + invoice.taxExclusiveAmount.amount,
       0
@@ -72,8 +60,8 @@ const processSalesBacklog = (orders, invoices) => {
       for (const invoice of invoices) {
         for (const docLine of invoice.documentLines) {
           if (
-            order.naturalKey === docLine.sourceDoc
-            // && docLine.documentLineStatus === 2   // E para usar so os invoices completed?
+            order.naturalKey === docLine.sourceDoc &&
+            docLine.documentLineStatus === 2
           ) {
             return false;
           }
@@ -114,8 +102,8 @@ const getSalesBacklog = (orders, invoices) => {
       for (const invoice of invoices) {
         for (const docLine of invoice.documentLines) {
           if (
-            order.naturalKey === docLine.sourceDoc
-            // && docLine.documentLineStatus === 2   // E para usar so os invoices completed?
+            order.naturalKey === docLine.sourceDoc &&
+            docLine.documentLineStatus === 2
           ) {
             return false;
           }
@@ -123,8 +111,8 @@ const getSalesBacklog = (orders, invoices) => {
       }
       return true;
     })
-    .forEach(({ payableAmount }) => {
-      salesBacklog += payableAmount.amount;
+    .forEach(({ taxExclusiveAmount }) => {
+      salesBacklog += taxExclusiveAmount.amount;
     });
 
   return salesBacklog;
@@ -233,88 +221,5 @@ module.exports = (server, db) => {
         );
       }
     );
-  });
-
-  // sales clients
-  server.get('/api/sales/topClients', (req, res) => {
-    const salesInvoices = db.SourceDocuments.SalesInvoices.Invoice;
-    const validTypes = ['FT', 'FS', 'FR', 'VD'];
-
-    const clients = [];
-
-    if (Array.isArray(salesInvoices)) {
-      salesInvoices.forEach((invoice) => {
-        console.log(invoice.InvoiceType);
-        if (validTypes.includes(invoice.InvoiceType)) {
-          const customerID = invoice.CustomerID;
-          let purchased = 0;
-
-          if (Array.isArray(invoice.Line)) {
-            invoice.Line.forEach((line) => {
-              const { UnitPrice, Quantity } = line;
-              purchased += UnitPrice * Quantity;
-            });
-          } else {
-            purchased = invoice.Line.UnitPrice * invoice.Line.Quantity;
-          }
-          let exists = false;
-          for (let i = 0; i < clients.length; i += 1) {
-            if (clients[i].id === customerID) {
-              exists = true;
-              clients[i].nPurchases += 1;
-              clients[i].totalPurchased += purchased;
-              break;
-            }
-          }
-          if (!exists) {
-            clients.push({
-              id: customerID,
-              totalPurchased: purchased,
-              nPurchases: 1,
-            });
-          }
-        }
-      });
-    } else {
-      const invoice = salesInvoices;
-      const customerID = invoice.CustomerID;
-      let purchased = 0;
-
-      if (validTypes.includes(invoice.InvoiceType)) {
-        if (Array.isArray(invoice.Line)) {
-          invoice.Line.forEach((line) => {
-            const { UnitPrice, Quantity } = line;
-            purchased += UnitPrice * Quantity;
-          });
-        } else {
-          purchased = invoice.Line.UnitPrice * invoice.Line.Quantity;
-        }
-        let exists = false;
-        for (let i = 0; i < clients.length; i += 1) {
-          if (clients[i].id === customerID) {
-            exists = true;
-            clients[i].nPurchases += 1;
-            clients[i].totalPurchased += purchased;
-            break;
-          }
-        }
-        if (!exists) {
-          clients.push({
-            id: customerID,
-            totalPurchased: purchased,
-            nPurchases: 1,
-          });
-        }
-      }
-    }
-
-    for (let i = 0; i < clients.length; i += 1) {
-      clients[i].totalPurchased = parseFloat(clients[i].totalPurchased).toFixed(
-        2
-      );
-    }
-
-    const sorted = clients.sort((a, b) => a.totalPurchased > b.totalPurchased);
-    res.json(sorted.slice(0, 5));
   });
 };

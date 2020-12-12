@@ -90,21 +90,6 @@ const Index = ({ setPage }) => {
                 backgroundColor: 'white',
               }}
             />
-            <GenericCard
-              title="Delay in Stock Receivment"
-              description="Average number of days the company takes to receive items from the suppliers"
-              amount="5"
-              formatter={formatMoney}
-              unit=" "
-              styleTitle={{
-                borderBottom: '1px solid black',
-                backgroundColor: '#ffbf54',
-                color: 'white',
-              }}
-              styleCard={{
-                backgroundColor: 'white',
-              }}
-            />
           </section>
 
           <section className="row-50-50">

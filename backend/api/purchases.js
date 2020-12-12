@@ -14,13 +14,24 @@ const processPurchases = (orders, year) => {
   return monthlyCumulativeValue;
 };
 
-const getPurchasesBacklog = (orders) => {
+const getPurchasesBacklog = (orders, invoices) => {
   let purchasesBacklog = 0;
-
   orders
-    .filter((order) => moment(order.documentDate).isAfter(moment()))
-    .forEach(({ documentDate, taxExclusiveAmount }) => {
-      purchasesBacklog += taxExclusiveAmount.amount;
+    .filter((order) => {
+      for (const invoice of invoices) {
+        for (const docLine of invoice.documentLines) {
+          if (
+            order.naturalKey === docLine.sourceDoc &&
+            docLine.documentLineStatus === 2
+          ) {
+            return false;
+          }
+        }
+      }
+      return true;
+    })
+    .forEach(({ payableAmount }) => {
+      purchasesBacklog += payableAmount.amount;
     });
 
   return purchasesBacklog;
@@ -79,22 +90,33 @@ module.exports = (server) => {
   });
 
   server.get('/api/purchasesBacklog', (req, res) => {
-    const options = {
+    const options_purchases = {
       method: 'GET',
       url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
-    const options1 = {
+    const options_invoices = {
       method: 'GET',
-      url: `${global.basePrimaveraUrl}/goodsReceipt/processOrders/1/1000?company=${process.env.COMPANY_KEY}`,
+      url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
 
-    return global.request(options1, function (error, response, body) {
-      if (error) throw new Error(error);
-
-      if (!JSON.parse(body).message) {
-        res.json(getPurchasesBacklog(JSON.parse(body)));
+    return global.request(
+      options_purchases,
+      function (errorSales, response, bodySales) {
+        if (errorSales) res.json(errorSales);
+        return global.request(
+          options_invoices,
+          function (errorInvoices, response, bodyInvoices) {
+            if (errorInvoices) res.json(errorInvoices);
+            res.json(
+              getPurchasesBacklog(
+                JSON.parse(bodySales),
+                JSON.parse(bodyInvoices)
+              )
+            );
+          }
+        );
       }
-    });
+    );
   });
 };

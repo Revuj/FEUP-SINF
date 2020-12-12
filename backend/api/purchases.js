@@ -41,7 +41,9 @@ const processDebtToSuppliers = (invoices) => {
   let temp = invoices;
   if (!Array.isArray(temp)) temp = [temp];
 
-  return temp.reduce((acc, invoice) => acc + invoice.payableAmount.amount, 0);
+  return temp
+    .filter( ({documentStatus}) => documentStatus === 1)
+    .reduce((acc, invoice) => acc + invoice.payableAmount.amount, 0);
 }
 
 module.exports = (server) => {

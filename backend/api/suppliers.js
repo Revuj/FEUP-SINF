@@ -72,16 +72,10 @@ const getPurchasesBacklog = (orders, invoices, id) => {
     )
     .filter((order) => {
       for (const invoice of invoices) {
-        let sourceDoc = false;
         for (const docLine of invoice.documentLines) {
           if (order.naturalKey === docLine.sourceDoc) {
-            sourceDoc = true;
-            break;
+            return false;
           }
-        }
-
-        if (invoice.documentStatus === 2 && sourceDoc) {
-          return false;
         }
       }
       return true;

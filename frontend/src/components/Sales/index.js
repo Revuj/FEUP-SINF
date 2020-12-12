@@ -27,17 +27,14 @@ const Sales = ({ setPage }) => {
     setNetSales(null);
     setGpm(null);
     const fetchData = async () => {
-      const { data } = await fetchCogs();
       const sales = await fetchNetSales(year);
+      const { data } = await fetchCogs(year);
       const backlogValue = await fetchBacklogValue();
       const debt = await fetchDebt();
       setNetSales(sales.data);
       setBacklog(backlogValue.data);
       const grossProfitMargin =
-        sales.data == 0
-          ? 0
-          : (sales.data - (data.cogs.totalDebit - data.cogs.totalCredit)) /
-            sales.data;
+        sales.data == 0 ? 0 : (sales.data - data) / sales.data;
       setGpm(grossProfitMargin);
       setDebt(debt.data);
     };
@@ -94,7 +91,7 @@ const Sales = ({ setPage }) => {
               }}
             />
             <GenericCard
-              title="Customer Debt"
+              title="Accounts Receivable"
               description="Amount of money in debt from customers"
               amount={debt}
               formatter={formatMoney}

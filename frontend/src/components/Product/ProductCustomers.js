@@ -30,8 +30,8 @@ export default function ProductCustomers({
   const headers = [
     { name: "ID", field: "id", sortable: false },
     { name: "Name", field: "name", sortable: false },
-    { name: "Units Purchased", field: "units", sortable: true },
-    { name: "Value Purchased", field: "value", sortable: true },
+    { name: "Units Sold", field: "units", sortable: true },
+    { name: "Value", field: "value", sortable: true },
   ];
 
   const history = useHistory();

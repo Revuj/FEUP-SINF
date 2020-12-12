@@ -80,8 +80,7 @@ const processSalesBacklog = (orders, invoices, id) => {
       for (const invoice of invoices) {
         for (const docLine of invoice.documentLines) {
           if (
-            (order.naturalKey === docLine.sourceDoc &&
-              docLine.documentLineStatus === 2) ||
+            order.naturalKey === docLine.sourceDoc ||
             order.buyerCustomerParty != id
           ) {
             return false;

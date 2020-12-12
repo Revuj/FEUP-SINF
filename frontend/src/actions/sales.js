@@ -136,8 +136,8 @@ const fetchOngoingSales = () => {
   ];
 };
 
-const fetchCogs = () => {
-  return axios.get(`api/financial/cogs`);
+const fetchCogs = (year) => {
+  return axios.get(`api/sales/cogs/${year}`);
 };
 
 const fetchNetSales = (year) => {

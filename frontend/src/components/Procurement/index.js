@@ -14,16 +14,13 @@ import Layout from "../Layout";
 
 const Procurement = ({ title, setPage }) => {
   const [year, setYear] = useState("2020");
-  const [accountsPayable, setAccountsPayable] = useState(null);
   const [purchasesBacklog, setPurchasesBacklog] = useState(null);
   const [totalOfPurchases, setTotalOfPurchases] = useState(null);
   const [debt, setDebt] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const acPayable = (await fetchAccountsPayable()).data;
       const debtSuplliers = (await fetchDebt()).data;
-      setAccountsPayable(acPayable);
       setDebt(debtSuplliers);
     };
 
@@ -62,7 +59,7 @@ const Procurement = ({ title, setPage }) => {
             className="account-payable"
             title="Accounts payable"
             description="Amounts due to vendors or suppliers for goods that have not yet been paid for."
-            amount={accountsPayable}
+            amount={debt}
             formatter={formatMoney}
             unit="€"
             styleTitle={{
@@ -91,19 +88,6 @@ const Procurement = ({ title, setPage }) => {
             title="total of purchases"
             description="Amount of money spent in purchases"
             amount={totalOfPurchases}
-            formatter={formatMoney}
-            unit="€"
-            styleTitle={{
-              borderBottom: "1px solid black",
-              backgroundColor: "#ffbf54",
-              color: "white",
-            }}
-          />
-
-          <GenericCard
-            title="Debt to suppliers"
-            description="Amount of money in debt to the suplliers"
-            amount={debt}
             formatter={formatMoney}
             unit="€"
             styleTitle={{

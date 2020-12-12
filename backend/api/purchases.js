@@ -24,10 +24,7 @@ const getPurchasesBacklog = (orders, invoices) => {
     .filter((order) => {
       for (const invoice of invoices) {
         for (const docLine of invoice.documentLines) {
-          if (
-            order.naturalKey === docLine.sourceDoc &&
-            invoice.documentStatus === 2
-          ) {
+          if (order.naturalKey === docLine.sourceDoc) {
             return false;
           }
         }
@@ -90,10 +87,7 @@ const processPurchasesBacklog = (orders, invoices) => {
     .filter((order) => {
       for (const invoice of invoices) {
         for (const docLine of invoice.documentLines) {
-          if (
-            order.naturalKey === docLine.sourceDoc &&
-            invoice.documentStatus === 2
-          ) {
+          if (order.naturalKey === docLine.sourceDoc) {
             return false;
           }
         }
@@ -110,13 +104,13 @@ const processPurchasesBacklog = (orders, invoices) => {
         purchasesBacklog[counter] = {
           date: documentDate.substr(0, 10),
           supplier: sellerSupplierPartyName,
-          items: '',
+          items: "",
           value: Number(payableAmount.amount),
         };
 
         documentLines.forEach((item) => {
           purchasesBacklog[counter].items +=
-            item.quantity + 'x ' + item.description + ';  ';
+            item.quantity + "x " + item.description + ";  ";
         });
 
         counter++;
@@ -127,16 +121,15 @@ const processPurchasesBacklog = (orders, invoices) => {
 };
 
 module.exports = (server) => {
-
   // backlog table
-  server.get('/api/purchases/backlogProducts', (req, res) => {
+  server.get("/api/purchases/backlogProducts", (req, res) => {
     const options_purchases = {
-      method: 'GET',
+      method: "GET",
       url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
     const options_invoices = {
-      method: 'GET',
+      method: "GET",
       url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
 
@@ -160,7 +153,7 @@ module.exports = (server) => {
     );
   });
 
-  server.get('/api/purchases/debt-suppliers', (req, res) => {
+  server.get("/api/purchases/debt-suppliers", (req, res) => {
     let options = {
       method: "GET",
       url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,

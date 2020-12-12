@@ -70,10 +70,7 @@ const processSalesBacklog = (orders, invoices) => {
     .filter((order) => {
       for (const invoice of invoices) {
         for (const docLine of invoice.documentLines) {
-          if (
-            order.naturalKey === docLine.sourceDoc &&
-            docLine.documentLineStatus === 2
-          ) {
+          if (order.naturalKey === docLine.sourceDoc) {
             return false;
           }
         }
@@ -113,10 +110,7 @@ const getSalesBacklog = (orders, invoices) => {
     .filter((order) => {
       for (const invoice of invoices) {
         for (const docLine of invoice.documentLines) {
-          if (
-            order.naturalKey === docLine.sourceDoc &&
-            docLine.documentLineStatus === 2
-          ) {
+          if (order.naturalKey === docLine.sourceDoc) {
             return false;
           }
         }
@@ -137,6 +131,12 @@ const processDebtCustomers = (invoices) => {
   return temp
     .filter(({ documentStatus }) => documentStatus === 1)
     .reduce((acc, invoice) => acc + invoice.taxExclusiveAmount.amount, 0);
+};
+
+const processCogs = (entries) => {
+  let temp = entries.filter((entry) => entry.accountType.indexOf("61") == 0);
+  const total = temp.reduce((acc, entry) => acc + entry.amount, 0);
+  return total;
 };
 
 module.exports = (server, db, client) => {
@@ -174,30 +174,25 @@ module.exports = (server, db, client) => {
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
-    const key = 'net_sales' + year;
+    const key = "net_sales" + year;
     try {
-       client.get(key, async (err, payload) => {
+      client.get(key, async (err, payload) => {
         // return res.status(200).json(JSON.parse(payload));
 
         if (payload != null) {
           console.log("Sent " + payload);
-          return res.json(
-           JSON.parse(payload)
-          )
-          
+          return res.json(JSON.parse(payload));
         }
         return global.request(options, function (error, response, body) {
           if (error) res.json(error);
-          const netSales=getNetSales(JSON.parse(body), year);
+          const netSales = getNetSales(JSON.parse(body), year);
           client.setex(key, 1440, JSON.stringify(netSales));
           res.json(netSales);
         });
-          
-    });
-  } catch(error) {
-    console.log(error);
-  }
-
+      });
+    } catch (error) {
+      console.log(error);
+    }
   });
 
   // sales products
@@ -274,5 +269,18 @@ module.exports = (server, db, client) => {
         );
       }
     );
+  });
+
+  server.get("/api/sales/cogs/:year", (req, res) => {
+    const { year } = req.params;
+    const accounts = {
+      method: "GET",
+      url: `${global.basePrimaveraUrl}/financialCore/accountingEntries/getAccountingSummaries?startDate=1-1-${year}&endDate=31-12-${year}`,
+    };
+
+    return global.request(accounts, function (error, response, body) {
+      if (error) res.json(error);
+      res.json(processCogs(JSON.parse(body)));
+    });
   });
 };

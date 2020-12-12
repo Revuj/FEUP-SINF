@@ -39,7 +39,7 @@ function Login() {
   return (
     <div id="login-container">
       <span id="login-left">
-        <h2 id="welcome-message">Welcome Back</h2>
+        <h2 id="welcome-message">Welcome</h2>
         <div>
           <p className="login-field">Email</p>
           <input
@@ -71,11 +71,6 @@ function Login() {
             Sign in with Google
           </button>
         </div>
-      </span>
-      <span id="login-right">
-        <h1 id="login-koala" className="clear-text">
-          Bee
-        </h1>
       </span>
     </div>
   );

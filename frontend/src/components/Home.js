@@ -6,9 +6,8 @@ import '../styles/Home.css';
 function Home() {
   return (
     <div id="home-page">
-      <span>
+      <span id="slogan">
         <img id="logo" src={Koala} alt="koala logo" />
-        <h2 id="title">Bee</h2>
       </span>
       <Login />
     </div>

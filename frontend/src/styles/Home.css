@@ -1,5 +1,5 @@
 #home-page {
-  background: url("../assets/background.png") no-repeat center center fixed;
+  background: url('../assets/background.png') no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -7,8 +7,12 @@
   height: 100vh;
 }
 
+#home-page #slogan {
+  margin: 1rem;
+}
+
 #home-page #logo {
-  margin: 1rem 1rem;
+  margin: 0 1rem;
   width: 4rem;
 }
 

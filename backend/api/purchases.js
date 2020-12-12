@@ -79,8 +79,84 @@ const processPurchasesProducts = (invoices, year) => {
   );
 };
 
+const processPurchasesBacklog = (orders, invoices) => {
+  let purchasesBacklog = {};
+  let counter = 0;
+  orders
+    .filter((order) => {
+      for (const invoice of invoices) {
+        for (const docLine of invoice.documentLines) {
+          if (
+            order.naturalKey === docLine.sourceDoc &&
+            invoice.documentStatus === 2
+          ) {
+            return false;
+          }
+        }
+      }
+      return true;
+    })
+    .forEach(
+      ({
+        sellerSupplierPartyName,
+        documentDate,
+        documentLines,
+        payableAmount,
+      }) => {
+        purchasesBacklog[counter] = {
+          date: documentDate.substr(0, 10),
+          supplier: sellerSupplierPartyName,
+          items: '',
+          value: Number(payableAmount.amount),
+        };
+
+        documentLines.forEach((item) => {
+          purchasesBacklog[counter].items +=
+            item.quantity + 'x ' + item.description + ';  ';
+        });
+
+        counter++;
+      }
+    );
+
+  return Object.keys(purchasesBacklog).map((order) => purchasesBacklog[order]);
+};
+
 module.exports = (server) => {
-  server.get("/api/purchases/debt-suppliers", (req, res) => {
+
+  // backlog table
+  server.get('/api/purchases/backlogProducts', (req, res) => {
+    const options_purchases = {
+      method: 'GET',
+      url: `${global.basePrimaveraUrl}/purchases/orders`,
+    };
+
+    const options_invoices = {
+      method: 'GET',
+      url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
+    };
+
+    return global.request(
+      options_purchases,
+      function (errorSales, response, bodyPurchases) {
+        if (errorSales) res.json(errorSales);
+        return global.request(
+          options_invoices,
+          function (errorInvoices, response, bodyInvoices) {
+            if (errorInvoices) res.json(errorInvoices);
+            res.json(
+              processPurchasesBacklog(
+                JSON.parse(bodyPurchases),
+                JSON.parse(bodyInvoices)
+              )
+            );
+          }
+        );
+      }
+    );
+  });
+
+  server.get('/api/purchases/debt-suppliers', (req, res) => {
     let options = {
       method: "GET",
       url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,

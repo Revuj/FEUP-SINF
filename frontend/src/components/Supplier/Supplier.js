@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import Grid from "@material-ui/core/Grid";
 import SupplierInformation from "./SupplierInformation";
 import UnitsPurchased from "./UnitsPurchased";
-import UnitsOrdered from "./UnitsOrdered";
 import SupplierPurchases from "./SupplierPurchases";
 import PendingPurchases from "./PendingPurchases";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -30,7 +28,6 @@ const Supplier = () => {
           <section className="top-cards">
             <SupplierInformation id={id} />
             <UnitsPurchased id={id} year={year} />
-            <UnitsOrdered id={id} year={year} />
           </section>
           <section className="row-50-50">
             <span>

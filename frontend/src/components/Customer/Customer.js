@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import CustomerInformation from "./CustomerInformation";
 import UnitsSold from "./UnitsSold";
-import UnitsOrdered from "./UnitsOrdered";
 import PendingSales from "./PendingSales";
 import CustomerSales from "./CustomerSales";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -28,7 +27,6 @@ const Customer = () => {
           <section className="top-cards">
             <CustomerInformation id={id} />
             <UnitsSold id={id} year={year} />
-            <UnitsOrdered id={id} year={year} />
           </section>
           <section className="row-50-50">
             <span>

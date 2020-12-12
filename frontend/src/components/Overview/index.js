@@ -4,14 +4,13 @@ import GenericCard from '../GenericCard';
 import TopProductsTable from '../Sales/TopProductsTable';
 import SalesBacklogTable from '../Sales/SalesBacklogTable';
 import { formatMoney } from '../../helper/CurrencyFormater';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
+import { YearPicker } from '../YearPicker';
 import {
   fetchAccountsReceivable,
   fetchAccountsPayable,
 } from '../../actions/financial';
 
-import Layout from '../Layout'
+import Layout from '../Layout';
 
 const Overview = () => {
   const [accountsReceivable, setAccountsReceivable] = useState(null);
@@ -33,11 +32,7 @@ const Overview = () => {
       <div>
         <div className="top-bar">
           <h1 className="title">Overview</h1>
-          <DropdownButton id="dropdown-basic-button" title={year}>
-            <Dropdown.Item href="#/action-1">2020</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">2019</Dropdown.Item>
-            <Dropdown.Item href="#/action-3">2018</Dropdown.Item>
-          </DropdownButton>
+          <YearPicker year={year} setYear={setYear} />
         </div>
 
         <div className="main-content">

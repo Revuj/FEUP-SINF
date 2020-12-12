@@ -4,8 +4,7 @@ import GenericCard from '../GenericCard';
 import BalanceSheet from './BalanceSheet';
 import { formatMoney } from '../../helper/CurrencyFormater';
 import '../../styles/Finantial.css';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
+import { YearPicker } from '../YearPicker';
 import {
   fetchProfitLoss,
   fetchBalanceSheet,
@@ -14,7 +13,7 @@ import {
 } from '../../actions/financial';
 import ProfitLossStatement from './ProfitLossStatement';
 
-import Layout from '../Layout'
+import Layout from '../Layout';
 
 const Index = () => {
   const [year, setYear] = useState('2020');
@@ -62,11 +61,7 @@ const Index = () => {
       <div>
         <div className="top-bar">
           <h1 className="title">Financial</h1>
-          <DropdownButton id="dropdown-basic-button" title={year}>
-            <Dropdown.Item href="#/action-1">2020</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">2019</Dropdown.Item>
-            <Dropdown.Item href="#/action-3">2018</Dropdown.Item>
-          </DropdownButton>
+          <YearPicker year={year} setYear={setYear} />
         </div>
 
         <div className="main-content">

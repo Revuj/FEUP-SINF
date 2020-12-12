@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import GenericCard from "../GenericCard";
-import StockByProductTable from "./StockByProductTable";
-import StockByWarehouseTable from "./StockByWarehouseTable";
-import { formatMoney } from "../../helper/CurrencyFormater";
-import "../../styles/Inventory.css";
-import "../../styles/GenericChart.css";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import { fetchInventoryTurnover } from "../../actions/stock";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import GenericCard from '../GenericCard';
+import StockByProductTable from './StockByProductTable';
+import StockByWarehouseTable from './StockByWarehouseTable';
+import { formatMoney } from '../../helper/CurrencyFormater';
+import '../../styles/Inventory.css';
+import '../../styles/GenericChart.css';
+import { YearPicker } from '../YearPicker';
+import { fetchInventoryTurnover } from '../../actions/stock';
 
-import Layout from "../Layout";
+import Layout from '../Layout';
 
 const Index = ({ setPage }) => {
+  const [year, setYear] = useState('2020');
   const [stock, setStock] = useState(null);
   const [inventoryTurnover, setInventoryTurnover] = useState(null);
   const [avgInventoryPeriod, setAvgInventoryPeriod] = useState(null);
@@ -25,7 +25,7 @@ const Index = ({ setPage }) => {
     };
 
     axios
-      .get("/api/inventory/stock")
+      .get('/api/inventory/stock')
       .then((response) => {
         setStock(response.data);
       })
@@ -41,6 +41,7 @@ const Index = ({ setPage }) => {
       <div>
         <div className="top-bar">
           <h1 className="title">Inventory</h1>
+          <YearPicker year={year} setYear={setYear} />
         </div>
         <div className="main-content">
           <section className="top-cards">
@@ -51,12 +52,12 @@ const Index = ({ setPage }) => {
               formatter={formatMoney}
               unit="€"
               styleTitle={{
-                borderBottom: "1px solid black",
-                backgroundColor: "#37d5d6",
-                color: "white",
+                borderBottom: '1px solid black',
+                backgroundColor: '#37d5d6',
+                color: 'white',
               }}
               styleCard={{
-                backgroundColor: "white",
+                backgroundColor: 'white',
               }}
             />
             <GenericCard
@@ -66,12 +67,12 @@ const Index = ({ setPage }) => {
               formatter={formatMoney}
               unit=" days"
               styleTitle={{
-                borderBottom: "1px solid black",
-                backgroundColor: "#37d5d6",
-                color: "white",
+                borderBottom: '1px solid black',
+                backgroundColor: '#37d5d6',
+                color: 'white',
               }}
               styleCard={{
-                backgroundColor: "white",
+                backgroundColor: 'white',
               }}
             />
             <GenericCard
@@ -81,12 +82,12 @@ const Index = ({ setPage }) => {
               formatter={formatMoney}
               unit=""
               styleTitle={{
-                borderBottom: "1px solid black",
-                backgroundColor: "#37d5d6",
-                color: "white",
+                borderBottom: '1px solid black',
+                backgroundColor: '#37d5d6',
+                color: 'white',
               }}
               styleCard={{
-                backgroundColor: "white",
+                backgroundColor: 'white',
               }}
             />
             <GenericCard
@@ -96,12 +97,12 @@ const Index = ({ setPage }) => {
               formatter={formatMoney}
               unit=" "
               styleTitle={{
-                borderBottom: "1px solid black",
-                backgroundColor: "#37d5d6",
-                color: "white",
+                borderBottom: '1px solid black',
+                backgroundColor: '#37d5d6',
+                color: 'white',
               }}
               styleCard={{
-                backgroundColor: "white",
+                backgroundColor: 'white',
               }}
             />
           </section>
@@ -110,7 +111,7 @@ const Index = ({ setPage }) => {
             <span>
               <StockByProductTable
                 numberItemsPerPage={6}
-                containerStyle={{ width: "100%" }}
+                containerStyle={{ width: '100%' }}
                 setPage={setPage}
               />
             </span>
@@ -118,7 +119,7 @@ const Index = ({ setPage }) => {
             <span>
               <StockByWarehouseTable
                 numberItemsPerPage={6}
-                containerStyle={{ width: "100%" }}
+                containerStyle={{ width: '100%' }}
                 setPage={setPage}
               />
             </span>

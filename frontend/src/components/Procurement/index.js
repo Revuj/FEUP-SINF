@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import GenericCard from "../GenericCard";
-import { formatMoney } from "../../helper/CurrencyFormater";
-import Purchases from "./Purchases";
-import SuppliersTable from "../Procurement/SuppliersTable";
-import "../../styles/Procurement.css";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import { fetchAccountsPayable } from "../../actions/financial";
-import { fetchDebt } from "../../actions/purchases";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import GenericCard from '../GenericCard';
+import { formatMoney } from '../../helper/CurrencyFormater';
+import Purchases from './Purchases';
+import SuppliersTable from '../Procurement/SuppliersTable';
+import '../../styles/Procurement.css';
+import { YearPicker } from '../YearPicker';
+import { fetchAccountsPayable } from '../../actions/financial';
+import { fetchDebt } from '../../actions/purchases';
 
-import Layout from "../Layout";
+import Layout from '../Layout';
 
 const Procurement = ({ title, setPage }) => {
-  const [year, setYear] = useState("2020");
+  const [year, setYear] = useState('2020');
   const [accountsPayable, setAccountsPayable] = useState(null);
   const [purchasesBacklog, setPurchasesBacklog] = useState(null);
   const [totalOfPurchases, setTotalOfPurchases] = useState(null);
@@ -53,17 +52,7 @@ const Procurement = ({ title, setPage }) => {
     <Layout>
       <div className="top-bar">
         <h1 className="title">Procurement</h1>
-        <DropdownButton id="dropdown-basic-button" title={year}>
-          <Dropdown.Item href="#/action-1" onClick={() => setYear(2020)}>
-            2020
-          </Dropdown.Item>
-          <Dropdown.Item href="#/action-2" onClick={() => setYear(2019)}>
-            2019
-          </Dropdown.Item>
-          <Dropdown.Item href="#/action-3" onClick={() => setYear(2018)}>
-            2018
-          </Dropdown.Item>
-        </DropdownButton>
+        <YearPicker year={year} setYear={setYear} />
       </div>
 
       <div className="main-content">
@@ -76,9 +65,9 @@ const Procurement = ({ title, setPage }) => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: "1px solid black",
-              backgroundColor: "#37d5d6",
-              color: "white",
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
             }}
           />
           <GenericCard
@@ -89,9 +78,9 @@ const Procurement = ({ title, setPage }) => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: "1px solid black",
-              backgroundColor: "#37d5d6",
-              color: "white",
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
             }}
           />
 
@@ -104,9 +93,9 @@ const Procurement = ({ title, setPage }) => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: "1px solid black",
-              backgroundColor: "#37d5d6",
-              color: "white",
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
             }}
           />
 
@@ -117,9 +106,9 @@ const Procurement = ({ title, setPage }) => {
             formatter={formatMoney}
             unit="€"
             styleTitle={{
-              borderBottom: "1px solid black",
-              backgroundColor: "#37d5d6",
-              color: "white",
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
             }}
           />
 
@@ -130,12 +119,12 @@ const Procurement = ({ title, setPage }) => {
             formatter={formatMoney}
             unit=" "
             styleTitle={{
-              borderBottom: "1px solid black",
-              backgroundColor: "#37d5d6",
-              color: "white",
+              borderBottom: '1px solid black',
+              backgroundColor: '#37d5d6',
+              color: 'white',
             }}
             styleCard={{
-              backgroundColor: "white",
+              backgroundColor: 'white',
             }}
           />
         </section>
@@ -148,7 +137,7 @@ const Procurement = ({ title, setPage }) => {
             <SuppliersTable
               setPage={setPage}
               numberItemsPerPage={6}
-              containerStyle={{ width: "100%" }}
+              containerStyle={{ width: '100%' }}
               year={year}
             />
           </span>

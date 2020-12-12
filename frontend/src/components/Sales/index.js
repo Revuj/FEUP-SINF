@@ -4,18 +4,16 @@ import SalesByTime from './SalesByTime';
 import BestClientsTable from './BestClientsTable';
 import SalesBacklogTable from './SalesBacklogTable';
 import TopProductsTable from './TopProductsTable';
+import { YearPicker } from '../YearPicker';
 import { formatMoney } from '../../helper/CurrencyFormater';
-// import { formatePercentage } from "../../helper/PercentageFormater";
 import '../../styles/Sales.css';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
 import {
   fetchCogs,
   fetchNetSales,
   fetchBacklogValue,
 } from '../../actions/sales';
 
-import Layout from '../Layout'
+import Layout from '../Layout';
 
 const Sales = ({ setPage }) => {
   const [year, setYear] = useState('2020');
@@ -25,12 +23,17 @@ const Sales = ({ setPage }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const {data} = await fetchCogs();
+      const { data } = await fetchCogs();
       const sales = await fetchNetSales(year);
       const backlogValue = await fetchBacklogValue();
       setNetSales(sales.data);
       setBacklog(backlogValue.data);
-      setGpm( netSales === null ? null :(netSales - (data.cogs.totalDebit- data.cogs.totalCredit))/ netSales );
+      setGpm(
+        netSales === null
+          ? null
+          : (netSales - (data.cogs.totalDebit - data.cogs.totalCredit)) /
+              netSales
+      );
     };
     fetchData();
   }, [netSales]);
@@ -40,11 +43,7 @@ const Sales = ({ setPage }) => {
       <div>
         <div className="top-bar">
           <h1 className="title">Sales</h1>
-          <DropdownButton id="dropdown-basic-button" title={year}>
-            <Dropdown.Item href="#/action-1">2020</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">2019</Dropdown.Item>
-            <Dropdown.Item href="#/action-3">2018</Dropdown.Item>
-          </DropdownButton>
+          <YearPicker year={year} setYear={setYear} />
         </div>
 
         <div className="main-content">

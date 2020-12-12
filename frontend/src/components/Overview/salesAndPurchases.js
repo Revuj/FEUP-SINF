@@ -26,6 +26,8 @@ function SalesAndPurchases({ year, height }) {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
+      setGraphData(null);
       const sales = await axios.get(`/api/sales/${year}`);
       const purchases = await axios.get(`/api/purchases/${year}`);
       setSalesAndPurchases({

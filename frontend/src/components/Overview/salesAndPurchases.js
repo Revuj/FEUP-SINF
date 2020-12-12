@@ -1,28 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { css } from '@emotion/core';
-import PuffLoader from 'react-spinners/PuffLoader';
-import { Line } from 'react-chartjs-2';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { css } from "@emotion/core";
+import PuffLoader from "react-spinners/PuffLoader";
+import { Line } from "react-chartjs-2";
 
 const options = {
-    scales: {
-      yAxes: [
-        {
-          type: 'linear',
-          display: true,
-          position: 'left',
-          id: 'y-axis-1',
-        },
-      ],
-    },
+  scales: {
+    yAxes: [
+      {
+        type: "linear",
+        display: true,
+        position: "left",
+        id: "y-axis-1",
+      },
+    ],
+  },
 };
 
 function SalesAndPurchases({ year, height }) {
-
-    const [loading, setLoading] = useState(true);
-    const [salesAndPurchases, setSalesAndPurchases] = useState(null);
-    const [graphData, setGraphData] = useState(null);
-
+  const [loading, setLoading] = useState(true);
+  const [salesAndPurchases, setSalesAndPurchases] = useState(null);
+  const [graphData, setGraphData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,35 +43,35 @@ function SalesAndPurchases({ year, height }) {
         console.log(salesAndPurchases);
         setGraphData({
           labels: [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
           ],
           datasets: [
             {
-              label: 'Sales',
+              label: "Sales",
               data: salesAndPurchases.sales,
               fill: false,
-              backgroundColor: 'rgb(255, 99, 132)',
-              borderColor: 'rgba(255, 99, 132, 0.2)',
-              yAxisID: 'y-axis-1',
+              backgroundColor: "rgb(255, 99, 132)",
+              borderColor: "rgba(255, 99, 132, 0.2)",
+              yAxisID: "y-axis-1",
             },
             {
-              label: 'Costs',
+              label: "Purchases",
               data: salesAndPurchases.purchases,
               fill: false,
-              backgroundColor: 'rgb(54, 162, 235)',
-              borderColor: 'rgba(54, 162, 235, 0.2)',
-              yAxisID: 'y-axis-1',
+              backgroundColor: "rgb(54, 162, 235)",
+              borderColor: "rgba(54, 162, 235, 0.2)",
+              yAxisID: "y-axis-1",
             },
           ],
         });
@@ -94,11 +92,11 @@ function SalesAndPurchases({ year, height }) {
   return (
     <div className="chart">
       <h3 className="chart-title">Sales vs Purchases</h3>
-      <div className="graph-loading" style={loading ? { height: '250px' } : {}}>
+      <div className="graph-loading" style={loading ? { height: "250px" } : {}}>
         <PuffLoader
           css={graphStyle}
           size={60}
-          color={'#ffbf54'}
+          color={"#ffbf54"}
           loading={loading}
           className="loader"
         />
@@ -108,11 +106,6 @@ function SalesAndPurchases({ year, height }) {
       )}
     </div>
   );
-
-
-
-
-   
 }
 
 export default SalesAndPurchases;

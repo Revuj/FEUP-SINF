@@ -22,7 +22,7 @@ const getPurchasesBacklog = (orders, invoices) => {
         for (const docLine of invoice.documentLines) {
           if (
             order.naturalKey === docLine.sourceDoc &&
-            docLine.documentLineStatus === 2
+            invoice.documentStatus === 2
           ) {
             return false;
           }

@@ -42,16 +42,23 @@ const processSales = (invoices, year) => {
   return Object.keys(productSales).map((product) => productSales[product]);
 };
 
-const getNetSales = (receipts, year) => {
-  let netSales = 0;
-
+const getNetSales = (invoices, year) => {
+  /*let netSales = 0;
   receipts
     .filter((receipt) => moment(receipt.documentDate).year() == year)
     .forEach(({ payableAmount }) => {
       netSales += payableAmount.amount;
     });
 
-  return netSales;
+
+*/
+  return invoices
+    .filter((invoice) => moment(invoice.documentDate).year() === parseInt(year,10))
+    .reduce((current, invoice) => current + invoice.taxExclusiveAmount.amount, 0);
+
+
+
+
 };
 
 const processSalesBacklog = (orders, invoices) => {
@@ -138,7 +145,7 @@ module.exports = (server, db) => {
     const { year } = req.params;
     const options = {
       method: 'GET',
-      url: `${global.basePrimaveraUrl}/accountsReceivable/receipts`,
+      url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
     return global.request(options, function (error, response, body) {

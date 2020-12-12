@@ -57,6 +57,34 @@ const processUnits = (invoices, id, year, party) => {
   return { units, value };
 };
 
+const processCustomers = (invoices, id, year) => {
+  const customers = {};
+  if (invoices) {
+    invoices
+      .filter((invoice) => moment(invoice.documentDate).year() == year)
+      .forEach((invoice) => {
+        invoice.documentLines
+          .filter((line) => (id ? line.salesItem === id : true))
+          .forEach((lineParsed) => {
+            if (customers[invoice.buyerCustomerParty]) {
+              customers[invoice.buyerCustomerParty].units += Number(
+                lineParsed.quantity
+              );
+            } else {
+              customers[invoice.buyerCustomerParty] = {
+                id: invoice.buyerCustomerParty,
+                name: invoice.buyerCustomerPartyName,
+                value: Number(invoice.taxExclusiveAmount.amount),
+                units: Number(lineParsed.quantity),
+              };
+            }
+          });
+      });
+  }
+
+  return Object.keys(customers).map((customer) => customers[customer]);
+};
+
 module.exports = (server, db) => {
   server.get("/api/products/:id", (req, res) => {
     const { id } = req.params;
@@ -145,7 +173,7 @@ module.exports = (server, db) => {
     const { id } = req.params;
     const options = {
       method: "GET",
-      url: `${global.basePrimaveraUrl}/purchases/orders`,
+      url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
 
     return global.request(options, function (error, response, body) {
@@ -156,20 +184,30 @@ module.exports = (server, db) => {
     });
   });
 
-  /**
-   * todo [year]
-   */
-  server.get("/api/products/:id/suppliers", (req, res) => {
-    const { id } = req.params;
+  server.get("/api/products/:id/suppliers/:year", (req, res) => {
+    const { id, year } = req.params;
     const options = {
       method: "GET",
-      url: `${global.basePrimaveraUrl}/purchases/orders`,
+      url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
-    const year = 2020;
     console.log(year);
     return global.request(options, function (error, response, body) {
       if (error) res.json(error);
       res.json(processSuppliers(id, JSON.parse(body), year));
+    });
+  });
+
+  server.get("/api/products/:id/customers/:year", (req, res) => {
+    const { id, year } = req.params;
+    const options = {
+      method: "GET",
+      url: `${global.basePrimaveraUrl}/billing/invoices`,
+    };
+
+    console.log(year);
+    return global.request(options, function (error, response, body) {
+      if (error) res.json(error);
+      res.json(processCustomers(JSON.parse(body), id, year));
     });
   });
 };

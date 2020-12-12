@@ -5,10 +5,10 @@ const processPurchases = (orders, year) => {
 
   orders
     .filter((order) => moment(order.documentDate).year() == year)
-    .forEach(({ documentDate, payableAmount }) => {
+    .forEach(({ documentDate, taxExclusiveAmount }) => {
       const month = moment(documentDate).month();
 
-      monthlyCumulativeValue[month] += payableAmount.amount;
+      monthlyCumulativeValue[month] += taxExclusiveAmount.amount;
     });
 
   return monthlyCumulativeValue;
@@ -19,8 +19,8 @@ const getPurchasesBacklog = (orders) => {
 
   orders
     .filter((order) => moment(order.documentDate).isAfter(moment()))
-    .forEach(({ documentDate, payableAmount }) => {
-      purchasesBacklog += payableAmount.amount;
+    .forEach(({ documentDate, taxExclusiveAmount }) => {
+      purchasesBacklog += taxExclusiveAmount.amount;
     });
 
   return purchasesBacklog;
@@ -38,7 +38,7 @@ module.exports = (server) => {
 
       if (!JSON.parse(body).message) {
         const totalOrders = JSON.parse(body).reduce((acumulator, order) => {
-          acumulator += order.payableAmount.amount;
+          acumulator += order.taxExclusiveAmount.amount;
           return acumulator;
         }, 0);
 
@@ -51,7 +51,7 @@ module.exports = (server) => {
           if (e) res.json(e);
           if (!JSON.parse(b).message) {
             const totalPaid = JSON.parse(b).reduce((acumulator, invoice) => {
-              acumulator += invoice.payableAmount.amount;
+              acumulator += invoice.taxExclusiveAmount.amount;
               return acumulator;
             }, 0);
 

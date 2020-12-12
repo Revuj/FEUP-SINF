@@ -8,11 +8,11 @@ import { css } from "@emotion/core";
 import PuffLoader from "react-spinners/PuffLoader";
 import { useHistory } from "react-router-dom";
 
-const fetchSuppliers = async (id, year) => {
-  return axios.get(`/api/products/${id}/suppliers/${year}`);
+const fetchCustomers = async (id, year) => {
+  return axios.get(`/api/products/${id}/customers/${year}`);
 };
 
-export default function ProductSuppliers({
+export default function ProductCustomers({
   id,
   numberItemsPerPage,
   containerStyle,
@@ -35,44 +35,44 @@ export default function ProductSuppliers({
   ];
 
   const history = useHistory();
-  const [suppliers, setSuppliers] = useState(null);
+  const [customers, setCustomers] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await fetchSuppliers(id, year);
-      setSuppliers(data);
+      const { data } = await fetchCustomers(id, year);
+      setCustomers(data);
       setLoading(false);
     };
     fetchData();
   }, [id, year]);
 
   /*to able to sort the data we are going to retrieve */
-  const supplierData = useMemo(() => {
-    if (suppliers === null) return;
-    let computedSuppliers = suppliers;
+  const customerData = useMemo(() => {
+    if (customers === null) return;
+    let computedCustomers = customers;
 
     if (search) {
-      computedSuppliers = computedSuppliers.filter(
-        (supplier) => supplier.name.toLowerCase().includes(search.toLowerCase())
+      computedCustomers = computedCustomers.filter(
+        (customer) => customer.name.toLowerCase().includes(search.toLowerCase())
         // || suppier.email.toLowerCase().includes(search.toLowerCase())
       );
     }
 
-    setTotalItems(computedSuppliers.length);
+    setTotalItems(computedCustomers.length);
 
     if (sorting.field) {
       const reversed = sorting.order === "asc" ? 1 : -1;
-      computedSuppliers = computedSuppliers.sort(
+      computedCustomers = computedCustomers.sort(
         (a, b) => reversed * (a[sorting.field] - b[sorting.field])
       );
     }
 
     //Current Page slice
-    return computedSuppliers.slice(
+    return computedCustomers.slice(
       (currentPage - 1) * ITEMS_PER_PAGE,
       (currentPage - 1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE
     );
-  }, [suppliers, currentPage, search, sorting]);
+  }, [customers, currentPage, search, sorting]);
 
   const tableStyle = css`
     margin: 0;
@@ -86,7 +86,7 @@ export default function ProductSuppliers({
     <>
       <section className="table" style={containerStyle}>
         <header className="header_info">
-          <h3 className="table-title">Suppliers</h3>
+          <h3 className="table-title">Customers</h3>
           <Search
             onSearch={(value) => {
               setSearch(value);
@@ -102,21 +102,21 @@ export default function ProductSuppliers({
             onSorting={(field, order) => setSorting({ field, order })}
           />
           <tbody>
-            {supplierData &&
-              supplierData.map((supplier) => (
-                <tr key={supplier.id}>
+            {customerData &&
+              customerData.map((customer) => (
+                <tr key={customer.id}>
                   <th
                     scope="row"
                     className="table-link"
                     onClick={() => {
-                      history.push("/supplier/" + supplier.id);
+                      history.push("/customer/" + customer.id);
                     }}
                   >
-                    {supplier.id}
+                    {customer.id}
                   </th>
-                  <td>{supplier.name}</td>
-                  <td>{supplier.units}</td>
-                  <td>{formatMoney(supplier.value)}</td>
+                  <td>{customer.name}</td>
+                  <td>{customer.units}</td>
+                  <td>{formatMoney(customer.value)}</td>
                 </tr>
               ))}
           </tbody>

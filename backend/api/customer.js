@@ -42,7 +42,7 @@ const totalSales = (invoices, customer, year) => {
     );
 
     const total = validOrders.reduce(
-      (total, currentOrder) => total + currentOrder.payableAmount.amount,
+      (total, currentOrder) => total + currentOrder.taxExclusiveAmount.amount,
       0
     );
 
@@ -200,7 +200,7 @@ module.exports = (server) => {
                   naturalKey,
                   documentDate,
                   documentLines,
-                  payableAmount,
+                  taxExclusiveAmount,
                 }) => ({
                   reference: naturalKey,
                   date: documentDate.substr(0, 10),
@@ -208,7 +208,7 @@ module.exports = (server) => {
                     (acc, current) => acc + current.quantity,
                     0
                   ),
-                  value: payableAmount.amount,
+                  value: taxExclusiveAmount.amount,
                 })
               );
 

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import ProductInfo from "./ProductInfo";
 import ProductSuppliers from "./ProductSuppliers";
+import ProductCustomers from "./ProductCustomers";
 import ProductSalesvsPurchases from "./ProductSalesvsPurchases";
 import UnitsSold from "./UnitsSold";
 import UnitsPurchased from "./UnitsPurchased";
-
 import UnitsStock from "./UnitsStock";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
@@ -36,10 +36,15 @@ const Product = () => {
           </section>
           <section className="row-50-50">
             <span>
-              <ProductSalesvsPurchases id={id} year={year} />
+              <ProductCustomers id={id} numberItemsPerPage={5} year={year} />
             </span>
             <span>
-              <ProductSuppliers id={id} numberItemsPerPage={5} />
+              <ProductSuppliers id={id} numberItemsPerPage={5} year={year} />
+            </span>
+          </section>
+          <section>
+            <span>
+              <ProductSalesvsPurchases id={id} year={year} />
             </span>
           </section>
         </div>

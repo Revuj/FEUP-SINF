@@ -72,7 +72,7 @@ const Procurement = ({ title, setPage }) => {
           />
           <GenericCard
             className="orders-to-arrive"
-            title="Purchase backlog"
+            title="Purchases backlog"
             description="Amounts of money in orders that are to arrive."
             amount={purchasesBacklog}
             formatter={formatMoney}

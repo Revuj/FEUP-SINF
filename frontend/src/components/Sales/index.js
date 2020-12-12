@@ -32,7 +32,7 @@ const Sales = ({ setPage }) => {
       setBacklog(backlogValue.data);
       setGpm(
         !sales.data
-          ? null
+          ? 'N/A'
           : (sales.data - (data.cogs.totalDebit - data.cogs.totalCredit)) /
               sales.data
       );

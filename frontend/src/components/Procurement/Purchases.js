@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { css } from '@emotion/core';
-import PuffLoader from 'react-spinners/PuffLoader';
-import { Line } from 'react-chartjs-2';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { css } from "@emotion/core";
+import PuffLoader from "react-spinners/PuffLoader";
+import { Line } from "react-chartjs-2";
 
 function PurchasesByTime({ year }) {
   const [purchases, setPurchases] = useState(null);
@@ -17,27 +17,27 @@ function PurchasesByTime({ year }) {
         setPurchases(response.data);
         setPurchases({
           labels: [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
           ],
           datasets: [
             {
-              label: 'Purchases',
-              data: purchases,
+              label: "Purchases",
+              data: response.data,
               fill: false,
-              backgroundColor: 'rgb(255, 99, 132)',
-              borderColor: 'rgba(255, 99, 132, 0.2)',
-              yAxisID: 'y-axis-1',
+              backgroundColor: "rgb(255, 99, 132)",
+              borderColor: "rgba(255, 99, 132, 0.2)",
+              yAxisID: "y-axis-1",
             },
           ],
         });
@@ -52,10 +52,10 @@ function PurchasesByTime({ year }) {
     scales: {
       yAxes: [
         {
-          type: 'linear',
+          type: "linear",
           display: true,
-          position: 'left',
-          id: 'y-axis-1',
+          position: "left",
+          id: "y-axis-1",
         },
       ],
     },
@@ -72,11 +72,11 @@ function PurchasesByTime({ year }) {
   return (
     <div className="chart">
       <h3 className="chart-title">Purchases</h3>
-      <div className="graph-loading" style={loading ? { height: '250px' } : {}}>
+      <div className="graph-loading" style={loading ? { height: "250px" } : {}}>
         <PuffLoader
           css={graphStyle}
           size={60}
-          color={'#ffbf54'}
+          color={"#ffbf54"}
           loading={loading}
           className="loader"
         />

@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import GenericCard from '../GenericCard';
-import { formatMoney } from '../../helper/CurrencyFormater';
-import Purchases from './Purchases';
-import SuppliersTable from '../Procurement/SuppliersTable';
-import '../../styles/Procurement.css';
-import { YearPicker } from '../YearPicker';
-import { fetchAccountsPayable } from '../../actions/financial';
-import { fetchDebt } from '../../actions/purchases';
-import PurchasesBacklogTable from './PurchasesBacklogTable';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import GenericCard from "../GenericCard";
+import { formatMoney } from "../../helper/CurrencyFormater";
+import Purchases from "./Purchases";
+import SuppliersTable from "../Procurement/SuppliersTable";
+import "../../styles/Procurement.css";
+import { YearPicker } from "../YearPicker";
+import { fetchAccountsPayable } from "../../actions/financial";
+import { fetchDebt } from "../../actions/purchases";
+import PurchasesBacklogTable from "./PurchasesBacklogTable";
 import TopProductsTable from "./TopProductsTable";
-import Layout from '../Layout';
+import Layout from "../Layout";
 
 const Procurement = ({ title, setPage }) => {
   const [year, setYear] = useState("2020");
@@ -117,7 +117,12 @@ const Procurement = ({ title, setPage }) => {
         <section className="row-50-50">
           <span>
             <Purchases year={year} />
-            <PurchasesBacklogTable numberItemsPerPage={4} setPage={setPage} />
+            <SuppliersTable
+              setPage={setPage}
+              numberItemsPerPage={6}
+              containerStyle={{ width: "100%" }}
+              year={year}
+            />{" "}
           </span>
           <span>
             <TopProductsTable
@@ -126,17 +131,7 @@ const Procurement = ({ title, setPage }) => {
               containerStyle={{ width: "100%" }}
               year={year}
             />
-          </span>
-        </section>
-        <section className="row-50-50">
-          <span></span>
-          <span>
-            <SuppliersTable
-              setPage={setPage}
-              numberItemsPerPage={6}
-              containerStyle={{ width: "100%" }}
-              year={year}
-            />
+            <PurchasesBacklogTable numberItemsPerPage={4} setPage={setPage} />
           </span>
         </section>
       </div>

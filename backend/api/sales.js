@@ -2,16 +2,18 @@ const moment = require('moment');
 
 const processMonthlySales = (invoices, year) => {
   let monthlyCumulativeValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  
+
   invoices
-    .filter((invoice) => moment(invoice.documentDate).year() == parseInt(year,10))
+    .filter(
+      (invoice) => moment(invoice.documentDate).year() == parseInt(year, 10)
+    )
     .forEach(({ documentDate, grossValue }) => {
       const month = moment(documentDate).month();
-     // monthlyCumulativeValue[month] += payableAmount.amount;
-     monthlyCumulativeValue[month] += grossValue.amount;
+      // monthlyCumulativeValue[month] += payableAmount.amount;
+      monthlyCumulativeValue[month] += grossValue.amount;
     });
 
-  return monthlyCumulativeValue
+  return monthlyCumulativeValue;
 };
 
 const processSales = (invoices, year) => {
@@ -53,12 +55,13 @@ const getNetSales = (invoices, year) => {
 
 */
   return invoices
-    .filter((invoice) => moment(invoice.documentDate).year() === parseInt(year,10))
-    .reduce((current, invoice) => current + invoice.taxExclusiveAmount.amount, 0);
-
-
-
-
+    .filter(
+      (invoice) => moment(invoice.documentDate).year() === parseInt(year, 10)
+    )
+    .reduce(
+      (current, invoice) => current + invoice.taxExclusiveAmount.amount,
+      0
+    );
 };
 
 const processSalesBacklog = (orders, invoices) => {
@@ -66,16 +69,17 @@ const processSalesBacklog = (orders, invoices) => {
   let counter = 0;
   orders
     .filter((order) => {
-        for (const invoice of invoices){
-          for (const docLine of invoice.documentLines){
-            if (order.naturalKey === docLine.sourceDoc
-              // && docLine.documentLineStatus === 2   // E para usar so os invoices completed?
-              ){
-              return false;
-            }
+      for (const invoice of invoices) {
+        for (const docLine of invoice.documentLines) {
+          if (
+            order.naturalKey === docLine.sourceDoc
+            // && docLine.documentLineStatus === 2   // E para usar so os invoices completed?
+          ) {
+            return false;
           }
         }
-        return true;
+      }
+      return true;
     })
     .forEach(
       ({
@@ -107,17 +111,18 @@ const getSalesBacklog = (orders, invoices) => {
   let salesBacklog = 0;
   orders
     .filter((order) => {
-      for (const invoice of invoices){
-        for (const docLine of invoice.documentLines){
-          if (order.naturalKey === docLine.sourceDoc
+      for (const invoice of invoices) {
+        for (const docLine of invoice.documentLines) {
+          if (
+            order.naturalKey === docLine.sourceDoc
             // && docLine.documentLineStatus === 2   // E para usar so os invoices completed?
-            ){
+          ) {
             return false;
           }
         }
       }
       return true;
-    }) //mudar no futuro
+    })
     .forEach(({ payableAmount }) => {
       salesBacklog += payableAmount.amount;
     });
@@ -181,13 +186,24 @@ module.exports = (server, db) => {
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
-    return global.request(options_sales, function (errorSales, response, bodySales) {
-      if (errorSales) res.json(errorSales);
-      return global.request(options_invoices, function (errorInvoices, response, bodyInvoices) {
-        if (errorInvoices) res.json(errorInvoices);
-        res.json(processSalesBacklog(JSON.parse(bodySales), JSON.parse(bodyInvoices)));
-      });
-    });
+    return global.request(
+      options_sales,
+      function (errorSales, response, bodySales) {
+        if (errorSales) res.json(errorSales);
+        return global.request(
+          options_invoices,
+          function (errorInvoices, response, bodyInvoices) {
+            if (errorInvoices) res.json(errorInvoices);
+            res.json(
+              processSalesBacklog(
+                JSON.parse(bodySales),
+                JSON.parse(bodyInvoices)
+              )
+            );
+          }
+        );
+      }
+    );
   });
 
   // backlog value
@@ -202,13 +218,21 @@ module.exports = (server, db) => {
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
-    return global.request(options_sales, function (errorSales, response, bodySales) {
-      if (errorSales) res.json(errorSales);
-      return global.request(options_invoices, function (errorInvoices, response, bodyInvoices) {
-        if (errorInvoices) res.json(errorInvoices);
-        res.json(getSalesBacklog(JSON.parse(bodySales), JSON.parse(bodyInvoices)));
-      });
-    });
+    return global.request(
+      options_sales,
+      function (errorSales, response, bodySales) {
+        if (errorSales) res.json(errorSales);
+        return global.request(
+          options_invoices,
+          function (errorInvoices, response, bodyInvoices) {
+            if (errorInvoices) res.json(errorInvoices);
+            res.json(
+              getSalesBacklog(JSON.parse(bodySales), JSON.parse(bodyInvoices))
+            );
+          }
+        );
+      }
+    );
   });
 
   // sales clients

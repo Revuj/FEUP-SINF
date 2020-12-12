@@ -56,7 +56,7 @@ const Sales = ({ setPage }) => {
               unit="%"
               styleTitle={{
                 borderBottom: '1px solid black',
-                backgroundColor: '#37d5d6',
+                backgroundColor: '#ffbf54',
                 color: 'white',
               }}
             />
@@ -68,7 +68,7 @@ const Sales = ({ setPage }) => {
               unit="€"
               styleTitle={{
                 borderBottom: '1px solid black',
-                backgroundColor: '#37d5d6',
+                backgroundColor: '#ffbf54',
                 color: 'white',
               }}
             />
@@ -80,7 +80,7 @@ const Sales = ({ setPage }) => {
               unit="€"
               styleTitle={{
                 borderBottom: '1px solid black',
-                backgroundColor: '#37d5d6',
+                backgroundColor: '#ffbf54',
                 color: 'white',
               }}
               styleCard={{

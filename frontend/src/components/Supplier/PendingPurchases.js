@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useMemo } from "react";
-import Search from "../Search";
-import PaginationComponent from "../Pagination";
-import TableHeader from "../TableHeader";
-import { fetchPendingPurchases } from "../../actions/suppliers";
-import { css } from "@emotion/core";
-import PuffLoader from "react-spinners/PuffLoader";
-import { formatMoney } from "../../helper/CurrencyFormater";
+import React, { useState, useEffect, useMemo } from 'react';
+import Search from '../Search';
+import PaginationComponent from '../Pagination';
+import TableHeader from '../TableHeader';
+import { fetchPendingPurchases } from '../../actions/suppliers';
+import { css } from '@emotion/core';
+import PuffLoader from 'react-spinners/PuffLoader';
+import { formatMoney } from '../../helper/CurrencyFormater';
 
 export default function PendingPurchases({
   id,
@@ -16,15 +16,15 @@ export default function PendingPurchases({
   const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState("");
-  const [sorting, setSorting] = useState({ field: "", order: "" });
+  const [search, setSearch] = useState('');
+  const [sorting, setSorting] = useState({ field: '', order: '' });
 
   const ITEMS_PER_PAGE = numberItemsPerPage;
   const headers = [
-    { name: "Reference", field: "reference", sortable: false },
-    { name: "Date", field: "date", sortable: true },
-    { name: "Units Purchased", field: "units", sortable: true },
-    { name: "Value Purchased", field: "value", sortable: true },
+    { name: 'Reference', field: 'reference', sortable: false },
+    { name: 'Date', field: 'date', sortable: true },
+    { name: 'Units Purchased', field: 'units', sortable: true },
+    { name: 'Value Purchased', field: 'value', sortable: true },
   ];
 
   const [rows, setRows] = useState([]);
@@ -52,10 +52,10 @@ export default function PendingPurchases({
     setTotalItems(computedRows.length);
 
     if (sorting.field) {
-      const reversed = sorting.order === "asc" ? 1 : -1;
+      const reversed = sorting.order === 'asc' ? 1 : -1;
 
-      if (sorting.field === "date") {
-        console.log("oioi");
+      if (sorting.field === 'date') {
+        console.log('oioi');
         computedRows = computedRows.sort(
           (a, b) => reversed * (Date.parse(a.date) - Date.parse(b.date))
         );
@@ -123,12 +123,12 @@ export default function PendingPurchases({
 
         <div
           className="table-loading"
-          style={loading ? { height: "250px" } : {}}
+          style={loading ? { height: '250px' } : {}}
         >
           <PuffLoader
             css={tableStyle}
             size={60}
-            color={"#37d5d6"}
+            color={'#ffbf54'}
             loading={loading}
             className="loader"
           />

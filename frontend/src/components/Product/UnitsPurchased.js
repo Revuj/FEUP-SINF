@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { formatMoney } from "../../helper/CurrencyFormater";
-import axios from "axios";
-import "../../styles/GenericCard.css";
-import PuffLoader from "react-spinners/PuffLoader";
-import { css } from "@emotion/core";
-import { fetchUnitsPurchased } from "../../actions/product";
+import React, { useState, useEffect } from 'react';
+import { formatMoney } from '../../helper/CurrencyFormater';
+import axios from 'axios';
+import '../../styles/GenericCard.css';
+import PuffLoader from 'react-spinners/PuffLoader';
+import { css } from '@emotion/core';
+import { fetchUnitsPurchased } from '../../actions/product';
 
 const styleTitle = {
-  borderBottom: "1px solid black",
-  backgroundColor: "#37d5d6",
-  color: "white",
+  borderBottom: '1px solid black',
+  backgroundColor: '#ffbf54',
+  color: 'white',
 };
 
 const spinnerStyle = css`
@@ -53,7 +53,7 @@ const UnitsPurchased = ({ id, year }) => {
           <PuffLoader
             css={spinnerStyle}
             size={60}
-            color={"#37d5d6"}
+            color={'#ffbf54'}
             loading={loading == true}
             className="loader"
           />

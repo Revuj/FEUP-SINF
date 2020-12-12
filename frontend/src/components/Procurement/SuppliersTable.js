@@ -9,7 +9,7 @@ import { css } from '@emotion/core';
 import PuffLoader from 'react-spinners/PuffLoader';
 import '../../styles/Table.css';
 import { useHistory } from 'react-router-dom';
-import { formatMoney } from "../../helper/CurrencyFormater";
+import { formatMoney } from '../../helper/CurrencyFormater';
 
 const SuppliersTable = ({
   numberItemsPerPage,
@@ -21,17 +21,17 @@ const SuppliersTable = ({
   const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState("");
-  const [sorting, setSorting] = useState({ field: "", order: "" });
+  const [search, setSearch] = useState('');
+  const [sorting, setSorting] = useState({ field: '', order: '' });
   const [suppliers, setSuppliers] = useState([]);
 
   const ITEMS_PER_PAGE = numberItemsPerPage;
 
   const headers = [
-    { name: "ID", field: "id", sortable: false },
-    { name: "Name", field: "name", sortable: false },
-    { name: "Units Purchased", field: "units", sortable: true },
-    { name: "Value Purchased", field: "value", sortable: true },
+    { name: 'ID', field: 'id', sortable: false },
+    { name: 'Name', field: 'name', sortable: false },
+    { name: 'Units Purchased', field: 'units', sortable: true },
+    { name: 'Value Purchased', field: 'value', sortable: true },
   ];
 
   const history = useHistory();
@@ -62,7 +62,7 @@ const SuppliersTable = ({
 
     //Sorting suppliers
     if (sorting.field) {
-      const reversed = sorting.order === "asc" ? 1 : -1;
+      const reversed = sorting.order === 'asc' ? 1 : -1;
 
       computedSuppliers = computedSuppliers.sort(
         (a, b) => reversed * (a[sorting.field] - b[sorting.field])
@@ -110,7 +110,7 @@ const SuppliersTable = ({
                   scope="row"
                   className="table-link"
                   onClick={() => {
-                    history.push('/supplier/'+supplier.id);
+                    history.push('/supplier/' + supplier.id);
                   }}
                 >
                   {supplier.id}
@@ -133,12 +133,12 @@ const SuppliersTable = ({
 
         <div
           className="table-loading"
-          style={loading ? { height: "250px" } : {}}
+          style={loading ? { height: '250px' } : {}}
         >
           <PuffLoader
             css={tableStyle}
             size={60}
-            color={"#37d5d6"}
+            color={'#ffbf54'}
             loading={loading}
             className="loader"
           />

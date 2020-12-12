@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
-import Search from "../Search";
-import PaginationComponent from "../Pagination";
-import TableHeader from "../TableHeader";
-import { formatMoney } from "../../helper/CurrencyFormater";
-import { css } from "@emotion/core";
-import PuffLoader from "react-spinners/PuffLoader";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState, useMemo } from 'react';
+import axios from 'axios';
+import Search from '../Search';
+import PaginationComponent from '../Pagination';
+import TableHeader from '../TableHeader';
+import { formatMoney } from '../../helper/CurrencyFormater';
+import { css } from '@emotion/core';
+import PuffLoader from 'react-spinners/PuffLoader';
+import { useHistory } from 'react-router-dom';
 
 const fetchCustomers = async (id, year) => {
   return axios.get(`/api/products/${id}/customers/${year}`);
@@ -23,15 +23,15 @@ export default function ProductCustomers({
   const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState("");
-  const [sorting, setSorting] = useState({ field: "", order: "" });
+  const [search, setSearch] = useState('');
+  const [sorting, setSorting] = useState({ field: '', order: '' });
 
   const ITEMS_PER_PAGE = numberItemsPerPage;
   const headers = [
-    { name: "ID", field: "id", sortable: false },
-    { name: "Name", field: "name", sortable: false },
-    { name: "Units Purchased", field: "units", sortable: true },
-    { name: "Value Purchased", field: "value", sortable: true },
+    { name: 'ID', field: 'id', sortable: false },
+    { name: 'Name', field: 'name', sortable: false },
+    { name: 'Units Purchased', field: 'units', sortable: true },
+    { name: 'Value Purchased', field: 'value', sortable: true },
   ];
 
   const history = useHistory();
@@ -61,7 +61,7 @@ export default function ProductCustomers({
     setTotalItems(computedCustomers.length);
 
     if (sorting.field) {
-      const reversed = sorting.order === "asc" ? 1 : -1;
+      const reversed = sorting.order === 'asc' ? 1 : -1;
       computedCustomers = computedCustomers.sort(
         (a, b) => reversed * (a[sorting.field] - b[sorting.field])
       );
@@ -109,7 +109,7 @@ export default function ProductCustomers({
                     scope="row"
                     className="table-link"
                     onClick={() => {
-                      history.push("/customer/" + customer.id);
+                      history.push('/customer/' + customer.id);
                     }}
                   >
                     {customer.id}
@@ -131,12 +131,12 @@ export default function ProductCustomers({
         />
         <div
           className="table-loading"
-          style={loading ? { height: "250px" } : {}}
+          style={loading ? { height: '250px' } : {}}
         >
           <PuffLoader
             css={tableStyle}
             size={60}
-            color={"#37d5d6"}
+            color={'#ffbf54'}
             loading={loading}
             className="loader"
           />

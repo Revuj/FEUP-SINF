@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import axios from "axios";
-import PuffLoader from "react-spinners/PuffLoader";
-import { css } from "@emotion/core";
+import React, { useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import axios from 'axios';
+import PuffLoader from 'react-spinners/PuffLoader';
+import { css } from '@emotion/core';
 
 const fetchCustomerData = async (id) => {
   return await axios.get(`/api/customer/${id}`);
@@ -21,9 +21,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const styleTitle = {
-  borderBottom: "1px solid black",
-  backgroundColor: "#37d5d6",
-  color: "white",
+  borderBottom: '1px solid black',
+  backgroundColor: '#ffbf54',
+  color: 'white',
 };
 
 const spinnerStyle = css`
@@ -99,7 +99,7 @@ const CustomerInformation = ({ id }) => {
         <PuffLoader
           css={spinnerStyle}
           size={60}
-          color={"#37d5d6"}
+          color={'#ffbf54'}
           loading={loading == true}
           className="loader"
         />

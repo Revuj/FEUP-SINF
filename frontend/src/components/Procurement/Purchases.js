@@ -74,7 +74,7 @@ function PurchasesByTime({ year }) {
         <PuffLoader
           css={graphStyle}
           size={60}
-          color={'#37d5d6'}
+          color={'#ffbf54'}
           loading={loading}
           className="loader"
         />

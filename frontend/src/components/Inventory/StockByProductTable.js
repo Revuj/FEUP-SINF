@@ -8,7 +8,7 @@ import Product from '../Product/Product';
 import { css } from '@emotion/core';
 import PuffLoader from 'react-spinners/PuffLoader';
 import { useHistory } from 'react-router-dom';
-import { formatMoney } from "../../helper/CurrencyFormater";
+import { formatMoney } from '../../helper/CurrencyFormater';
 import '../../styles/Table.css';
 
 const StockByProductTable = ({
@@ -20,16 +20,16 @@ const StockByProductTable = ({
   const [loading, setLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState("");
-  const [sorting, setSorting] = useState({ field: "", order: "" });
+  const [search, setSearch] = useState('');
+  const [sorting, setSorting] = useState({ field: '', order: '' });
 
   const ITEMS_PER_PAGE = numberItemsPerPage;
 
   const headers = [
-    { name: "ID", field: "id", sortable: false },
-    { name: "Name", field: "name", sortable: false },
-    { name: "Stock", field: "quantity", sortable: true },
-    { name: "Total value of stock", field: "value", sortable: true },
+    { name: 'ID', field: 'id', sortable: false },
+    { name: 'Name', field: 'name', sortable: false },
+    { name: 'Stock', field: 'quantity', sortable: true },
+    { name: 'Total value of stock', field: 'value', sortable: true },
   ];
 
   const [products, setProducts] = useState([]);
@@ -38,7 +38,7 @@ const StockByProductTable = ({
 
   useEffect(() => {
     axios
-      .get("/api/inventory/products")
+      .get('/api/inventory/products')
       .then((response) => {
         setProducts(response.data);
         setLoading(false);
@@ -62,7 +62,7 @@ const StockByProductTable = ({
 
     //Sorting products
     if (sorting.field) {
-      const reversed = sorting.order === "asc" ? 1 : -1;
+      const reversed = sorting.order === 'asc' ? 1 : -1;
       computedProducts = computedProducts.sort(
         (a, b) => reversed * (a[sorting.field] - b[sorting.field])
       );
@@ -109,7 +109,7 @@ const StockByProductTable = ({
                   className="table-link"
                   scope="row"
                   onClick={() => {
-                    history.push('/product/'+product.id);
+                    history.push('/product/' + product.id);
                   }}
                 >
                   {product.id}
@@ -131,12 +131,12 @@ const StockByProductTable = ({
         />
         <div
           className="table-loading"
-          style={loading ? { height: "250px" } : {}}
+          style={loading ? { height: '250px' } : {}}
         >
           <PuffLoader
             css={tableStyle}
             size={60}
-            color={"#37d5d6"}
+            color={'#ffbf54'}
             loading={loading}
             className="loader"
           />

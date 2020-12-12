@@ -1,4 +1,4 @@
-const moment = require("moment");
+const moment = require('moment');
 
 const processPurchases = (orders, year) => {
   let monthlyCumulativeValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -27,9 +27,9 @@ const getPurchasesBacklog = (orders) => {
 };
 
 module.exports = (server) => {
-  server.get("/api/purchases/debt-suppliers", (req, res) => {
+  server.get('/api/purchases/debt-suppliers', (req, res) => {
     let options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
@@ -43,7 +43,7 @@ module.exports = (server) => {
         }, 0);
 
         options = {
-          method: "GET",
+          method: 'GET',
           url: `${global.basePrimaveraUrl}/accountsPayable/payments`,
         };
 
@@ -62,10 +62,10 @@ module.exports = (server) => {
     });
   });
 
-  server.get("/api/purchases/:year", (req, res) => {
+  server.get('/api/purchases/:year', (req, res) => {
     const { year } = req.params;
     const options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
@@ -78,14 +78,14 @@ module.exports = (server) => {
     });
   });
 
-  server.get("/api/purchasesBacklog", (req, res) => {
+  server.get('/api/purchasesBacklog', (req, res) => {
     const options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
     const options1 = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/goodsReceipt/processOrders/1/1000?company=${process.env.COMPANY_KEY}`,
     };
 

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import axios from "axios";
-import PuffLoader from "react-spinners/PuffLoader";
-import { css } from "@emotion/core";
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
+import PuffLoader from 'react-spinners/PuffLoader';
+import { css } from '@emotion/core';
 
 const fetchStockUnits = async (id) => {
   return axios.get(`/api/products/${id}/stock-units`);
@@ -14,16 +14,16 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
   },
   value: {
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 26,
     color: theme.palette.text.secondary,
   },
 }));
 
 const styleTitle = {
-  borderBottom: "1px solid black",
-  backgroundColor: "#37d5d6",
-  color: "white",
+  borderBottom: '1px solid black',
+  backgroundColor: '#ffbf54',
+  color: 'white',
 };
 
 const spinnerStyle = css`
@@ -62,7 +62,7 @@ const UnitsStock = ({ id }) => {
           <PuffLoader
             css={spinnerStyle}
             size={60}
-            color={"#37d5d6"}
+            color={'#ffbf54'}
             loading={loading == true}
             className="loader"
           />

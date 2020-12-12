@@ -42,7 +42,7 @@ const GenericCard = ({
           <PuffLoader
             css={spinnerStyle}
             size={60}
-            color={'#37d5d6'}
+            color={'#ffbf54'}
             loading={amount == null}
             className="loader"
           />

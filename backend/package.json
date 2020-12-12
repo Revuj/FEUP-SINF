@@ -15,6 +15,7 @@
     "json-server": "^0.16.3",
     "moment": "^2.29.1",
     "redis": "^3.0.2",
+    "redis-server": "^1.2.2",
     "request": "^2.88.2",
     "xml2json": "^0.12.0"
   }

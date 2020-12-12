@@ -35,7 +35,7 @@ function SalesAndPurchases({ year, height }) {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [year]);
 
   useEffect(() => {
     const updateGraph = () => {

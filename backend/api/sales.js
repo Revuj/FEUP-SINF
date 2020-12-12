@@ -1,4 +1,4 @@
-const moment = require("moment");
+const moment = require('moment');
 
 const processMonthlySales = (invoices, year) => {
   let monthlyCumulativeValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -87,13 +87,13 @@ const processSalesBacklog = (orders, invoices) => {
         salesBacklog[counter] = {
           date: documentDate.substr(0, 10),
           customer: buyerCustomerPartyName,
-          items: "",
+          items: '',
           value: Number(payableAmount.amount),
         };
 
         documentLines.forEach((item) => {
           salesBacklog[counter].items +=
-            item.quantity + "x " + item.description + ";  ";
+            item.quantity + 'x ' + item.description + ';  ';
         });
 
         counter++;
@@ -134,17 +134,17 @@ const processDebtCustomers = (invoices) => {
 };
 
 const processCogs = (entries) => {
-  let temp = entries.filter((entry) => entry.accountType.indexOf("61") == 0);
+  let temp = entries.filter((entry) => entry.accountType.indexOf('61') == 0);
   const total = temp.reduce((acc, entry) => acc + entry.amount, 0);
   return total;
 };
 
-module.exports = (server, db, client) => {
+module.exports = (server, db, cache) => {
   // monthly sales by year
-  server.get("/api/sales/:year([0-9]+)", (req, res) => {
+  server.get('/api/sales/:year([0-9]+)', (req, res) => {
     const { year } = req.params;
     const options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
@@ -154,9 +154,9 @@ module.exports = (server, db, client) => {
     });
   });
 
-  server.get("/api/sales/debt-customers", (req, res) => {
+  server.get('/api/sales/debt-customers', (req, res) => {
     let options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
@@ -167,40 +167,33 @@ module.exports = (server, db, client) => {
   });
 
   // net sales
-  server.get("/api/sales/net/:year", (req, res) => {
+  server.get('/api/sales/net/:year', (req, res) => {
     const { year } = req.params;
     const options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
-    const key = "net_sales" + year;
-    try {
-      client.get(key, async (err, payload) => {
-        // return res.status(200).json(JSON.parse(payload));
-
-        if (payload != null) {
-          console.log("Sent " + payload);
-          return res.json(JSON.parse(payload));
-        }
-        return global.request(options, function (error, response, body) {
-          if (error) res.json(error);
-          const netSales = getNetSales(JSON.parse(body), year);
-          client.setex(key, 1440, JSON.stringify(netSales));
-          res.json(netSales);
-        });
+    const key = 'net_sales' + year;
+    const cachedNetSales = cache.get(key);
+    if (cachedNetSales == undefined) {
+      return global.request(options, function (error, response, body) {
+        if (error) res.json(error);
+        const netSales = getNetSales(JSON.parse(body), year);
+        cache.set(key, netSales, 1440);
+        res.json(netSales);
       });
-    } catch (error) {
-      console.log(error);
+    } else {
+      res.json(cachedNetSales);
     }
   });
 
   // sales products
-  server.get("/api/sales/products/:year([0-9]+)", (req, res) => {
+  server.get('/api/sales/products/:year([0-9]+)', (req, res) => {
     const { year } = req.params;
 
     const options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/billing/invoices `,
     };
 
@@ -211,14 +204,14 @@ module.exports = (server, db, client) => {
   });
 
   // backlog table
-  server.get("/api/sales/backlogProducts", (req, res) => {
+  server.get('/api/sales/backlogProducts', (req, res) => {
     const options_sales = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/sales/orders`,
     };
 
     const options_invoices = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
@@ -243,14 +236,14 @@ module.exports = (server, db, client) => {
   });
 
   // backlog value
-  server.get("/api/sales/backlog", (req, res) => {
+  server.get('/api/sales/backlog', (req, res) => {
     const options_sales = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/sales/orders`,
     };
 
     const options_invoices = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
@@ -271,10 +264,10 @@ module.exports = (server, db, client) => {
     );
   });
 
-  server.get("/api/sales/cogs/:year", (req, res) => {
+  server.get('/api/sales/cogs/:year', (req, res) => {
     const { year } = req.params;
     const accounts = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/financialCore/accountingEntries/getAccountingSummaries?startDate=1-1-${year}&endDate=31-12-${year}`,
     };
 

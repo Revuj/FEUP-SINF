@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import RevenueVsCost from "../Financial/RevenueVsCost";
-import GenericCard from "../GenericCard";
-import TopProductsTable from "../Sales/TopProductsTable";
-import SalesBacklogTable from "../Sales/SalesBacklogTable";
-import { formatMoney } from "../../helper/CurrencyFormater";
-import { YearPicker } from "../YearPicker";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import RevenueVsCost from '../Financial/RevenueVsCost';
+import GenericCard from '../GenericCard';
+import TopProductsTable from '../Sales/TopProductsTable';
+import SalesBacklogTable from '../Sales/SalesBacklogTable';
+import { formatMoney } from '../../helper/CurrencyFormater';
+import { YearPicker } from '../YearPicker';
 import {
   fetchCogs,
   fetchNetSales,
   fetchBacklogValue,
-} from "../../actions/sales";
+} from '../../actions/sales';
 import {
   fetchAccountsReceivable,
   fetchAccountsPayable,
-} from "../../actions/financial";
-import SalesAndPurchases from "./salesAndPurchases";
+} from '../../actions/financial';
+import SalesAndPurchases from './salesAndPurchases';
 
-import Layout from "../Layout";
+import Layout from '../Layout';
 
 const Overview = () => {
-  const [year, setYear] = useState("2020");
+  const [year, setYear] = useState('2020');
   const [gpm, setGpm] = useState(null);
   const [netSales, setNetSales] = useState(null);
   const [stock, setStock] = useState(null);
@@ -38,7 +38,6 @@ const Overview = () => {
       const { data } = await fetchCogs(year);
       const sales = await fetchNetSales(year);
       setNetSales(sales.data);
-      const { data } = await fetchCogs();
       const backlogValue = await fetchBacklogValue();
       const acReceivable = (await fetchAccountsReceivable()).data;
       const acPayable = (await fetchAccountsPayable()).data;
@@ -57,7 +56,7 @@ const Overview = () => {
         });
 
       axios
-        .get("/api/inventory/stock")
+        .get('/api/inventory/stock')
         .then((response) => {
           setStock(response.data);
         })
@@ -94,9 +93,9 @@ const Overview = () => {
               formatter={(x) => Math.round((x + Number.EPSILON) * 100) / 100}
               unit="%"
               styleTitle={{
-                borderBottom: "1px solid black",
-                backgroundColor: "#ffbf54",
-                color: "white",
+                borderBottom: '1px solid black',
+                backgroundColor: '#ffbf54',
+                color: 'white',
               }}
             />
             <GenericCard
@@ -106,9 +105,9 @@ const Overview = () => {
               formatter={formatMoney}
               unit="€"
               styleTitle={{
-                borderBottom: "1px solid black",
-                backgroundColor: "#ffbf54",
-                color: "white",
+                borderBottom: '1px solid black',
+                backgroundColor: '#ffbf54',
+                color: 'white',
               }}
             />
             <GenericCard
@@ -118,9 +117,9 @@ const Overview = () => {
               formatter={formatMoney}
               unit="€"
               styleTitle={{
-                borderBottom: "1px solid black",
-                backgroundColor: "#ffbf54",
-                color: "white",
+                borderBottom: '1px solid black',
+                backgroundColor: '#ffbf54',
+                color: 'white',
               }}
             />
             <GenericCard
@@ -130,9 +129,9 @@ const Overview = () => {
               formatter={formatMoney}
               unit="€"
               styleTitle={{
-                borderBottom: "1px solid black",
-                backgroundColor: "#ffbf54",
-                color: "white",
+                borderBottom: '1px solid black',
+                backgroundColor: '#ffbf54',
+                color: 'white',
               }}
             />
             <GenericCard
@@ -142,9 +141,9 @@ const Overview = () => {
               formatter={formatMoney}
               unit="€"
               styleTitle={{
-                borderBottom: "1px solid black",
-                backgroundColor: "#ffbf54",
-                color: "white",
+                borderBottom: '1px solid black',
+                backgroundColor: '#ffbf54',
+                color: 'white',
               }}
             />
             <GenericCard
@@ -154,12 +153,12 @@ const Overview = () => {
               formatter={formatMoney}
               unit="€"
               styleTitle={{
-                borderBottom: "1px solid black",
-                backgroundColor: "#ffbf54",
-                color: "white",
+                borderBottom: '1px solid black',
+                backgroundColor: '#ffbf54',
+                color: 'white',
               }}
               styleCard={{
-                backgroundColor: "white",
+                backgroundColor: 'white',
               }}
             />
             <GenericCard
@@ -169,12 +168,12 @@ const Overview = () => {
               formatter={formatMoney}
               unit="€"
               styleTitle={{
-                borderBottom: "1px solid black",
-                backgroundColor: "#ffbf54",
-                color: "white",
+                borderBottom: '1px solid black',
+                backgroundColor: '#ffbf54',
+                color: 'white',
               }}
               styleCard={{
-                backgroundColor: "white",
+                backgroundColor: 'white',
               }}
             />
             <GenericCard
@@ -185,9 +184,9 @@ const Overview = () => {
               formatter={formatMoney}
               unit="€"
               styleTitle={{
-                borderBottom: "1px solid black",
-                backgroundColor: "#ffbf54",
-                color: "white",
+                borderBottom: '1px solid black',
+                backgroundColor: '#ffbf54',
+                color: 'white',
               }}
             />
           </section>

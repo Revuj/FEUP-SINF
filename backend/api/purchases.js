@@ -37,39 +37,24 @@ const getPurchasesBacklog = (orders, invoices) => {
   return purchasesBacklog;
 };
 
+const processDebtToSuppliers = (invoices) => {
+  let temp = invoices;
+  if (!Array.isArray(temp)) temp = [temp];
+
+  return temp.reduce((acc, invoice) => acc + invoice.payableAmount.amount, 0);
+}
+
 module.exports = (server) => {
   server.get('/api/purchases/debt-suppliers', (req, res) => {
     let options = {
       method: 'GET',
-      url: `${global.basePrimaveraUrl}/purchases/orders`,
+      url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
 
     return global.request(options, (error, response, body) => {
       if (error) res.json(error);
-
-      if (!JSON.parse(body).message) {
-        const totalOrders = JSON.parse(body).reduce((acumulator, order) => {
-          acumulator += order.taxExclusiveAmount.amount;
-          return acumulator;
-        }, 0);
-
-        options = {
-          method: 'GET',
-          url: `${global.basePrimaveraUrl}/accountsPayable/payments`,
-        };
-
-        global.request(options, (e, r, b) => {
-          if (e) res.json(e);
-          if (!JSON.parse(b).message) {
-            const totalPaid = JSON.parse(b).reduce((acumulator, invoice) => {
-              acumulator += invoice.taxExclusiveAmount.amount;
-              return acumulator;
-            }, 0);
-
-            res.json({ debt: Math.abs(totalOrders - totalPaid) });
-          }
-        });
-      }
+      res.json(processDebtToSuppliers(JSON.parse(body)));
+     
     });
   });
 
@@ -77,7 +62,7 @@ module.exports = (server) => {
     const { year } = req.params;
     const options = {
       method: 'GET',
-      url: `${global.basePrimaveraUrl}/purchases/orders`,
+      url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
 
     return global.request(options, (error, response, body) => {

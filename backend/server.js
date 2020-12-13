@@ -9,7 +9,6 @@ const _router = router('db.json');
 const middlewares = defaults({ noCors: false });
 const db = _router.db.__wrapped__;
 
-const redis = require('redis');
 const NodeCache = require('node-cache');
 const cache = new NodeCache();
 
@@ -27,7 +26,7 @@ const salesAPI = require('./api/sales');
 const productAPI = require('./api/product');
 const clientAPI = require('./api/customer');
 
-FinancialController(server, db);
+FinancialController(server, db, cache);
 salesAPI(server, db, cache);
 purchasesAPI(server, cache);
 suppliersAPI(server, cache);

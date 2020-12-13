@@ -1285,78 +1285,146 @@ const inventoryTurnover = (account, journal) => {
   return (costOfGods.totalDebit - costOfGods.totalCredit) / inventory;
 };
 
-module.exports = (server, db) => {
+module.exports = (server, db, cache) => {
   server.get("/api/financial/balance-sheet", (req, res) => {
-    const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
-    res.json(balanceSheet(accounts));
+    const key = "financial_balanceSheet";
+    const cached = cache.get(key);
+    if (cached == undefined) {
+      const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
+      const balanceSheetObj = balanceSheet(accounts);
+      cache.set(key, balanceSheetObj, 3600);
+      res.json(balanceSheetObj);
+    } else {
+      res.json(cached);
+    }
   });
 
   server.get("/api/financial/accounts-receivable", (req, res) => {
-    const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
-    const assets = getAssets(accounts);
-
-    // console.table(assets.currentAssets);
-
-    const clients = assets.currentAssets.find(
-      (element) => element.name === "Clientes"
-    );
-
-    res.json(clients.value);
+    const key = "financial_accounts_receivable";
+    const cached = cache.get(key);
+    if (cached == undefined) {
+      const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
+      const assets = getAssets(accounts);
+      const clients = assets.currentAssets.find(
+        (element) => element.name === "Clientes"
+      );
+      cache.set(key, clients.value, 3600);
+      res.json(clients.value);
+    }
+    else {
+      res.json(cached);
+    }
+ 
   });
 
   server.get("/api/financial/accounts-payable", (req, res) => {
-    const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
-    const liabilities = getLiabilities(accounts);
+    const key = "financial_accounts_payable";
+    const cached = cache.get(key);
+    if (cached == undefined) {
+      const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
+      const liabilities = getLiabilities(accounts);
+      // console.table(assets.currentLiabilities);
+  
+      const suppliers = liabilities.currentLiabilities.find(
+        (element) => element.name === "Fornecedores"
+      );
+      cache.set(key, suppliers.value, 3600);
+      res.json(suppliers.value);
+    } else {
+      res.json(cached);
+    }
 
-    // console.table(assets.currentLiabilities);
-
-    const suppliers = liabilities.currentLiabilities.find(
-      (element) => element.name === "Fornecedores"
-    );
-
-    res.json(suppliers.value);
   });
 
   server.get("/api/financial/profit-loss", (req, res) => {
-    const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
-    const journal = db.GeneralLedgerEntries.Journal;
-    const pl = profitLoss(journal, accounts);
-    res.json(pl);
+    const key = "financial_profit_loss";
+    const cached = cache.get(key);
+    if (cached == undefined) {
+      const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
+      const journal = db.GeneralLedgerEntries.Journal;
+      const pl = profitLoss(journal, accounts);
+      cache.set(key, pl , 3600);
+      res.json(pl);
+    } else {
+      res.json(cached);
+    }
+
   });
 
   server.get("/api/financial/account-balance", (req, res) => {
-    const journal = db.GeneralLedgerEntries.Journal;
-    const values = processJournals(
-      journal,
-      req.query.accountId,
-      req.query.monthly === "true"
-    );
-    res.json(values);
+    const key = "financial_account_balance";
+    const cached = cache.get(key);
+    if (cached == undefined) {
+      const journal = db.GeneralLedgerEntries.Journal;
+      const values = processJournals(
+        journal,
+        req.query.accountId,
+        req.query.monthly === "true"
+      );
+      cache.set(key, values, 3600);
+      res.json(values);
+    } else {
+      res.json(cached);
+    }
+
   });
 
   server.get("/api/financial/ebitda", (req, res) => {
-    const journal = db.GeneralLedgerEntries.Journal;
-    const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
-    res.json({ ebitda: profitLoss(journal, accounts).ebitda });
+    const key = "financial_ebitda";
+    const cached = cache.get(key);
+    if (cached == undefined) {
+      const journal = db.GeneralLedgerEntries.Journal;
+      const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
+      const ebitda = profitLoss(journal, accounts).ebitda;
+      cache.set(key,{ ebitda: ebitda }, 3600 );
+      res.json({ ebitda: ebitda });
+    } else {
+      res.json(cached);
+    }
   });
 
   server.get("/api/financial/ebit", (req, res) => {
-    const journal = db.GeneralLedgerEntries.Journal;
-    const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
-    res.json({ ebit: profitLoss(journal, accounts).ebit });
+    const key = "financial_ebit";
+    const cached = cache.get(key);
+    if (cached == undefined) {
+      const journal = db.GeneralLedgerEntries.Journal;
+      const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
+      const ebit = profitLoss(journal, accounts).ebit;
+      cache.set(key,{ ebit: ebit }, 3600 );
+      res.json({ ebit: ebit });
+
+    } else {
+      res.json(cached);
+    }
+
   });
 
   server.get("/api/financial/cogs", (req, res) => {
-    const journal = db.GeneralLedgerEntries.Journal;
-
-    res.json({ cogs: getCogs(journal) });
+    const key = "financial_cogs";
+    const cached = cache.get(key);
+    if (cached == undefined) {
+      const journal = db.GeneralLedgerEntries.Journal;
+      const cogs = getCogs(journal);
+      cache.set(key, cogs, 3600);
+      res.json({ cogs: cogs });
+    } else {
+      res.json(cached);
+    }
+  
   });
 
   server.get("/api/financial/inventory-turnover", (req, res) => {
-    const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
-    const journal = db.GeneralLedgerEntries.Journal;
+    const key = "financial_inventory_turnover";
+    const cached = cache.get(key);
+    if (cached == undefined) {
+      const accounts = db.MasterFiles.GeneralLedgerAccounts.Account;
+      const journal = db.GeneralLedgerEntries.Journal;
+      const inventory_turnover = inventoryTurnover(accounts, journal);
+      cache.set(key, inventory_turnover, 3600 );
+      res.json(inventory_turnover);
+    } else {
+      res.json(cached);
+    }
 
-    const inventory_turnover = inventoryTurnover(accounts, journal);
-    res.json(inventory_turnover);
   });
 };

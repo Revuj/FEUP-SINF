@@ -29,8 +29,8 @@ const clientAPI = require('./api/customer');
 
 FinancialController(server, db);
 salesAPI(server, db, cache);
-purchasesAPI(server);
-suppliersAPI(server);
+purchasesAPI(server, cache);
+suppliersAPI(server, cache);
 inventoryAPI(server);
 productAPI(server, db);
 clientAPI(server);

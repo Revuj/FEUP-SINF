@@ -1,4 +1,4 @@
-const moment = require("moment");
+const moment = require('moment');
 
 const processPurchases = (orders, year) => {
   let monthlyCumulativeValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -104,13 +104,13 @@ const processPurchasesBacklog = (orders, invoices) => {
         purchasesBacklog[counter] = {
           date: documentDate.substr(0, 10),
           supplier: sellerSupplierPartyName,
-          items: "",
+          items: '',
           value: Number(payableAmount.amount),
         };
 
         documentLines.forEach((item) => {
           purchasesBacklog[counter].items +=
-            item.quantity + "x " + item.description + ";  ";
+            item.quantity + 'x ' + item.description + ';  ';
         });
 
         counter++;
@@ -120,109 +120,145 @@ const processPurchasesBacklog = (orders, invoices) => {
   return Object.keys(purchasesBacklog).map((order) => purchasesBacklog[order]);
 };
 
-module.exports = (server) => {
+module.exports = (server, cache) => {
   // backlog table
-  server.get("/api/purchases/backlogProducts", (req, res) => {
+  server.get('/api/purchases/backlogProducts', (req, res) => {
     const options_purchases = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
     const options_invoices = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
 
-    return global.request(
-      options_purchases,
-      function (errorSales, response, bodyPurchases) {
-        if (errorSales) res.json(errorSales);
-        return global.request(
-          options_invoices,
-          function (errorInvoices, response, bodyInvoices) {
-            if (errorInvoices) res.json(errorInvoices);
-            res.json(
-              processPurchasesBacklog(
+    const key = 'backlogProducts';
+    const cachedBacklogProducts = cache.get(key);
+    if (cachedBacklogProducts == undefined) {
+      return global.request(
+        options_purchases,
+        function (errorSales, response, bodyPurchases) {
+          if (errorSales) res.json(errorSales);
+          return global.request(
+            options_invoices,
+            function (errorInvoices, response, bodyInvoices) {
+              if (errorInvoices) res.json(errorInvoices);
+              const backlogProducts = processPurchasesBacklog(
                 JSON.parse(bodyPurchases),
                 JSON.parse(bodyInvoices)
-              )
-            );
-          }
-        );
-      }
-    );
+              );
+              cache.set(key, backlogProducts, 1440);
+              res.json(backlogProducts);
+            }
+          );
+        }
+      );
+    } else {
+      return res.json(cachedBacklogProducts);
+    }
   });
 
-  server.get("/api/purchases/debt-suppliers", (req, res) => {
+  server.get('/api/purchases/debt-suppliers', (req, res) => {
     let options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
 
-    return global.request(options, (error, response, body) => {
-      if (error) res.json(error);
-      res.json(processDebtToSuppliers(JSON.parse(body)));
-    });
+    const key = 'suppliersDebt';
+    const cachedDebt = cache.get(key);
+    if (cachedDebt == undefined) {
+      return global.request(options, (error, response, body) => {
+        if (error) res.json(error);
+        const debt = processDebtToSuppliers(JSON.parse(body));
+        cache.set(key, debt, 1440);
+        res.json(debt);
+      });
+    } else {
+      return res.json(cachedDebt);
+    }
   });
 
-  server.get("/api/purchases/products/:year([0-9]+)", (req, res) => {
+  server.get('/api/purchases/products/:year([0-9]+)', (req, res) => {
     const { year } = req.params;
 
     const options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
 
-    return global.request(options, function (error, response, body) {
-      if (error) res.json(error);
-      res.json(processPurchasesProducts(JSON.parse(body), year));
-    });
+    const key = 'purchasesProducts' + year;
+    const cachedPurchases = cache.get(key);
+    if (cachedPurchases == undefined) {
+      return global.request(options, function (error, response, body) {
+        if (error) res.json(error);
+        const purchases = processPurchasesProducts(JSON.parse(body), year);
+        cache.set(key, purchases, 1440);
+        res.json(purchases);
+      });
+    } else {
+      return res.json(cachedPurchases);
+    }
   });
 
-  server.get("/api/purchases/:year", (req, res) => {
+  server.get('/api/purchases/:year', (req, res) => {
     const { year } = req.params;
     const options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
 
-    return global.request(options, (error, response, body) => {
-      if (error) res.json(error);
+    const key = 'purchases' + year;
+    const cachedPurchases = cache.get(key);
+    if (cachedPurchases == undefined) {
+      return global.request(options, (error, response, body) => {
+        if (error) res.json(error);
 
-      if (!JSON.parse(body).message) {
-        res.json(processPurchases(JSON.parse(body), year));
-      }
-    });
+        if (!JSON.parse(body).message) {
+          const purchases = processPurchases(JSON.parse(body), year);
+          cache.set(key, purchases, 1440);
+          res.json(purchases);
+        }
+      });
+    } else {
+      return res.json(cachedPurchases);
+    }
   });
 
-  server.get("/api/purchasesBacklog", (req, res) => {
+  server.get('/api/purchasesBacklog', (req, res) => {
     const options_purchases = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
     const options_invoices = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
 
-    return global.request(
-      options_purchases,
-      function (errorSales, response, bodySales) {
-        if (errorSales) res.json(errorSales);
-        return global.request(
-          options_invoices,
-          function (errorInvoices, response, bodyInvoices) {
-            if (errorInvoices) res.json(errorInvoices);
-            res.json(
-              getPurchasesBacklog(
+    const key = 'purchasesBacklog';
+    const cachedPurchasesBacklog = cache.get(key);
+    if (cachedPurchasesBacklog == undefined) {
+      return global.request(
+        options_purchases,
+        function (errorSales, response, bodySales) {
+          if (errorSales) res.json(errorSales);
+          return global.request(
+            options_invoices,
+            function (errorInvoices, response, bodyInvoices) {
+              if (errorInvoices) res.json(errorInvoices);
+              const purchasesBacklog = getPurchasesBacklog(
                 JSON.parse(bodySales),
                 JSON.parse(bodyInvoices)
-              )
-            );
-          }
-        );
-      }
-    );
+              );
+              cache.set(key, purchasesBacklog, 1440);
+              res.json(purchasesBacklog);
+            }
+          );
+        }
+      );
+    } else {
+      return res.json(cachedPurchasesBacklog);
+    }
   });
 };

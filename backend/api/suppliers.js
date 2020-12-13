@@ -1,5 +1,5 @@
-const moment = require("moment");
-const processSuppliers = require("./processSuppliers");
+const moment = require('moment');
+const processSuppliers = require('./processSuppliers');
 
 /**
  *
@@ -31,12 +31,12 @@ const totalPurchases = (invoices, supplier, year) => {
     });
     return {
       totalPrice: total,
-      message: "success",
+      message: 'success',
       totalOrders: totalOrders.reduce((acc, curr) => acc + curr, 0),
     };
   }
 
-  return { message: "There was an error processing the orders" };
+  return { message: 'There was an error processing the orders' };
 };
 
 const purchasesByMonth = (invoices, supplier, year) => {
@@ -60,7 +60,7 @@ const purchasesByMonth = (invoices, supplier, year) => {
     return unitsPurchsed;
   }
 
-  return { message: "There was an error processing the orders" };
+  return { message: 'There was an error processing the orders' };
 };
 
 const getPurchasesBacklog = (orders, invoices, id) => {
@@ -97,107 +97,142 @@ const getPurchasesBacklog = (orders, invoices, id) => {
   return Object.keys(purchasesBacklog).map((order) => purchasesBacklog[order]);
 };
 
-module.exports = (server) => {
-  server.get("/api/suppliers/:year", (req, res) => {
+module.exports = (server, cache) => {
+  server.get('/api/suppliers/:year', (req, res) => {
     const { year } = req.params;
     const options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
-    return global.request(options, function (error, response, body) {
-      if (error) res.json(error);
-      res.json(processSuppliers(null, JSON.parse(body), year));
-    });
+    const key = 'suppliers' + year;
+    const cachedSuppliers = cache.get(key);
+    if (cachedSuppliers == undefined) {
+      return global.request(options, function (error, response, body) {
+        if (error) res.json(error);
+        const suppliers = processSuppliers(null, JSON.parse(body), year);
+        cache.set(key, suppliers, 1440);
+        res.json(suppliers);
+      });
+    } else {
+      console.log('hit');
+      return res.json(cachedSuppliers);
+    }
   });
 
   /**
    * get information related to a supplier
    */
-  server.get("/api/suppliers/identifier/:id", (req, res) => {
+  server.get('/api/suppliers/identifier/:id', (req, res) => {
     const { id } = req.params;
     const options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/purchasesCore/supplierParties/${id}`,
     };
 
-    return global.request(options, function (error, _response, body) {
-      if (error) res.json(error);
-      res.json(JSON.parse(body));
-    });
+    const key = 'supplier' + id;
+    const cachedSupplier = cache.get(key);
+    if (cachedSupplier == undefined) {
+      return global.request(options, function (error, _response, body) {
+        if (error) res.json(error);
+        const information = JSON.parse(body);
+        cache.set(key, information, 1440);
+        res.json(information);
+      });
+    } else {
+      return res.json(cachedSupplier);
+    }
   });
 
-  server.get("/api/suppliers/:id/purchases/:year", (req, res) => {
+  server.get('/api/suppliers/:id/purchases/:year', (req, res) => {
     const { id, year } = req.params;
-    const monthly = req.query.monthly === "true";
+    const monthly = req.query.monthly === 'true';
 
     const options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
 
-    return global.request(options, function (error, _response, body) {
-      if (error) res.json(error);
+    const key = 'supplier' + id + 'purchases' + year;
+    const cachedSupplier = cache.get(key);
+    if (cachedSupplier == undefined) {
+      return global.request(options, function (error, _response, body) {
+        if (error) res.json(error);
 
-      if (monthly) {
-        res.json(purchasesByMonth(JSON.parse(body), id, year));
-      } else {
-        res.json(totalPurchases(JSON.parse(body), id, year));
-      }
-    });
+        let purchases;
+        if (monthly) {
+          purchases = purchasesByMonth(JSON.parse(body), id, year);
+        } else {
+          purchases = totalPurchases(JSON.parse(body), id, year);
+        }
+        cache.set(key, purchases, 1440);
+        res.json(purchases);
+      });
+    } else {
+      return res.json(cachedSupplier);
+    }
   });
 
-  server.get("/api/suppliers/:id/purchases-orders/:year", (req, res) => {
+  server.get('/api/suppliers/:id/purchases-orders/:year', (req, res) => {
     const { id, year } = req.params;
-    const monthly = req.query.monthly === "true";
+    const monthly = req.query.monthly === 'true';
 
     const options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
     return global.request(options, function (error, _response, body) {
       if (error) res.json(error);
-
+      let orders;
       if (monthly) {
-        res.json(purchasesByMonth(JSON.parse(body), id, year));
+        orders = purchasesByMonth(JSON.parse(body), id, year);
       } else {
-        res.json(totalPurchases(JSON.parse(body), id, year));
+        orders = totalPurchases(JSON.parse(body), id, year);
       }
+      res.json(orders);
     });
   });
 
-  server.get("/api/suppliers/:id/pending-purchases", (req, res) => {
+  server.get('/api/suppliers/:id/pending-purchases', (req, res) => {
     const { id } = req.params;
 
     const options_purchases = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
     const options_invoices = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
 
-    return global.request(
-      options_purchases,
-      function (errorSales, response, bodySales) {
-        if (errorSales) res.json(errorSales);
-        return global.request(
-          options_invoices,
-          function (errorInvoices, response, bodyInvoices) {
-            if (errorInvoices) res.json(errorInvoices);
-            res.json(
-              getPurchasesBacklog(
-                JSON.parse(bodySales),
-                JSON.parse(bodyInvoices),
-                id
-              )
-            );
-          }
-        );
-      }
-    );
+    const key = 'supplier' + id + 'pending';
+    const cachedSupplier = cache.get(key);
+    if (cachedSupplier == undefined) {
+      return global.request(
+        options_purchases,
+        function (errorSales, response, bodySales) {
+          if (errorSales) res.json(errorSales);
+          return global.request(
+            options_invoices,
+            function (errorInvoices, response, bodyInvoices) {
+              if (errorInvoices) res.json(errorInvoices);
+              {
+                const backlog = getPurchasesBacklog(
+                  JSON.parse(bodySales),
+                  JSON.parse(bodyInvoices),
+                  id
+                );
+                cache.set(key, backlog, 1440);
+                res.json(backlog);
+              }
+            }
+          );
+        }
+      );
+    } else {
+      return res.json(cachedSupplier);
+    }
   });
 };

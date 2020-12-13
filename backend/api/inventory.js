@@ -47,17 +47,27 @@ const processStock = (materials) =>
     0
   );
 
-module.exports = (server) => {
+module.exports = (server, cache) => {
   server.get("/api/inventory/products", (req, res) => {
     const options = {
       method: "GET",
       url: `${global.basePrimaveraUrl}/materialsCore/materialsItems`,
     };
 
+    const key = 'inventory-products';
+    const cachedProducts = cache.get(key);
+
+    if (cachedProducts != undefined){
+      console.log('hit');
+      return res.json(cachedProducts);
+    }
+    
     return global.request(options, function (error, response, body) {
       if (error) res.json(error);
       if (!JSON.parse(body).message) {
-        res.json(processProducts(JSON.parse(body)));
+        const products = processProducts(JSON.parse(body));
+        cache.set(key, products, 3600);
+        res.json(products);
       }
     });
   });
@@ -68,10 +78,20 @@ module.exports = (server) => {
       url: `${global.basePrimaveraUrl}/materialscore/materialsitems`,
     };
 
+    const key = 'inventory-warehouses';
+    const cachedWarehouses = cache.get(key);
+
+    if (cachedWarehouses != undefined){
+      console.log('hit');
+      return res.json(cachedWarehouses);
+    }
+
     return global.request(options, function (error, response, body) {
       if (error) res.json(error);
       if (!JSON.parse(body).message) {
-        res.json(processWarehouses(JSON.parse(body)));
+        const warehouses = processWarehouses(JSON.parse(body));
+        cache.set(key, warehouses, 3600);
+        res.json(warehouses);
       }
     });
   });
@@ -82,10 +102,20 @@ module.exports = (server) => {
       url: `${global.basePrimaveraUrl}/materialsCore/materialsItems`,
     };
 
+    const key = 'inventory-stock';
+    const cachedStock = cache.get(key);
+
+    if (cachedStock != undefined){
+      console.log('hit');
+      return res.json(cachedStock);
+    }
+
     return global.request(options, function (error, response, body) {
       if (error) res.json(error);
       if (!JSON.parse(body).message) {
-        res.json(processStock(JSON.parse(body)));
+        const stock = processStock(JSON.parse(body));
+        cache.set(key, stock, 3600);
+        res.json(stock);
       }
     });
   });

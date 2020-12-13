@@ -30,7 +30,7 @@ FinancialController(server, db, cache);
 salesAPI(server, db, cache);
 purchasesAPI(server, cache);
 suppliersAPI(server, cache);
-inventoryAPI(server);
+inventoryAPI(server, cache);
 productAPI(server, db);
 clientAPI(server);
 

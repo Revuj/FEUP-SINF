@@ -2,7 +2,8 @@
   "scripts": {
     "server": "cd backend && nodemon server.js",
     "client": "cd frontend && npm start",
-    "start": "concurrently \"cd backend && nodemon server.js\" \"cd frontend && npm start\""
+    "start": "concurrently \"cd backend && nodemon server.js\" \"cd frontend && npm start\"",
+    "update:dependencies": "concurrently \"npm install\" \"cd backend && npm install\" \"cd frontend && npm install\""
   },
   "dependencies": {
     "concurrently": "^5.3.0",

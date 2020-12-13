@@ -1352,7 +1352,7 @@ module.exports = (server, db, cache) => {
   });
 
   server.get("/api/financial/account-balance", (req, res) => {
-    const key = "financial_account_balance";
+    const key = "financial_account_balance" + req.query.accountId + req.query.monthly;
     const cached = cache.get(key);
     if (cached == undefined) {
       const journal = db.GeneralLedgerEntries.Journal;

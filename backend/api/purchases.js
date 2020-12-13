@@ -148,7 +148,7 @@ module.exports = (server, cache) => {
                 JSON.parse(bodyPurchases),
                 JSON.parse(bodyInvoices)
               );
-              cache.set(key, backlogProducts, 1440);
+              cache.set(key, backlogProducts, 3600);
               res.json(backlogProducts);
             }
           );
@@ -171,7 +171,7 @@ module.exports = (server, cache) => {
       return global.request(options, (error, response, body) => {
         if (error) res.json(error);
         const debt = processDebtToSuppliers(JSON.parse(body));
-        cache.set(key, debt, 1440);
+        cache.set(key, debt, 3600);
         res.json(debt);
       });
     } else {
@@ -193,7 +193,7 @@ module.exports = (server, cache) => {
       return global.request(options, function (error, response, body) {
         if (error) res.json(error);
         const purchases = processPurchasesProducts(JSON.parse(body), year);
-        cache.set(key, purchases, 1440);
+        cache.set(key, purchases, 3600);
         res.json(purchases);
       });
     } else {
@@ -216,7 +216,7 @@ module.exports = (server, cache) => {
 
         if (!JSON.parse(body).message) {
           const purchases = processPurchases(JSON.parse(body), year);
-          cache.set(key, purchases, 1440);
+          cache.set(key, purchases, 3600);
           res.json(purchases);
         }
       });
@@ -251,7 +251,7 @@ module.exports = (server, cache) => {
                 JSON.parse(bodySales),
                 JSON.parse(bodyInvoices)
               );
-              cache.set(key, purchasesBacklog, 1440);
+              cache.set(key, purchasesBacklog, 3600);
               res.json(purchasesBacklog);
             }
           );

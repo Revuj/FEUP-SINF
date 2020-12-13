@@ -135,7 +135,7 @@ const processSuppliers = (invoices, id, year) => {
   return Object.keys(customers).map((customer) => customers[customer]);
 };
 
-module.exports = (server, db) => {
+module.exports = (server, db, cache) => {
   server.get("/api/products/:id", (req, res) => {
     const { id } = req.params;
 
@@ -144,12 +144,20 @@ module.exports = (server, db) => {
       url: `${global.basePrimaveraUrl}/materialsCore/materialsItems/${id}`,
     };
 
-    return global.request(options, function (error, response, body) {
-      if (error) res.json(error);
-      if (!JSON.parse(body).message) {
-        res.json(JSON.parse(body));
-      }
-    });
+    const key = `product_${id}_id`;
+    const cached = cache.get(key);
+    if (cached == undefined) {
+      return global.request(options, function (error, response, body) {
+        if (error) res.json(error);
+        if (!JSON.parse(body).message) {
+          const product = JSON.parse(body);
+          cache.set(key, product, 3600);
+          res.json(JSON.parse(body));
+        }
+      });
+    } else {
+      res.json(cached);
+    }
   });
 
   server.get("/api/products/:id/units-sold/:year", (req, res) => {
@@ -160,12 +168,19 @@ module.exports = (server, db) => {
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
-    return global.request(options, function (error, _response, body) {
-      if (error) res.json(error);
+    const key = `product_${id}_units_sold_${year}`;
+    const cached = cache.get(key);
+    if (cached == undefined) {
+      return global.request(options, function (error, _response, body) {
+        if (error) res.json(error);
 
-      const unitsSold = processUnits(JSON.parse(body), id, year, "salesItem");
-      return res.json(unitsSold);
-    });
+        const unitsSold = processUnits(JSON.parse(body), id, year, "salesItem");
+        cache.set(key, unitsSold, 3600);
+        return res.json(unitsSold);
+      });
+    } else {
+      res.json(cached);
+    }
   });
 
   server.get("/api/products/:id/units-purchased/:year", (req, res) => {
@@ -176,17 +191,25 @@ module.exports = (server, db) => {
       url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
 
-    return global.request(options, function (error, _response, body) {
-      if (error) res.json(error);
+    const key = `product_${id}_units_purchased_${year}`;
+    const cached = cache.get(key);
+    if (cached == undefined) {
+      return global.request(options, function (error, _response, body) {
+        if (error) res.json(error);
 
-      const unitsPurchased = processUnits(
-        JSON.parse(body),
-        id,
-        year,
-        "purchasesItem"
-      );
-      return res.json(unitsPurchased);
-    });
+        const unitsPurchased = processUnits(
+          JSON.parse(body),
+          id,
+          year,
+          "purchasesItem"
+        );
+
+        cache.set(key, unitsPurchased, 3600);
+        return res.json(unitsPurchased);
+      });
+    } else {
+      res.json(cached);
+    }
   });
 
   server.get("/api/products/:id/stock-units", (req, res) => {
@@ -195,13 +218,20 @@ module.exports = (server, db) => {
       method: "GET",
       url: `${global.basePrimaveraUrl}/materialsCore/materialsItems/${id}`,
     };
-
-    return global.request(options, function (error, response, body) {
-      if (error) res.json(error);
-      if (!JSON.parse(body).message) {
-        res.json({ totalStock: calculateStockNumber(JSON.parse(body)) });
-      }
-    });
+    const key = `product_${id}_stock_units`;
+    const cached = cache.get(key);
+    if (cached == undefined) {
+      return global.request(options, function (error, response, body) {
+        if (error) res.json(error);
+        if (!JSON.parse(body).message) {
+          const stock = calculateStockNumber(JSON.parse(body));
+          cache.set(key, stock, 3600);
+          res.json({ totalStock: stock });
+        }
+      });
+    } else {
+      res.json({ totalStock: cached });
+    }
   });
 
   server.get("/api/products/:id/avg-price", (req, res) => {
@@ -211,14 +241,22 @@ module.exports = (server, db) => {
       url: `${global.basePrimaveraUrl}/salescore/salesitems/${id}`,
     };
 
-    return global.request(options, function (error, response, body) {
-      if (error) res.json(error);
-      if (!JSON.parse(body).message) {
-        res.json({ avg: calculateAvgPrice(JSON.parse(body)) });
-      } else {
-        res.json({ avg: 0 });
-      }
-    });
+    const key = `product_${id}_avg_price`;
+    const cached = cache.get(key);
+    if (cached == undefined) {
+      return global.request(options, function (error, response, body) {
+        if (error) res.json(error);
+        if (!JSON.parse(body).message) {
+          const avg = calculateAvgPrice(JSON.parse(body));
+          cache.set(key, avg, 3600);
+          res.json({ avg: avg });
+        } else {
+          res.json({ avg: 0 });
+        }
+      });
+    } else {
+      res.json({ avg: cached });
+    }
   });
 
   server.get("/api/products/:id/avg-cost", (req, res) => {
@@ -228,12 +266,20 @@ module.exports = (server, db) => {
       url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
 
-    return global.request(options, function (error, response, body) {
-      if (error) res.json({ avg: 0 });
-      if (!JSON.parse(body).message) {
-        res.json({ avg: calculateAvgCost(JSON.parse(body), id) });
-      }
-    });
+    const key = `product_${id}_avg_cost`;
+    const cached = cache.get(key);
+    if (cached == undefined) {
+      return global.request(options, function (error, response, body) {
+        if (error) res.json({ avg: 0 });
+        if (!JSON.parse(body).message) {
+          const avg = calculateAvgCost(JSON.parse(body), id);
+          cache.set(key, avg, 3600);
+          res.json({ avg: avg });
+        }
+      });
+    } else {
+      res.json({ avg: cached });
+    }
   });
 
   server.get("/api/products/:id/suppliers/:year", (req, res) => {
@@ -242,11 +288,19 @@ module.exports = (server, db) => {
       method: "GET",
       url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
-    console.log(year);
-    return global.request(options, function (error, response, body) {
-      if (error) res.json(error);
-      res.json(processSuppliers(JSON.parse(body), id, year));
-    });
+
+    const key = `product_${id}_suppliers_${year}`;
+    const cached = cache.get(key);
+    if (cached == undefined) {
+      return global.request(options, function (error, response, body) {
+        if (error) res.json(error);
+        const suppliers = processSuppliers(JSON.parse(body), id, year);
+        cache.set(key, suppliers, 3600);
+        res.json(suppliers);
+      });
+    } else {
+      res.json(cached);
+    }
   });
 
   server.get("/api/products/:id/customers/:year", (req, res) => {
@@ -256,10 +310,17 @@ module.exports = (server, db) => {
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
-    console.log(year);
-    return global.request(options, function (error, response, body) {
-      if (error) res.json(error);
-      res.json(processCustomers(JSON.parse(body), id, year));
-    });
+    const key = `product_${id}_customers_${year}`;
+    const cached = cache.get(key);
+    if (cached == undefined) {
+      return global.request(options, function (error, response, body) {
+        if (error) res.json(error);
+        const customers = processCustomers(JSON.parse(body), id, year);
+        cache.set(key, customers, 3600);
+        res.json(customers);
+      });
+    } else {
+      res.json(cached);
+    }
   });
 };

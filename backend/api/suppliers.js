@@ -1,5 +1,5 @@
-const moment = require('moment');
-const processSuppliers = require('./processSuppliers');
+const moment = require("moment");
+const processSuppliers = require("./processSuppliers");
 
 /**
  *
@@ -31,12 +31,12 @@ const totalPurchases = (invoices, supplier, year) => {
     });
     return {
       totalPrice: total,
-      message: 'success',
+      message: "success",
       totalOrders: totalOrders.reduce((acc, curr) => acc + curr, 0),
     };
   }
 
-  return { message: 'There was an error processing the orders' };
+  return { message: "There was an error processing the orders" };
 };
 
 const purchasesByMonth = (invoices, supplier, year) => {
@@ -60,7 +60,7 @@ const purchasesByMonth = (invoices, supplier, year) => {
     return unitsPurchsed;
   }
 
-  return { message: 'There was an error processing the orders' };
+  return { message: "There was an error processing the orders" };
 };
 
 const getPurchasesBacklog = (orders, invoices, id) => {
@@ -98,14 +98,14 @@ const getPurchasesBacklog = (orders, invoices, id) => {
 };
 
 module.exports = (server, cache) => {
-  server.get('/api/suppliers/:year', (req, res) => {
+  server.get("/api/suppliers/:year", (req, res) => {
     const { year } = req.params;
     const options = {
-      method: 'GET',
+      method: "GET",
       url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
-    const key = 'suppliers' + year;
+    const key = "suppliers" + year;
     const cachedSuppliers = cache.get(key);
     if (cachedSuppliers == undefined) {
       return global.request(options, function (error, response, body) {
@@ -115,7 +115,7 @@ module.exports = (server, cache) => {
         res.json(suppliers);
       });
     } else {
-      console.log('hit');
+      console.log("hit");
       return res.json(cachedSuppliers);
     }
   });
@@ -123,14 +123,14 @@ module.exports = (server, cache) => {
   /**
    * get information related to a supplier
    */
-  server.get('/api/suppliers/identifier/:id', (req, res) => {
+  server.get("/api/suppliers/identifier/:id", (req, res) => {
     const { id } = req.params;
     const options = {
-      method: 'GET',
+      method: "GET",
       url: `${global.basePrimaveraUrl}/purchasesCore/supplierParties/${id}`,
     };
 
-    const key = 'supplier' + id;
+    const key = "supplier" + id;
     const cachedSupplier = cache.get(key);
     if (cachedSupplier == undefined) {
       return global.request(options, function (error, _response, body) {
@@ -144,16 +144,16 @@ module.exports = (server, cache) => {
     }
   });
 
-  server.get('/api/suppliers/:id/purchases/:year', (req, res) => {
+  server.get("/api/suppliers/:id/purchases/:year", (req, res) => {
     const { id, year } = req.params;
-    const monthly = req.query.monthly === 'true';
+    const monthly = req.query.monthly === "true";
 
     const options = {
-      method: 'GET',
+      method: "GET",
       url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
 
-    const key = 'supplier' + id + 'purchases' + year;
+    const key = "supplier" + id + "purchases" + year + monthly;
     const cachedSupplier = cache.get(key);
     if (cachedSupplier == undefined) {
       return global.request(options, function (error, _response, body) {
@@ -173,12 +173,12 @@ module.exports = (server, cache) => {
     }
   });
 
-  server.get('/api/suppliers/:id/purchases-orders/:year', (req, res) => {
+  server.get("/api/suppliers/:id/purchases-orders/:year", (req, res) => {
     const { id, year } = req.params;
-    const monthly = req.query.monthly === 'true';
+    const monthly = req.query.monthly === "true";
 
     const options = {
-      method: 'GET',
+      method: "GET",
       url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
@@ -194,20 +194,20 @@ module.exports = (server, cache) => {
     });
   });
 
-  server.get('/api/suppliers/:id/pending-purchases', (req, res) => {
+  server.get("/api/suppliers/:id/pending-purchases", (req, res) => {
     const { id } = req.params;
 
     const options_purchases = {
-      method: 'GET',
+      method: "GET",
       url: `${global.basePrimaveraUrl}/purchases/orders`,
     };
 
     const options_invoices = {
-      method: 'GET',
+      method: "GET",
       url: `${global.basePrimaveraUrl}/invoiceReceipt/invoices`,
     };
 
-    const key = 'supplier' + id + 'pending';
+    const key = "supplier" + id + "pending";
     const cachedSupplier = cache.get(key);
     if (cachedSupplier == undefined) {
       return global.request(

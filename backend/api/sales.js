@@ -63,7 +63,8 @@ const getNetSales = (invoices, year) => {
     );
 };
 
-const processSalesBacklog = (orders, invoices) => {
+const processSalesBacklog = 
+(orders, invoices) => {
   let salesBacklog = {};
   let counter = 0;
   orders
@@ -83,13 +84,13 @@ const processSalesBacklog = (orders, invoices) => {
         buyerCustomerPartyName,
         documentDate,
         documentLines,
-        payableAmount,
+        taxExclusiveAmount,
       }) => {
         salesBacklog[counter] = {
           date: documentDate.substr(0, 10),
           customer: buyerCustomerPartyName,
           items: '',
-          value: Number(payableAmount.amount),
+          value: Number(taxExclusiveAmount.amount),
         };
 
         documentLines.forEach((item) => {

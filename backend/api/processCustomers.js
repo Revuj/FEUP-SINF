@@ -16,11 +16,16 @@ module.exports = (product, orders, year) => {
               customers[order.buyerCustomerParty].units += Number(
                 lineParsed.quantity
               );
+              customers[order.buyerCustomerParty].value += Number(
+                lineParsed.quantity * lineParsed.unitPrice.amount
+              );
             } else {
               customers[order.buyerCustomerParty] = {
                 id: order.buyerCustomerParty,
                 name: order.buyerCustomerPartyName,
-                value: Number(order.taxExclusiveAmount.amount),
+                value:
+                  Number(lineParsed.quantity) *
+                  Number(lineParsed.unitPrice.amount),
                 units: Number(lineParsed.quantity),
               };
             }

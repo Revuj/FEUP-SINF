@@ -14,16 +14,6 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const signInWithGoogle = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).then(async () => {
-      console.log(user);
-      authContext.login();
-      localStorage.setItem('auth-token', 'TOKEN');
-      history.push('/overview');
-    });
-  };
-
   const signInWithEmailAndPassword = () => {
     firebase
       .auth()
@@ -63,12 +53,6 @@ function Login() {
             }}
           >
             Login
-          </button>
-          <button
-            className="primary-button gray-background"
-            onClick={signInWithGoogle}
-          >
-            Sign in with Google
           </button>
         </div>
       </span>

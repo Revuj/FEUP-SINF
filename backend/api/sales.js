@@ -1,5 +1,5 @@
-const moment = require("moment");
-const cache = require("node-cache");
+const moment = require('moment');
+const cache = require('node-cache');
 
 const processMonthlySales = (invoices, year) => {
   let monthlyCumulativeValue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -10,10 +10,10 @@ const processMonthlySales = (invoices, year) => {
         moment(invoice.documentDate).year() == parseInt(year, 10) &&
         invoice.isDeleted == false
     )
-    .forEach(({ documentDate, grossValue }) => {
+    .forEach(({ documentDate, taxExclusiveAmount }) => {
       const month = moment(documentDate).month();
       // monthlyCumulativeValue[month] += payableAmount.amount;
-      monthlyCumulativeValue[month] += grossValue.amount;
+      monthlyCumulativeValue[month] += taxExclusiveAmount.amount;
     });
 
   return monthlyCumulativeValue;
@@ -88,13 +88,13 @@ const processSalesBacklog = (orders, invoices) => {
         salesBacklog[counter] = {
           date: documentDate.substr(0, 10),
           customer: buyerCustomerPartyName,
-          items: "",
+          items: '',
           value: Number(taxExclusiveAmount.amount),
         };
 
         documentLines.forEach((item) => {
           salesBacklog[counter].items +=
-            item.quantity + "x " + item.description + ";  ";
+            item.quantity + 'x ' + item.description + ';  ';
         });
 
         counter++;
@@ -131,12 +131,12 @@ const processDebtCustomers = (invoices) => {
 
   return temp
     .filter(({ documentStatus }) => documentStatus === 1)
-    .reduce((acc, invoice) => acc + invoice.taxExclusiveAmount.amount, 0);
+    .reduce((acc, invoice) => acc + invoice.payableAmount.amount, 0);
 };
 
 const processCogs = (entries, year) => {
   let temp = entries.filter(
-    (entry) => entry.year == year && entry.accountType.indexOf("61") == 0
+    (entry) => entry.year == year && entry.accountType.indexOf('61') == 0
   );
   const total = temp.reduce((acc, entry) => acc + entry.amount, 0);
   return total;
@@ -144,14 +144,14 @@ const processCogs = (entries, year) => {
 
 module.exports = (server, db, cache) => {
   // monthly sales by year
-  server.get("/api/sales/:year([0-9]+)", (req, res) => {
+  server.get('/api/sales/:year([0-9]+)', (req, res) => {
     const { year } = req.params;
 
-    const key = "sales" + year;
+    const key = 'sales' + year;
     const cached = cache.get(key);
     if (cached == undefined) {
       const options = {
-        method: "GET",
+        method: 'GET',
         url: `${global.basePrimaveraUrl}/billing/invoices`,
       };
 
@@ -166,13 +166,13 @@ module.exports = (server, db, cache) => {
     res.json(cached);
   });
 
-  server.get("/api/sales/debt-customers", (req, res) => {
-    const key = "accountsPayable";
+  server.get('/api/sales/debt-customers', (req, res) => {
+    const key = 'accountsPayable';
     const cached = cache.get(key);
 
     if (cached == undefined) {
       let options = {
-        method: "GET",
+        method: 'GET',
         url: `${global.basePrimaveraUrl}/billing/invoices`,
       };
 
@@ -188,14 +188,14 @@ module.exports = (server, db, cache) => {
   });
 
   // net sales
-  server.get("/api/sales/net/:year", (req, res) => {
+  server.get('/api/sales/net/:year', (req, res) => {
     const { year } = req.params;
     const options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
-    const key = "net_sales" + year;
+    const key = 'net_sales' + year;
     const cachedNetSales = cache.get(key);
     if (cachedNetSales == undefined) {
       return global.request(options, function (error, response, body) {
@@ -210,14 +210,14 @@ module.exports = (server, db, cache) => {
   });
 
   // sales products
-  server.get("/api/sales/products/:year([0-9]+)", (req, res) => {
+  server.get('/api/sales/products/:year([0-9]+)', (req, res) => {
     const { year } = req.params;
 
-    const key = "sales_products" + year;
+    const key = 'sales_products' + year;
     const cachedSalesProducts = cache.get(key);
     if (cachedSalesProducts == undefined) {
       const options = {
-        method: "GET",
+        method: 'GET',
         url: `${global.basePrimaveraUrl}/billing/invoices `,
       };
 
@@ -233,17 +233,17 @@ module.exports = (server, db, cache) => {
   });
 
   // backlog table
-  server.get("/api/sales/backlogProducts", (req, res) => {
-    const key = "backlog_products";
+  server.get('/api/sales/backlogProducts', (req, res) => {
+    const key = 'backlog_products';
     const cached = cache.get(key);
     if (cached == undefined) {
       const options_sales = {
-        method: "GET",
+        method: 'GET',
         url: `${global.basePrimaveraUrl}/sales/orders`,
       };
 
       const options_invoices = {
-        method: "GET",
+        method: 'GET',
         url: `${global.basePrimaveraUrl}/billing/invoices`,
       };
 
@@ -270,17 +270,17 @@ module.exports = (server, db, cache) => {
   });
 
   // backlog value
-  server.get("/api/sales/backlog", (req, res) => {
-    const key = "sales_backlog";
+  server.get('/api/sales/backlog', (req, res) => {
+    const key = 'sales_backlog';
     const cached = cache.get(key);
     if (cached == undefined) {
       const options_sales = {
-        method: "GET",
+        method: 'GET',
         url: `${global.basePrimaveraUrl}/sales/orders`,
       };
 
       const options_invoices = {
-        method: "GET",
+        method: 'GET',
         url: `${global.basePrimaveraUrl}/billing/invoices`,
       };
       return global.request(
@@ -309,14 +309,14 @@ module.exports = (server, db, cache) => {
     res.json(cached);
   });
 
-  server.get("/api/sales/cogs/:year", (req, res) => {
+  server.get('/api/sales/cogs/:year', (req, res) => {
     const { year } = req.params;
     const accounts = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/financialCore/accountingEntries/getAccountingSummaries?startDate=1-1-${year}&endDate=31-12-${year}`,
     };
 
-    const key = "cogs" + year;
+    const key = 'cogs' + year;
     const cached = cache.get(key);
 
     if (cached == undefined) {

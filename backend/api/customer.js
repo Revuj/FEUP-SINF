@@ -1,5 +1,5 @@
-const processCustomers = require("./processCustomers");
-const moment = require("moment");
+const processCustomers = require('./processCustomers');
+const moment = require('moment');
 
 const processCostumerPurchases = (invoices, costumerId) => {
   if (Array.isArray(invoices)) {
@@ -9,11 +9,12 @@ const processCostumerPurchases = (invoices, costumerId) => {
           accountingParty === costumerId && isDeleted == false
       )
       .reduce(
-        (total, currentInvoice) => total + currentInvoice.grossValue.amount,
+        (total, currentInvoice) =>
+          total + currentInvoice.taxExclusiveAmount.amount,
         0
       );
   } else if (invoices.accountingParty === CustomerId) {
-    return invoices.grossValue.amount;
+    return invoices.taxExclusiveAmount.amount;
   } else return {};
 };
 
@@ -39,12 +40,12 @@ const totalSales = (invoices, customer, year) => {
     });
     return {
       totalPrice: total,
-      message: "success",
+      message: 'success',
       totalOrders: totalOrders.reduce((acc, curr) => acc + curr, 0),
     };
   }
 
-  return { message: "There was an error processing the orders" };
+  return { message: 'There was an error processing the orders' };
 };
 
 const salesByMonth = (invoices, customer, year) => {
@@ -68,7 +69,7 @@ const salesByMonth = (invoices, customer, year) => {
     return unitsPurchsed;
   }
 
-  return { message: "There was an error processing the orders" };
+  return { message: 'There was an error processing the orders' };
 };
 
 const processSalesBacklog = (orders, invoices, id) => {
@@ -109,10 +110,10 @@ const processSalesBacklog = (orders, invoices, id) => {
 };
 
 module.exports = (server, cache) => {
-  server.get("/api/customers/:year", (req, res) => {
+  server.get('/api/customers/:year', (req, res) => {
     const { year } = req.params;
     const options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
@@ -130,10 +131,10 @@ module.exports = (server, cache) => {
     }
   });
 
-  server.get("/api/customer/:id", (req, res) => {
+  server.get('/api/customer/:id', (req, res) => {
     const { id } = req.params;
     const options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/salesCore/customerParties/${id}`,
     };
 
@@ -151,10 +152,10 @@ module.exports = (server, cache) => {
     }
   });
 
-  server.get("/api/customer/:id/purchases", (req, res) => {
+  server.get('/api/customer/:id/purchases', (req, res) => {
     const { id } = req.params;
     const options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/accountsReceivable/receipts`,
     };
 
@@ -175,12 +176,12 @@ module.exports = (server, cache) => {
     }
   });
 
-  server.get("/api/customer/:id/sales/:year", (req, res) => {
+  server.get('/api/customer/:id/sales/:year', (req, res) => {
     const { id, year } = req.params;
-    const monthly = req.query.monthly === "true";
+    const monthly = req.query.monthly === 'true';
 
     const options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 
@@ -205,12 +206,12 @@ module.exports = (server, cache) => {
     }
   });
 
-  server.get("/api/customer/:id/sales-orders/:year", (req, res) => {
+  server.get('/api/customer/:id/sales-orders/:year', (req, res) => {
     const { id, year } = req.params;
-    const monthly = req.query.monthly === "true";
+    const monthly = req.query.monthly === 'true';
 
     const options = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/sales/orders`,
     };
 
@@ -236,15 +237,15 @@ module.exports = (server, cache) => {
     }
   });
 
-  server.get("/api/customer/:id/pending-sales", (req, res) => {
+  server.get('/api/customer/:id/pending-sales', (req, res) => {
     const { id } = req.params;
     const options_sales = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/sales/orders`,
     };
 
     const options_invoices = {
-      method: "GET",
+      method: 'GET',
       url: `${global.basePrimaveraUrl}/billing/invoices`,
     };
 

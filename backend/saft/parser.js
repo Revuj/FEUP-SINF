@@ -1,7 +1,6 @@
-const parser = require('xml2json');
-const options = require('./index.js');
-const fs = require('fs');
-const xmllint = require('xmllint');
+const parser = require("xml2json");
+const options = require("./index.js");
+const fs = require("fs");
 
 fs.readFile(options.file.toString(), (err, data) => {
   //console.log(options.file);
@@ -11,14 +10,14 @@ fs.readFile(options.file.toString(), (err, data) => {
 
   const jsonFile = JSON.parse(string);
   let parsedContent = jsonFile.AuditFile;
-  delete parsedContent['xmlns:xsi'];
-  delete parsedContent['xmlns:xsd'];
-  delete parsedContent['xsi:schemaLocation'];
+  delete parsedContent["xmlns:xsi"];
+  delete parsedContent["xmlns:xsd"];
+  delete parsedContent["xsi:schemaLocation"];
   delete parsedContent.xmlns;
 
-  fs.writeFileSync('db.json', JSON.stringify(parsedContent), (err2) => {
+  fs.writeFileSync("db.json", JSON.stringify(parsedContent), (err2) => {
     if (err2) {
-      console.log('error');
+      console.log("error");
     }
   });
 });

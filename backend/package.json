@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node server",
-    "parse": "node saft/parser.js"
+    "start": "node server"
   },
   "dependencies": {
     "axios": "^0.21.0",

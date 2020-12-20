@@ -45,8 +45,6 @@ const Index = () => {
 
     const fetchBalanceSheetData = async () => {
       const { data } = await fetchBalanceSheet();
-      console.log('balance sheet');
-      console.log(data);
       setAssets(data.assets);
       setLiabilities(data.liabilities);
       setEquity(data.equity);

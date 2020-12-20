@@ -40,7 +40,6 @@ const TopProductsTable = ({
     axios
       .get(`/api/sales/products/${year}`)
       .then((response) => {
-        console.log(response.data);
         setProducts(response.data);
         setLoading(false);
       })

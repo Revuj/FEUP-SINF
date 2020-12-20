@@ -19,7 +19,7 @@ function Login() {
       .auth()
       .signInWithEmailAndPassword(username, password)
       .then(async () => {
-        console.log(user);
+        //console.log(user);
         authContext.login();
         localStorage.setItem('auth-token', 'TOKEN');
         history.push('/overview');

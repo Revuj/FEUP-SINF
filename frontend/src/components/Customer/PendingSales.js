@@ -59,11 +59,10 @@ export default function PendingSales({
       const reversed = sorting.order === 'asc' ? 1 : -1;
 
       if (sorting.field === 'date') {
-        console.log('oioi');
         computedInfo = computedInfo.sort(
           (a, b) => reversed * (Date.parse(a.date) - Date.parse(b.date))
         );
-        console.log(computedInfo);
+       // console.log(computedInfo);
       } else {
         computedInfo = computedInfo.sort(
           (a, b) => reversed * (a[sorting.field] - b[sorting.field])

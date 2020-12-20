@@ -73,7 +73,6 @@ function RevenueVsCost({ height }) {
   useEffect(() => {
     const updateGraph = () => {
       if (salesAndCosts) {
-        console.log(salesAndCosts);
         setGraphData({
           labels: [
             'Jan',

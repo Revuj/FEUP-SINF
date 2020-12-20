@@ -49,7 +49,7 @@ const CustomerInformation = ({ id }) => {
     fetchData();
   }, [id]);
 
-  console.log(customer);
+  //console.log(customer);
   // faltam algum atributos tao a null
   // temos outros atributos que se calhar deviamos colocar
   return (

@@ -29,7 +29,6 @@ const UnitsPurchased = ({ id, year }) => {
     setLoading(true);
     const fetchData = async () => {
       const { data } = await fetchUnitsPurchased(id, year);
-      console.log(data);
       setTotal(data);
       setLoading(false);
     };

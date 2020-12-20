@@ -115,7 +115,6 @@ module.exports = (server, cache) => {
         res.json(suppliers);
       });
     } else {
-      console.log("hit");
       return res.json(cachedSuppliers);
     }
   });

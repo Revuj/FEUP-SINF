@@ -40,7 +40,6 @@ function SalesAndPurchases({ year, height }) {
   useEffect(() => {
     const updateGraph = () => {
       if (salesAndPurchases) {
-        console.log(salesAndPurchases);
         setGraphData({
           labels: [
             "Jan",

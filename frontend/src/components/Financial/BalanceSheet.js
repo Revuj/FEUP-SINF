@@ -74,7 +74,6 @@ const BalanceSheet = ({
           <li style={itemStyle} className="list-subsection-title">
             <div className="">Current</div>
           </li>
-          {console.log(liabilities)}
           {liabilities.currentLiabilities.map((item) => {
             return (
               <li

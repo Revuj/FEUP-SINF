@@ -58,7 +58,6 @@ module.exports = (server, cache) => {
     const cachedProducts = cache.get(key);
 
     if (cachedProducts != undefined){
-      console.log('hit');
       return res.json(cachedProducts);
     }
     
@@ -82,7 +81,6 @@ module.exports = (server, cache) => {
     const cachedWarehouses = cache.get(key);
 
     if (cachedWarehouses != undefined){
-      console.log('hit');
       return res.json(cachedWarehouses);
     }
 
@@ -106,7 +104,6 @@ module.exports = (server, cache) => {
     const cachedStock = cache.get(key);
 
     if (cachedStock != undefined){
-      console.log('hit');
       return res.json(cachedStock);
     }
 

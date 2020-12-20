@@ -32,7 +32,7 @@ const PaginationComponent = ({
     }
 
     setPages([...set].sort((a, b) => a - b));
-    console.log(pages);
+    //console.log(pages);
   }, [currentPage, totalPages]);
 
   if (totalPages === 0) return null;

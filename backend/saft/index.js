@@ -12,6 +12,6 @@ const optionDefinitions = [
 
 const options = commandLineArgs(optionDefinitions);
 
-console.log(options);
+//console.log(options);
 
 module.exports = options;

@@ -55,11 +55,9 @@ export default function PendingPurchases({
       const reversed = sorting.order === 'asc' ? 1 : -1;
 
       if (sorting.field === 'date') {
-        console.log('oioi');
         computedRows = computedRows.sort(
           (a, b) => reversed * (Date.parse(a.date) - Date.parse(b.date))
         );
-        console.log(computedRows);
       } else {
         computedRows = computedRows.sort(
           (a, b) => reversed * (a[sorting.field] - b[sorting.field])

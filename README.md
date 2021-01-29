@@ -1,4 +1,7 @@
 # 360 º Dashboard
+
+[Project Presentation](https://github.com/Revuj/FEUP-SINF/blob/main/presentation.pdf)
+
 This  project  aims  to  provide  a  Web  Application  which  comprises  an  overview  of  a  company’s  operations and financial situation through several key performance indicators (KPI’s).  These KPIs have a complete and comprehensive visual representation which simplifies the analysis of the large stream of data inherent to the business, thus easing the  decision-making process.  
 
 To guarantee  a better  user experience,  the  data  is divided  into views,  each aggregating a set of statistics relevant to the topic at hand:  Overview, Finances, Sales, Procurement, and Inventory.

@@ -27,3 +27,8 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 Runs a script responsible for parsing a saf-t file and creating a database (db.json) with its information.
 
+## Login Credentials
+* Mail: admin@gmail.com	
+* Password: administrator
+
+
